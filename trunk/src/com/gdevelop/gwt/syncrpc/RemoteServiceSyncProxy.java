@@ -46,9 +46,9 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
       return clazz != null;
     }
 
-    public void validateDeserialize(Class<?> clazz) {
+    public void validateDeserialize(Class<?> clazz) throws SerializationException{
     }
-    public void validateSerialize(Class<?> clazz) {
+    public void validateSerialize(Class<?> clazz) throws SerializationException{
     }
   }
   static CookieManager cookieManager = new CookieManager();
@@ -67,6 +67,12 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     if (serializationPolicyName == null){
       serializationPolicy = new DummySerializationPolicy();
     }else{
+      // TODO
+      if (true){
+        serializationPolicy = new DummySerializationPolicy();
+        return;
+      }
+      
       String policyFileName = SerializationPolicyLoader.getSerializationPolicyFileName(serializationPolicyName);
       InputStream is = getClass().getResourceAsStream("/" + policyFileName);
       try {
