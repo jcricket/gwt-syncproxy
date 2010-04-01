@@ -77,7 +77,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
     this.serializationPolicyName = serializationPolicyName;
   }
   
-  public Object invoke(Object proxy, Method method, Object[] args) {
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable{
     RemoteServiceSyncProxy syncProxy = new 
       RemoteServiceSyncProxy(moduleBaseURL, 
                              remoteServiceRelativePath, 
@@ -170,6 +170,13 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
         callback.onFailure(ex);
         return null;
       }
+      Class[] expClasses = method.getExceptionTypes();
+      for (Class clazz : expClasses){
+        if (clazz.isAssignableFrom(ex.getClass())){
+          throw ex;
+        }
+      }
+      
       throw new InvocationException("Exception while invoking the remote service " + 
                                     method.getDeclaringClass().getName() + "." +
                                     method.getName(), ex);
