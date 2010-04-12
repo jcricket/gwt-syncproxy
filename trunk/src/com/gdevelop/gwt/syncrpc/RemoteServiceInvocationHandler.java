@@ -33,15 +33,15 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
   private static final Map<Class, ResponseReader> JPRIMITIVETYPE_TO_RESPONSEREADER = 
       new HashMap<Class, ResponseReader>();
   static{
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Boolean.class, ResponseReader.BOOLEAN);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Byte.class, ResponseReader.BYTE);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Character.class, ResponseReader.CHAR);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Double.class, ResponseReader.DOUBLE);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Float.class, ResponseReader.FLOAT);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Integer.class, ResponseReader.INT);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Long.class, ResponseReader.LONG);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Short.class, ResponseReader.SHORT);
-    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Void.class, ResponseReader.VOID);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Boolean.class, ResponseReader.BOOLEAN);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Byte.class, ResponseReader.BYTE);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Character.class, ResponseReader.CHAR);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Double.class, ResponseReader.DOUBLE);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Float.class, ResponseReader.FLOAT);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Integer.class, ResponseReader.INT);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Long.class, ResponseReader.LONG);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Short.class, ResponseReader.SHORT);
+//    JPRIMITIVETYPE_TO_RESPONSEREADER.put(Void.class, ResponseReader.VOID);
 
     JPRIMITIVETYPE_TO_RESPONSEREADER.put(boolean.class, ResponseReader.BOOLEAN);
     JPRIMITIVETYPE_TO_RESPONSEREADER.put(byte.class, ResponseReader.BYTE);
@@ -231,22 +231,38 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
 
   private void writeParam(SerializationStreamWriter streamWriter, 
           Class paramType, Object paramValue) throws SerializationException {
-    if ((paramType == Boolean.class) || (paramType == boolean.class)){
+    if (paramType == boolean.class){
       streamWriter.writeBoolean((Boolean)paramValue);
-    } else if ((paramType == Byte.class) || (paramType == byte.class)){
+//    } else if (paramType == Boolean.class){
+//      streamWriter.writeBoolean((Boolean)paramValue);
+    } else if (paramType == byte.class){
       streamWriter.writeByte((Byte)paramValue);
-    } else if ((paramType == Character.class) || (paramType == char.class)){
+//    } else if (paramType == Byte.class){
+//      streamWriter.writeByte((Byte)paramValue);
+    } else if (paramType == char.class){
       streamWriter.writeChar((Character)paramValue);
-    } else if ((paramType == Double.class) || (paramType == double.class)){
+//    } else if (paramType == Character.class){
+//      streamWriter.writeChar((Character)paramValue);
+    } else if (paramType == double.class){
       streamWriter.writeDouble((Double)paramValue);
-    } else if ((paramType == Float.class) || (paramType == float.class)){
+//    } else if (paramType == Double.class){
+//      streamWriter.writeDouble((Double)paramValue);
+    } else if (paramType == float.class){
       streamWriter.writeFloat((Float)paramValue);
-    }else  if ((paramType == Integer.class) || (paramType == int.class)){
+//    } else if (paramType == Float.class){
+//      streamWriter.writeFloat((Float)paramValue);
+    }else if (paramType == int.class){
       streamWriter.writeInt((Integer)paramValue);
-    } else if ((paramType == Long.class) || (paramType == long.class)){
+//    }else if (paramType == Integer.class){
+//      streamWriter.writeInt((Integer)paramValue);
+    } else if (paramType == long.class){
       streamWriter.writeLong((Long)paramValue);
-    } else if ((paramType == Short.class) || (paramType == short.class)){
+//    } else if (paramType == Long.class){
+//      streamWriter.writeLong((Long)paramValue);
+    } else if (paramType == short.class){
       streamWriter.writeShort((Short)paramValue);
+//    } else if (paramType == Short.class){
+//      streamWriter.writeShort((Short)paramValue);
     } else if (paramType == String.class){
       streamWriter.writeString((String)paramValue);
     } else {
