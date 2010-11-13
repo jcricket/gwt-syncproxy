@@ -103,6 +103,11 @@ public class CookieManager {
     }
   }
 
+  public void clearCookies(URLConnection conn) throws IOException {
+    // let's determine the domain from where these cookies are being sent
+    String domain = getDomainFromHost(conn.getURL().getHost());
+    store.remove(domain);
+  }
 
   /**
    * Prior to opening a URLConnection, calling this method will set all
