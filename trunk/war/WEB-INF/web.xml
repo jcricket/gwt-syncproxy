@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <description>GWT RPC Testing App</description>
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>RPCSuite.html</welcome-file>
+  </welcome-file-list>
+  
+  <!-- Used to test user login -->
+  <filter>
+    <filter-name>GAEAuthentication</filter-name>
+    <filter-class>com.gdevelop.gwt.syncrpc.server.test.GAEAuthenticationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>GAEAuthentication</filter-name>
+    <url-pattern>/rpcsuite/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Servlets -->
+	<servlet>
+		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.MixedSerializableEchoServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.RemoteServiceServletTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>collectionsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.CollectionsTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>customFieldSerializerTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.CustomFieldSerializerTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>enumsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.EnumsTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.UnicodeEscapingServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>objectGraphTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.ObjectGraphTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>valueTypesTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.ValueTypesTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>inheritanceTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.InheritanceTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>exceptionTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.ExceptionTestServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/echo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/servlettest</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>collectionsTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/collections</url-pattern>
+	</servlet-mapping>  
+	<servlet-mapping>
+		<servlet-name>customFieldSerializerTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/customfieldserializers</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>enumsTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/enums</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/unicodeEscape</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>objectGraphTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/objectgraphs</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>valueTypesTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/valuetypes</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>inheritanceTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/inheritance</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>exceptionTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/exception</url-pattern>
+	</servlet-mapping>
+
+</web-app>
