@@ -17,6 +17,7 @@ package com.gdevelop.gwt.syncrpc;
 
 
 import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.RpcRequestBuilder;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.StatusCodeException;
@@ -51,26 +52,30 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     public void validateSerialize(Class<?> clazz) throws SerializationException{
     }
   }
-  static CookieManager cookieManager = new CookieManager();
+//  static CookieManager cookieManager = new CookieManager();
 
   private String moduleBaseURL;
   private String remoteServiceURL;
   private String serializationPolicyName;
   private SerializationPolicy serializationPolicy;
+  private SessionManager connectionManager;
   
   public RemoteServiceSyncProxy(String moduleBaseURL, 
-      String remoteServiceRelativePath, String serializationPolicyName) {
+                                String remoteServiceRelativePath, 
+                                String serializationPolicyName, 
+                                SessionManager connectionManager) {
     this.moduleBaseURL = moduleBaseURL;
     this.remoteServiceURL = moduleBaseURL + remoteServiceRelativePath;
     this.serializationPolicyName = serializationPolicyName;
+    this.connectionManager = connectionManager;
 
     if (serializationPolicyName == null){
       serializationPolicy = new DummySerializationPolicy();
     }else{
       // TODO
       if (true){
-        serializationPolicy = new DummySerializationPolicy();
-        return;
+        // serializationPolicy = new DummySerializationPolicy();
+        // return;
       }
       
       String policyFileName = SerializationPolicyLoader.getSerializationPolicyFileName(serializationPolicyName);
@@ -116,20 +121,22 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     int statusCode;
     try {
       URL url = new URL(remoteServiceURL);
-      connection = (HttpURLConnection) url.openConnection();
+      connection = connectionManager.openConnection(url);
       connection.setDoInput(true);
       connection.setDoOutput(true);
       connection.setRequestMethod("POST");
+      connection.setRequestProperty(RpcRequestBuilder.STRONG_NAME_HEADER, serializationPolicyName);
       connection.setRequestProperty("Content-Type", "text/x-gwt-rpc; charset=utf-8");
-      connection.setRequestProperty("Content-Length", "" + requestData.length());
-      cookieManager.setCookies(connection);
+      connection.setRequestProperty("Content-Length", "" + requestData.getBytes("UTF-8").length);
+//      cookieManager.setCookies(connection);
       
       OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
       writer.write(requestData);
       writer.flush();
       writer.close();
 
-      cookieManager.storeCookies(connection);
+//      cookieManager.storeCookies(connection);
+      connectionManager.handleResponseHeaders(connection);
       statusCode = connection.getResponseCode();
       is = connection.getInputStream();
       ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -69,19 +69,24 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
   private String moduleBaseURL;
   private String remoteServiceRelativePath;
   private String serializationPolicyName;
+  private SessionManager connectionManager;
 
   public RemoteServiceInvocationHandler(String moduleBaseURL, 
-      String remoteServiceRelativePath, String serializationPolicyName){
+                                        String remoteServiceRelativePath, 
+                                        String serializationPolicyName, 
+                                        SessionManager connectionManager){
     this.moduleBaseURL = moduleBaseURL;
     this.remoteServiceRelativePath = remoteServiceRelativePath;
     this.serializationPolicyName = serializationPolicyName;
+    this.connectionManager = connectionManager;
   }
   
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable{
     RemoteServiceSyncProxy syncProxy = new 
       RemoteServiceSyncProxy(moduleBaseURL, 
                              remoteServiceRelativePath, 
-                             serializationPolicyName);
+                             serializationPolicyName, 
+                             connectionManager);
     SerializationStreamWriter streamWriter = syncProxy.createStreamWriter();
 
     AsyncCallback callback = null;

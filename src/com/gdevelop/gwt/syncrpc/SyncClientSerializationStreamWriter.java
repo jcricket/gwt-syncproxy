@@ -15,14 +15,12 @@
  */
 package com.gdevelop.gwt.syncrpc;
 
+
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.impl.AbstractSerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.ClientSerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.Serializer;
-
-
 import com.google.gwt.user.server.rpc.SerializationPolicy;
-
 import com.google.gwt.user.server.rpc.impl.SerializabilityUtil;
 
 import java.lang.reflect.Field;
@@ -33,6 +31,7 @@ import java.lang.reflect.Modifier;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * @see com.google.gwt.user.client.rpc.impl.ClientSerializationStreamWriter
@@ -310,11 +309,15 @@ public class SyncClientSerializationStreamWriter extends AbstractSerializationSt
    * @param fieldValue
    */
   public void writeLong(long fieldValue) {
-    double[] parts;
-    parts = makeLongComponents((int) (fieldValue >> 32), (int) fieldValue);
-    assert parts.length == 2;
-    writeDouble(parts[0]);
-    writeDouble(parts[1]);
+    if (getVersion() == SERIALIZATION_STREAM_MIN_VERSION) {
+      double[] parts;
+      parts = makeLongComponents((int) (fieldValue >> 32), (int) fieldValue);
+      assert parts.length == 2;
+      writeDouble(parts[0]);
+      writeDouble(parts[1]);
+    }else{
+      append(Utils.toBase64(fieldValue));
+    }
   }
 
   protected void append(String token) {

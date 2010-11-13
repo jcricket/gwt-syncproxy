@@ -19,9 +19,7 @@ package com.gdevelop.gwt.syncrpc;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.impl.AbstractSerializationStreamReader;
-
 import com.google.gwt.user.server.rpc.SerializationPolicy;
-
 import com.google.gwt.user.server.rpc.impl.SerializabilityUtil;
 import com.google.gwt.user.server.rpc.impl.SerializedInstanceReference;
 
@@ -440,7 +438,14 @@ public class SyncClientSerializationStreamReader extends AbstractSerializationSt
   }
 
   public long readLong() {
-    return (long) readDouble() + (long) readDouble();
+    if (getVersion() == SERIALIZATION_STREAM_MIN_VERSION) {
+      return (long) readDouble() + (long) readDouble();
+    }else{
+      String s = results.get(--index);
+      // remove quotes
+      s = s.substring(1, s.length() - 1);
+      return Utils.longFromBase64(s);
+    }
   }
 
   public short readShort() {
