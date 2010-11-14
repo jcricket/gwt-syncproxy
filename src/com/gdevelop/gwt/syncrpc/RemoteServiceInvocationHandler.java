@@ -17,6 +17,7 @@ package com.gdevelop.gwt.syncrpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter.ResponseReader;
@@ -87,6 +88,13 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
                              remoteServiceRelativePath, 
                              serializationPolicyName, 
                              connectionManager);
+    Class remoteServiceInft = method.getDeclaringClass();
+    for (Class intf : proxy.getClass().getInterfaces()){
+      if (RemoteService.class.isAssignableFrom(intf)){
+        remoteServiceInft = intf;
+      }
+    }
+    
     SerializationStreamWriter streamWriter = syncProxy.createStreamWriter();
 
     AsyncCallback callback = null;
@@ -94,7 +102,8 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
     try{
       // Determine whether sync or async
       boolean isAsync = false;
-      String serviceIntfName = method.getDeclaringClass().getCanonicalName();
+      // String serviceIntfName = method.getDeclaringClass().getCanonicalName();
+      String serviceIntfName = remoteServiceInft.getCanonicalName();
       int paramCount = paramTypes.length;
       Class returnType = method.getReturnType();
       if (method.getDeclaringClass().getCanonicalName().endsWith("Async")){
