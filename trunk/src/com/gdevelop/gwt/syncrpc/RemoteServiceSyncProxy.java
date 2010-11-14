@@ -52,7 +52,6 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     public void validateSerialize(Class<?> clazz) throws SerializationException{
     }
   }
-//  static CookieManager cookieManager = new CookieManager();
 
   private String moduleBaseURL;
   private String remoteServiceURL;
@@ -119,6 +118,8 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     HttpURLConnection connection = null;
     InputStream is = null;
     int statusCode;
+    
+    // Send request
     try {
       URL url = new URL(remoteServiceURL);
       connection = connectionManager.openConnection(url);
@@ -128,14 +129,17 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
       connection.setRequestProperty(RpcRequestBuilder.STRONG_NAME_HEADER, serializationPolicyName);
       connection.setRequestProperty("Content-Type", "text/x-gwt-rpc; charset=utf-8");
       connection.setRequestProperty("Content-Length", "" + requestData.getBytes("UTF-8").length);
-//      cookieManager.setCookies(connection);
       
       OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
       writer.write(requestData);
       writer.flush();
       writer.close();
-
-//      cookieManager.storeCookies(connection);
+    } catch (IOException e) {
+      throw new InvocationException("IOException while sending RPC request", e);
+    }
+    
+    // Receive and process response
+    try{
       connectionManager.handleResponseHeaders(connection);
       statusCode = connection.getResponseCode();
       is = connection.getInputStream();
@@ -163,10 +167,10 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
       }else{
         throw new InvocationException("Unknown response " + encodedResponse);
       }
-    } catch (IOException e) {
-      throw new InvocationException("IOException", e);
+    }catch(IOException e){
+      throw new InvocationException("IOException while receiving RPC response", e);
     } catch (SerializationException e) {
-      throw new InvocationException("Error while performing serialization", e);
+      throw new InvocationException("Error while deserialization response", e);
     }finally{
       if (is != null){
         try{
