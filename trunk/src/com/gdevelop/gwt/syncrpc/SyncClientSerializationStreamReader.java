@@ -357,7 +357,11 @@ public class SyncClientSerializationStreamReader extends AbstractSerializationSt
 
       assert (serializationPolicy != null);
 
-      serializationPolicy.validateDeserialize(instanceClass);
+      try{
+        serializationPolicy.validateDeserialize(instanceClass);
+      }catch(SerializationException e){
+        System.err.println("WARN: " + e.getMessage());
+      }
 
       //TODO validateTypeVersions(instanceClass, serializedInstRef);
 
