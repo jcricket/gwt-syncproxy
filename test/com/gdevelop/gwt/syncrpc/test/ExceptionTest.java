@@ -3,33 +3,29 @@ package com.gdevelop.gwt.syncrpc.test;
 
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 
-import com.google.gwt.user.client.rpc.ExceptionTestService;
+import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.user.client.rpc.ExceptionsTestService;
+
+import com.google.gwt.user.client.rpc.ExceptionsTestService.ExceptionsTestServiceException;
+import com.google.gwt.user.client.rpc.TestSetFactory;
+
+import com.google.gwt.user.client.rpc.TestSetValidator;
 
 import junit.framework.TestCase;
 
 public class ExceptionTest extends TestCase{
-  private static ExceptionTestService service = 
-    (ExceptionTestService)SyncProxy.newProxyInstance(
-        ExceptionTestService.class, RPCSyncTestSuite.BASE_URL, 
-        "exception");
+  private static ExceptionsTestService service = 
+    (ExceptionsTestService)SyncProxy.newProxyInstance(
+        ExceptionsTestService.class, RPCSyncTestSuite.BASE_URL, 
+        "exceptions");
 
   public ExceptionTest() {
   }
   
-  public void testException() {
-    System.out.println(RPCSyncTestSuite.BASE_URL);
-    
-//    service.doSomething01();
-//    
-//    try {
-//      service.doSomething02();
-//      fail("Must have an exception");
-//    } catch (Exception e) {
-//      // e.printStackTrace();
-//      assertTrue(ExceptionTestService.errorMessage.equals(e.getMessage()));
-//    }
-    
-    Integer ret = service.doSomething03(1, "A", "B");
-    assertTrue(ret == 2);
+  public void testException() throws ExceptionsTestServiceException {
+    final UmbrellaException expected = TestSetFactory.createUmbrellaException();
+    UmbrellaException result = service.echo(expected);
+    assertNotNull(result);
+    assertTrue(TestSetValidator.isValid(expected, result));
   }
 }

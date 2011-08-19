@@ -6,9 +6,11 @@ import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.google.gwt.user.client.rpc.CollectionsTestService;
 import com.google.gwt.user.client.rpc.TestSetFactory;
 import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeArraysAsList;
-import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeHashMap;
+import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeHashMapKey;
+import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeHashMapValue;
 import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeHashSet;
-import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeLinkedHashMap;
+import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeLinkedHashMapKey;
+import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeLinkedHashMapValue;
 import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeTreeMap;
 import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeTreeSet;
 import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeVector;
@@ -124,8 +126,8 @@ public class CollectionsTest extends TestCase{
   
   public void testHashMap() {
     try{
-      HashMap<String, MarkerTypeHashMap> expected = TestSetFactory.createHashMap();
-      HashMap<String, MarkerTypeHashMap> result = service.echo(expected);
+      final HashMap<MarkerTypeHashMapKey, MarkerTypeHashMapValue> expected = TestSetFactory.createHashMap();
+      HashMap<MarkerTypeHashMapKey, MarkerTypeHashMapValue> result = service.echo(expected);
       assertNotNull(result);
       assertTrue(TestSetValidator.isValid(expected, result));
     } catch (Throwable e) {
@@ -157,8 +159,9 @@ public class CollectionsTest extends TestCase{
   
   public void testLinkedHashMap() {
     try{
-      LinkedHashMap<String, MarkerTypeLinkedHashMap> expected = TestSetFactory.createLinkedHashMap();
-      LinkedHashMap<String, MarkerTypeLinkedHashMap> result = service.echo(expected);
+      LinkedHashMap<MarkerTypeLinkedHashMapKey, MarkerTypeLinkedHashMapValue> expected =
+          TestSetFactory.createLinkedHashMap();
+      LinkedHashMap<MarkerTypeLinkedHashMapKey, MarkerTypeLinkedHashMapValue> result = service.echo(expected);
       assertNotNull(result);
       expected.get("SerializableSet");
       result.get("SerializableSet");
@@ -170,8 +173,9 @@ public class CollectionsTest extends TestCase{
   
   public void testLinkedHashMapLRU() {
     try{
-      LinkedHashMap<String, MarkerTypeLinkedHashMap> expected = TestSetFactory.createLRULinkedHashMap();
-      LinkedHashMap<String, MarkerTypeLinkedHashMap> actual = service.echo(expected);
+      LinkedHashMap<MarkerTypeLinkedHashMapKey, MarkerTypeLinkedHashMapValue> expected =
+              TestSetFactory.createLRULinkedHashMap();
+      LinkedHashMap<MarkerTypeLinkedHashMapKey, MarkerTypeLinkedHashMapValue> actual = service.echo(expected);
       assertNotNull(actual);
       expected.get("SerializableSet");
       actual.get("SerializableSet");

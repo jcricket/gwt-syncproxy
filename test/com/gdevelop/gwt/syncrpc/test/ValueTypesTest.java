@@ -19,13 +19,13 @@ public class ValueTypesTest extends TestCase{
     (ValueTypesTestService)SyncProxy.newProxyInstance(
         ValueTypesTestService.class, RPCSyncTestSuite.BASE_URL, 
         "valuetypes");
-  static{
-    SyncProxy.getDefaultSessionManager().setCredentialsManager(new CredentialsManager(){
-      public LoginCredentials getLoginCredentials(URL url) {
-        return new LoginCredentials("gae", "http://localhost:8888", "http://localhost:8888", "a@b.com", "");
-      }
-    });
-  }
+//  static{
+//    SyncProxy.getDefaultSessionManager().setCredentialsManager(new CredentialsManager(){
+//      public LoginCredentials getLoginCredentials(URL url) {
+//        return new LoginCredentials("gae", "http://localhost:8888", "http://localhost:8888", "a@b.com", "");
+//      }
+//    });
+//  }
   public ValueTypesTest() {
   }
   
