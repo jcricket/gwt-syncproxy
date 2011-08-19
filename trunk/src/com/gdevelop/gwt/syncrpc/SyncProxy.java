@@ -88,6 +88,7 @@ public class SyncProxy {
           if (pos > 0){
             policyName = child.substring(0, child.length() - GWT_PRC_POLICY_FILE_EXT.length());
             POLICY_MAP.put(line.substring(0, pos), policyName);
+            POLICY_MAP.put(line.substring(0, pos) + "Async", policyName);
           }
           line = reader.readLine();
         }
