@@ -9,13 +9,13 @@
     <pathelement location="${outDir}/classes"/>
     <pathelement location="${gwt.sdk}/gwt-user.jar"/>
     <fileset dir="${gwt.sdk}" includes="gwt-dev*.jar"/>
-    <pathelement location="war/WEB-INF/lib_appengine/gdata-core-1.0.jar"/>
+    <pathelement location="${gdata.sdk}/lib/gdata-core-1.0.jar"/>
   </path>
 
   <target name="javac" description="Compile java source">
     <mkdir dir="${outDir}/classes"/>
     <javac srcdir="src" includes="**" 
-      excludes="**/java/**/*.java **/DeployToGAE.java **/StartDevMode.java **/StartDevModeGAE.java **/StartGAEDevServer.java" 
+      excludes="**/java/**/*.java **/dev/StartGAEDevServer.java **/dev/StartDevAppServer.java **/dev/Compile.java" 
       encoding="utf-8"
         destdir="${outDir}/classes"
         source="1.5" target="1.5" nowarn="true"
