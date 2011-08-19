@@ -18,7 +18,7 @@
   </filter>
   <filter-mapping>
     <filter-name>GAEAuthentication</filter-name>
-    <url-pattern>/rpcsuite/*</url-pattern>
+    <url-pattern>/xx_rpcsuite/*</url-pattern>
   </filter-mapping>
 
   <!-- Servlets -->
@@ -59,8 +59,8 @@
 		<servlet-class>com.google.gwt.user.server.rpc.InheritanceTestServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>exceptionTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.ExceptionTestServiceImpl</servlet-class>
+		<servlet-name>exceptionsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.ExceptionsTestServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -101,8 +101,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>exceptionTestServiceImpl</servlet-name>
-		<url-pattern>/rpcsuite/exception</url-pattern>
+		<servlet-name>exceptionsTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/exceptions</url-pattern>
 	</servlet-mapping>
 
 </web-app>

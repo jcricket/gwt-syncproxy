@@ -13,7 +13,7 @@ import junit.framework.TestCase;
  */
 public class UnicodeEscapingTest extends TestCase{
   static{
-    RPCSyncTestSuite.login();
+//    RPCSyncTestSuite.login();
   }
   
   /** the size of a block of characters to test */
@@ -35,6 +35,12 @@ public class UnicodeEscapingTest extends TestCase{
   private int current;
 
   public UnicodeEscapingTest() {
+  }
+
+  public void testClientToServerBMPHigh() throws InvalidCharacterException {
+    clientToServerVerifyRange(Character.MAX_SURROGATE + 1,
+        Character.MIN_SUPPLEMENTARY_CODE_POINT, CHARACTER_BLOCK_SIZE,
+        CHARACTER_BLOCK_SIZE);
   }
   
   public void testClientToServerBMP() throws InvalidCharacterException {
