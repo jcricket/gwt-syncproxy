@@ -11,16 +11,6 @@
     <welcome-file>RPCSuite.html</welcome-file>
   </welcome-file-list>
   
-  <!-- Used to test user login -->
-  <filter>
-    <filter-name>GAEAuthentication</filter-name>
-    <filter-class>com.gdevelop.gwt.syncrpc.server.test.GAEAuthenticationFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>GAEAuthentication</filter-name>
-    <url-pattern>/xx_rpcsuite/*</url-pattern>
-  </filter-mapping>
-
 	<servlet>
 		<servlet-name>ProfileService</servlet-name>
 		<servlet-class>com.gdevelop.gwt.syncrpc.test.server.ProfileServiceImpl</servlet-class>
