@@ -49,6 +49,8 @@ public class AllTest implements EntryPoint{
     GWT.create(TypeCheckedObjectsTestService.class);
     GWT.create(XsrfTestService.class);
     
+    GWT.create(ProfileService.class);
+
     // testProfileService();
     // testEnums();
     testTypeCheckedObjects();

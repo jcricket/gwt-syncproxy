@@ -126,10 +126,6 @@
             <url n="id" path="../../../system11.1.1.5.37.60.13/o.jdeveloper/appengine-1.5.2.library"/>
             <value n="isJDK" v="false"/>
          </hash>
-         <hash>
-            <value n="id" v="gwt.rpc"/>
-            <value n="isJDK" v="false"/>
-         </hash>
       </list>
       <hash n="internalDefinitions">
          <list n="libraryDefinitions">
@@ -140,13 +136,6 @@
                </list>
                <value n="description" v="src"/>
                <value n="id" v="src"/>
-            </hash>
-            <hash>
-               <list n="classPath">
-                  <url path="war/rpcsuite/"/>
-               </list>
-               <value n="description" v="gwt.rpc"/>
-               <value n="id" v="gwt.rpc"/>
             </hash>
          </list>
       </hash>
@@ -165,10 +154,6 @@
          </hash>
          <hash>
             <url n="id" path="../../../system11.1.1.5.37.60.13/o.jdeveloper/appengine-1.5.2.library"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
-            <value n="id" v="gwt.rpc"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

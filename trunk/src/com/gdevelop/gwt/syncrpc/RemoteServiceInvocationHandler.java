@@ -26,6 +26,8 @@ import com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter.ResponseReader
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import java.net.CookieManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,12 +74,12 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
   private String moduleBaseURL;
   private String remoteServiceRelativePath;
   private String serializationPolicyName;
-  private java.net.CookieManager cookieManager;
+  private CookieManager cookieManager;
 
   public RemoteServiceInvocationHandler(String moduleBaseURL, 
                                         String remoteServiceRelativePath, 
                                         String serializationPolicyName, 
-                                        java.net.CookieManager cookieManager){
+                                        CookieManager cookieManager){
     this.moduleBaseURL = moduleBaseURL;
     this.remoteServiceRelativePath = remoteServiceRelativePath;
     this.serializationPolicyName = serializationPolicyName;
