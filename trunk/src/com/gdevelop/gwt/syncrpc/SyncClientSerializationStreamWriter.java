@@ -346,7 +346,7 @@ public class SyncClientSerializationStreamWriter extends AbstractSerializationSt
 
     Class<?> clazz = getClassForSerialization(instance);
 
-//TODO    serializationPolicy.validateSerialize(clazz);
+    serializationPolicy.validateSerialize(clazz);
 
     serializeImpl(instance, clazz);
   }
@@ -384,7 +384,9 @@ public class SyncClientSerializationStreamWriter extends AbstractSerializationSt
         buffer.append("\\\\");
         break;
       default:
-        buffer.append(ch);
+        // buffer.append(ch);
+        String hex = Integer.toHexString(ch);
+        buffer.append("\\u0000".substring(0, 6-hex.length()) + hex);
       }
     }
     
