@@ -16,19 +16,14 @@
 package com.gdevelop.gwt.syncrpc;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import java.lang.reflect.Proxy;
 
+import java.net.CookieManager;
 import java.net.CookiePolicy;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 
 /**
@@ -44,57 +39,24 @@ import java.util.StringTokenizer;
  *    "http://localhost:8888/myapp/", "myServiceServlet");
  * In this case, the SyncProxy search for the appropriate policyName file in
  * the system classpath
+ *
+ * If not specified, SyncProxy uses a <em>default</em> {@link CookieManager}
+ * to manage client-server communication session
+ *
+ * To perform multi-session:
+ * CookieManager cookieManager = LoginUtils.loginAppEngine(...);
+ * MyServiceInterface myService = newProxyInstance(MyServiceInterface.class,
+ *    "http://localhost:8888/myapp/", "myServiceServlet", cookieManager);
+ * @see com.gdevelop.gwt.syncrpc.test.ProfileServiceTest example
  */
 public class SyncProxy {
-  private static final String GWT_PRC_POLICY_FILE_EXT = ".gwt.rpc";
-  private static final Map<String, String> POLICY_MAP = new HashMap<String, String>();
-  static{
-    String classPath = System.getProperty("java.class.path");
-    StringTokenizer st = new StringTokenizer(classPath, File.pathSeparator);
-    while (st.hasMoreTokens()){
-      String path = st.nextToken();
-      File f = new File(path);
-      if (f.isDirectory()){
-        searchPolicyFile(path);
-      }
-      // TODO: Search in jar, zip files
-    }
-  }
+  /**
+   * Map from ServiceInterface class name to Serialization Policy name
+   */
+  private static final Map<String, String> POLICY_MAP = RpcPolicyFinder.searchPolicyFileInClassPath();
   
-  private static final java.net.CookieManager DEFAULT_COOKIE_MANAGER = new java.net.CookieManager(null, CookiePolicy.ACCEPT_ALL);
-  
-  private static void searchPolicyFile(String path){
-    String policyName = null;
-    
-    File f = new File(path);
-    String[] children = f.list(new FilenameFilter(){
-      public boolean accept(File dir, String name) {
-        if (name.endsWith(GWT_PRC_POLICY_FILE_EXT)){
-          return true;
-        }
-        return false;
-      }
-    });
-    for (String child : children){
-      BufferedReader reader;
-      try {
-        reader = new BufferedReader(new FileReader(new File(path ,child)));
-        String line = reader.readLine();
-        while (line != null){
-          int pos = line.indexOf(", false, false, false, false, _, ");
-          if (pos > 0){
-            policyName = child.substring(0, child.length() - GWT_PRC_POLICY_FILE_EXT.length());
-            POLICY_MAP.put(line.substring(0, pos), policyName);
-            POLICY_MAP.put(line.substring(0, pos) + "Async", policyName);
-          }
-          line = reader.readLine();
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-        // ignore
-      }
-    }
-  }
+  private static final CookieManager DEFAULT_COOKIE_MANAGER 
+    = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
   
   /**
   * Create a new Proxy for the specified <code>serviceIntf</code>
@@ -109,9 +71,18 @@ public class SyncProxy {
   public static Object newProxyInstance(Class serviceIntf, String moduleBaseURL, 
                                         String remoteServiceRelativePath, 
                                         String policyName, 
-                                        java.net.CookieManager cookieManager){
+                                        CookieManager cookieManager){
     if(cookieManager == null){
-      cookieManager = new java.net.CookieManager(null, CookiePolicy.ACCEPT_ALL);
+      cookieManager = DEFAULT_COOKIE_MANAGER;
+    }
+    
+    if (policyName == null){
+      try {
+        POLICY_MAP.putAll(RpcPolicyFinder.fetchSerializationPolicyName(moduleBaseURL));
+        policyName = POLICY_MAP.get(serviceIntf.getName());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
 
     return Proxy.newProxyInstance(SyncProxy.class.getClassLoader(), 
@@ -165,7 +136,7 @@ public class SyncProxy {
   @SuppressWarnings("unchecked")
   public static Object newProxyInstance(Class serviceIntf, String moduleBaseURL, 
                                        String remoteServiceRelativePath, 
-                                        java.net.CookieManager cookieManager){
+                                        CookieManager cookieManager){
     return newProxyInstance(serviceIntf, moduleBaseURL, remoteServiceRelativePath, 
                             POLICY_MAP.get(serviceIntf.getName()), cookieManager);
   }

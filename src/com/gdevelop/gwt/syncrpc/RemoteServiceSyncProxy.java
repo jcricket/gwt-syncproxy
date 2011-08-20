@@ -25,18 +25,20 @@ import com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import com.google.gwt.user.server.rpc.SerializationPolicyLoader;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
 import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 
 /**
- * Base on com.google.gwt.user.client.rpc.impl.RemoteServiceProxy
+ * Base on {@link com.google.gwt.user.client.rpc.impl.RemoteServiceProxy}
  */
 public class RemoteServiceSyncProxy implements SerializationStreamFactory{
   private static class DummySerializationPolicy extends SerializationPolicy{
@@ -58,12 +60,12 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
   private String remoteServiceURL;
   private String serializationPolicyName;
   private SerializationPolicy serializationPolicy;
-  private java.net.CookieManager cookieManager;
+  private CookieManager cookieManager;
   
   public RemoteServiceSyncProxy(String moduleBaseURL, 
                                 String remoteServiceRelativePath, 
                                 String serializationPolicyName, 
-                                java.net.CookieManager cookieManager) {
+                                CookieManager cookieManager) {
     this.moduleBaseURL = moduleBaseURL;
     this.remoteServiceURL = moduleBaseURL + remoteServiceRelativePath;
     this.serializationPolicyName = serializationPolicyName;
@@ -75,6 +77,13 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
       String policyFileName = SerializationPolicyLoader.getSerializationPolicyFileName(serializationPolicyName);
       InputStream is = getClass().getResourceAsStream("/" + policyFileName);
       try {
+        if (is == null){
+          // Try to get from cache
+          String text = RpcPolicyFinder.getCachedPolicyFile(moduleBaseURL + policyFileName);
+          if (text != null){
+            is = new ByteArrayInputStream(text.getBytes("UTF8"));
+          }
+        }
         serializationPolicy = SerializationPolicyLoader.loadFromStream(is, null);
       } catch (Exception e) {
         throw new InvocationException("Error while loading serialization policy " 
