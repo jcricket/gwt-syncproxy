@@ -70,8 +70,9 @@ public class UnicodeEscapingTest extends TestCase{
     while (current < end) {
       int blockEnd = Math.min(end, current + size);
 
-      service.verifyStringContainingCharacterRange(current, blockEnd,
-                                                   com.google.gwt.user.client.rpc.UnicodeEscapingTest.getStringContainingCharacterRange(current, blockEnd));
+      String data = com.google.gwt.user.client.rpc.UnicodeEscapingTest
+        .getStringContainingCharacterRange(current, blockEnd);
+      service.verifyStringContainingCharacterRange(current, blockEnd, data);
       
       current += step;
     }

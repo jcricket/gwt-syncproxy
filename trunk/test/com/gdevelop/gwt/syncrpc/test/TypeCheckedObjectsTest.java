@@ -15,6 +15,8 @@ import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestSetFactory.TypeCheck
 import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestSetValidator;
 import com.google.gwt.user.client.rpc.TypeUncheckedGenericClass;
 
+import java.lang.reflect.UndeclaredThrowableException;
+
 import java.util.HashSet;
 
 import junit.framework.TestCase;
@@ -23,7 +25,7 @@ public class TypeCheckedObjectsTest extends TestCase{
   private static TypeCheckedObjectsTestService service = 
     (TypeCheckedObjectsTestService)SyncProxy.newProxyInstance(
         TypeCheckedObjectsTestService.class, RPCSyncTestSuite.BASE_URL, 
-        "enums");
+        "typecheckedobjects");
 
   public TypeCheckedObjectsTest() {
   }
@@ -35,7 +37,7 @@ public class TypeCheckedObjectsTest extends TestCase{
       service.echo(arg1);
       fail("testInvalidCheckedFieldSerializer is expected to throw an assertion");
     }catch(Exception caught){
-      assertTrue(caught instanceof SerializationException);
+      expectedException(caught, SerializationException.class);
     }
   }
   
@@ -45,7 +47,7 @@ public class TypeCheckedObjectsTest extends TestCase{
       service.echo(arg);
       fail("testInvalidCheckedSerializer is expected to throw an assertion");
     }catch(Exception caught){
-      assertTrue(caught instanceof SerializationException);
+      expectedException(caught, SerializationException.class);
     }
   }
   
@@ -56,7 +58,7 @@ public class TypeCheckedObjectsTest extends TestCase{
       service.echo(arg);
       fail("testInvalidCheckedSuperSerializer is expected to throw an assertion");
     }catch(Exception caught){
-      assertTrue(caught instanceof SerializationException);
+      expectedException(caught, SerializationException.class);
     }
   }
   
@@ -67,7 +69,7 @@ public class TypeCheckedObjectsTest extends TestCase{
       service.echo(arg);
       fail("testInvalidUncheckedSerializer is expected to throw an assertion");
     }catch(Exception caught){
-      assertTrue(caught instanceof SerializationException);
+      expectedException(caught, SerializationException.class);
     }
   }
   
@@ -105,5 +107,11 @@ public class TypeCheckedObjectsTest extends TestCase{
     TypeUncheckedGenericClass result = service.echo(arg);
     assertNotNull(result);
     assertTrue(TypeCheckedObjectsTestSetValidator.isValid(result));
+  }
+  
+  private void expectedException(Exception caught, Class expectedClass){
+    assertTrue((expectedClass.isAssignableFrom(caught.getClass())) || 
+        ((caught instanceof UndeclaredThrowableException) 
+          && (expectedClass.isAssignableFrom(caught.getCause().getClass()))));
   }
 }

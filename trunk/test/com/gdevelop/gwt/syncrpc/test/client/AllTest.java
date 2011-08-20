@@ -18,15 +18,18 @@ import com.google.gwt.user.client.rpc.InheritanceTestService;
 import com.google.gwt.user.client.rpc.MixedSerializableEchoService;
 import com.google.gwt.user.client.rpc.ObjectGraphTestService;
 import com.google.gwt.user.client.rpc.RecursiveClassTestService;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.rpc.TestSetFactory;
 import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestService;
 import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestServiceAsync;
 import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestSetFactory;
+import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestSetFactory.TypeCheckedFieldClass;
 import com.google.gwt.user.client.rpc.UnicodeEscapingService;
+import com.google.gwt.user.client.rpc.UnicodeEscapingService.InvalidCharacterException;
+import com.google.gwt.user.client.rpc.UnicodeEscapingServiceAsync;
+import com.google.gwt.user.client.rpc.UnicodeEscapingTest;
 import com.google.gwt.user.client.rpc.ValueTypesTestService;
 import com.google.gwt.user.client.rpc.XsrfTestService;
-import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestSetFactory.TypeCheckedFieldClass;
-import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestSetFactory.TypeCheckedSuperClass;
 
 public class AllTest implements EntryPoint{
   public AllTest() {
@@ -53,7 +56,8 @@ public class AllTest implements EntryPoint{
 
     // testProfileService();
     // testEnums();
-    testTypeCheckedObjects();
+    // testTypeCheckedObjects();
+    testUnicodeEscaping();
   }
   
   private void testProfileService(){
@@ -110,5 +114,29 @@ public class AllTest implements EntryPoint{
         System.out.println("result: " + result);
       }
     });
+  }
+  
+  private void testUnicodeEscaping(){
+    UnicodeEscapingServiceAsync service = 
+      (UnicodeEscapingServiceAsync)GWT.create(UnicodeEscapingService.class);
+    ServiceDefTarget target = (ServiceDefTarget) service;
+    target.setServiceEntryPoint(GWT.getModuleBaseURL() + "unicodeEscape");
+    
+    int start = Character.MAX_SURROGATE + 1;
+    int end = start + 64;
+    String data = UnicodeEscapingTest.getStringContainingCharacterRange(start, end);
+    try {
+      service.verifyStringContainingCharacterRange(start, end, data, new AsyncCallback<Boolean>(){
+        public void onFailure(Throwable caught) {
+          caught.printStackTrace();
+        }
+
+        public void onSuccess(Boolean result) {
+          System.out.println("Result: " + result);
+        }
+      });
+    } catch (InvalidCharacterException e) {
+      e.printStackTrace();
+    }
   }
 }

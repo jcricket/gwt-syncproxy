@@ -1,5 +1,6 @@
 <module rename-to="rpcsuite">
   <inherits name='com.google.gwt.user.User' />
+  <inherits name='com.google.gwt.junit.JUnit' />
   <inherits name='com.google.gwt.user.RPCSuite' />
 
 <!--
