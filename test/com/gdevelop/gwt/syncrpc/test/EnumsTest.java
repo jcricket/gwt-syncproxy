@@ -16,8 +16,7 @@ import junit.framework.TestCase;
 public class EnumsTest extends TestCase{
   private static EnumsTestService service = 
     (EnumsTestService)SyncProxy.newProxyInstance(
-        EnumsTestService.class, RPCSyncTestSuite.BASE_URL, 
-        "enums");
+        EnumsTestService.class, RPCSyncTestSuite.BASE_URL);
   
   public EnumsTest() {
   }

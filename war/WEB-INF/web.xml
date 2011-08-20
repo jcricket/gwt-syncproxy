@@ -128,6 +128,15 @@
   </servlet-mapping>
   
   <servlet>
+    <servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
+    <servlet-class>com.google.gwt.user.server.rpc.TypeCheckedObjectsTestServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
+    <url-pattern>/rpcsuite/typecheckedobjects</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
     <servlet-name>xsrfTestServiceImpl</servlet-name>
     <servlet-class>com.google.gwt.user.server.rpc.XsrfTestServiceImpl</servlet-class>
   </servlet>
