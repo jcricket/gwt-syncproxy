@@ -23,15 +23,31 @@
    </hash>
    <hash n="oracle.ide.model.ResourcePaths">
       <hash n="resourcesContentSet">
-         <list n="pattern-filters">
-            <string v="-WEB-INF/deploy/"/>
-            <string v="-WEB-INF/classes/"/>
-            <string v="-rpcsuite/"/>
-            <string v="+**"/>
+         <list n="constituent-sets">
+            <hash>
+               <list n="pattern-filters">
+                  <string v="-WEB-INF/lib/"/>
+                  <string v="-WEB-INF/deploy/"/>
+                  <string v="-WEB-INF/classes/"/>
+                  <string v="-rpcsuite/"/>
+                  <string v="+**"/>
+               </list>
+               <list n="url-path">
+                  <url path="war/"/>
+               </list>
+            </hash>
+            <hash>
+               <list n="pattern-filters">
+                  <string v="+LICENSE"/>
+                  <string v="+build.properties"/>
+                  <string v="+build.xml"/>
+               </list>
+               <list n="url-path">
+                  <url path="."/>
+               </list>
+            </hash>
          </list>
-         <list n="url-path">
-            <url path="war/"/>
-         </list>
+         <list n="url-path"/>
       </hash>
    </hash>
    <hash n="oracle.jdeveloper.compiler.OjcConfiguration">
@@ -81,6 +97,7 @@
    <hash n="oracle.jdeveloper.runner.RunConfigurations">
       <hash n="runConfigurationDefinitions">
          <hash n="Default">
+            <value n="compileBeforeRun" v="true"/>
             <value n="custom" v="false"/>
             <value n="name" v="Default"/>
             <url n="runDirectoryURL" path="war/"/>

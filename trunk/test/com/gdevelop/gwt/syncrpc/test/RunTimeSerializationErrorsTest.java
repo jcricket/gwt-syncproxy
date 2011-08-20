@@ -24,14 +24,19 @@ public class RunTimeSerializationErrorsTest extends TestCase{
   public void testBadSerialization1() {
     try{
       service.echoVoid(new MixedSerializable.NonSerializableSub());
+      fail("RPC request should have failed");
     }catch(Exception e){
-      return; // OK
+      System.out.println("OK");
     }
-    fail("RPC request should have failed");
   }
   
   public void testBadSerialization2() {
-    // empty
+    try{
+      service.echoRequest(new MixedSerializable.NonSerializableSub());
+      fail("RPC request should have failed");
+    }catch(Exception e){
+      System.out.println("OK");
+    }
   }
   
   public void testBadSerialization3() throws RequestException {

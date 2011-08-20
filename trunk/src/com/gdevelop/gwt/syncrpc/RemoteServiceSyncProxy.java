@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
+import java.net.CookieHandler;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -57,16 +58,16 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
   private String remoteServiceURL;
   private String serializationPolicyName;
   private SerializationPolicy serializationPolicy;
-  private SessionManager connectionManager;
+  private java.net.CookieManager cookieManager;
   
   public RemoteServiceSyncProxy(String moduleBaseURL, 
                                 String remoteServiceRelativePath, 
                                 String serializationPolicyName, 
-                                SessionManager connectionManager) {
+                                java.net.CookieManager cookieManager) {
     this.moduleBaseURL = moduleBaseURL;
     this.remoteServiceURL = moduleBaseURL + remoteServiceRelativePath;
     this.serializationPolicyName = serializationPolicyName;
-    this.connectionManager = connectionManager;
+    this.cookieManager = cookieManager;
 
     if (serializationPolicyName == null){
       serializationPolicy = new DummySerializationPolicy();
@@ -114,9 +115,12 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     int statusCode;
     
     // Send request
+    CookieHandler oldCookieHandler = CookieHandler.getDefault();
     try {
+      CookieHandler.setDefault(cookieManager);
+      
       URL url = new URL(remoteServiceURL);
-      connection = connectionManager.openConnection(url);
+      connection = (HttpURLConnection)url.openConnection();
       connection.setDoInput(true);
       connection.setDoOutput(true);
       connection.setRequestMethod("POST");
@@ -131,11 +135,12 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
       writer.close();
     } catch (IOException e) {
       throw new InvocationException("IOException while sending RPC request", e);
+    }finally{
+      CookieHandler.setDefault(oldCookieHandler);
     }
     
     // Receive and process response
     try{
-      connectionManager.handleResponseHeaders(connection);
       statusCode = connection.getResponseCode();
       is = connection.getInputStream();
       ByteArrayOutputStream baos = new ByteArrayOutputStream();

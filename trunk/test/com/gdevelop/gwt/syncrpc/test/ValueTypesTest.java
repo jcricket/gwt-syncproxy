@@ -1,15 +1,12 @@
 package com.gdevelop.gwt.syncrpc.test;
 
 
-import com.gdevelop.gwt.syncrpc.CredentialsManager;
-import com.gdevelop.gwt.syncrpc.LoginCredentials;
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 
 import com.google.gwt.user.client.rpc.ValueTypesTestService;
 
-import java.net.URL;
-
 import junit.framework.TestCase;
+
 
 /**
  * Base on com.google.gwt.user.client.rpc.*Test
@@ -19,14 +16,8 @@ public class ValueTypesTest extends TestCase{
     (ValueTypesTestService)SyncProxy.newProxyInstance(
         ValueTypesTestService.class, RPCSyncTestSuite.BASE_URL, 
         "valuetypes");
-//  static{
-//    SyncProxy.getDefaultSessionManager().setCredentialsManager(new CredentialsManager(){
-//      public LoginCredentials getLoginCredentials(URL url) {
-//        return new LoginCredentials("gae", "http://localhost:8888", "http://localhost:8888", "a@b.com", "");
-//      }
-//    });
-//  }
-  public ValueTypesTest() {
+  
+  public ValueTypesTest()  {
   }
   
   public void testBoolean_FALSE() {

@@ -12,10 +12,6 @@ import junit.framework.TestCase;
  * Base on com.google.gwt.user.client.rpc.*Test
  */
 public class UnicodeEscapingTest extends TestCase{
-  static{
-//    RPCSyncTestSuite.login();
-  }
-  
   /** the size of a block of characters to test */
   private static final int CHARACTER_BLOCK_SIZE = 64;
 

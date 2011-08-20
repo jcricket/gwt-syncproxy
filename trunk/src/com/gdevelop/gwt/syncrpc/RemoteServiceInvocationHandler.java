@@ -15,6 +15,7 @@
  */
 package com.gdevelop.gwt.syncrpc;
 
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public class RemoteServiceInvocationHandler implements InvocationHandler{
   private static final Map<Class, ResponseReader> JPRIMITIVETYPE_TO_RESPONSEREADER = 
@@ -70,16 +72,16 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
   private String moduleBaseURL;
   private String remoteServiceRelativePath;
   private String serializationPolicyName;
-  private SessionManager connectionManager;
+  private java.net.CookieManager cookieManager;
 
   public RemoteServiceInvocationHandler(String moduleBaseURL, 
                                         String remoteServiceRelativePath, 
                                         String serializationPolicyName, 
-                                        SessionManager connectionManager){
+                                        java.net.CookieManager cookieManager){
     this.moduleBaseURL = moduleBaseURL;
     this.remoteServiceRelativePath = remoteServiceRelativePath;
     this.serializationPolicyName = serializationPolicyName;
-    this.connectionManager = connectionManager;
+    this.cookieManager = cookieManager;
   }
   
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable{
@@ -87,7 +89,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
       RemoteServiceSyncProxy(moduleBaseURL, 
                              remoteServiceRelativePath, 
                              serializationPolicyName, 
-                             connectionManager);
+                             cookieManager);
     Class remoteServiceInft = method.getDeclaringClass();
     for (Class intf : proxy.getClass().getInterfaces()){
       if (RemoteService.class.isAssignableFrom(intf)){
@@ -191,9 +193,10 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
         }
       }
       
-      throw new InvocationException("Exception while invoking the remote service " + 
-                                    method.getDeclaringClass().getName() + "." +
-                                    method.getName(), ex);
+//      throw new InvocationException("Exception while invoking the remote service " + 
+//                                    method.getDeclaringClass().getName() + "." +
+//                                    method.getName(), ex);
+      throw ex;
     }
   }
   
