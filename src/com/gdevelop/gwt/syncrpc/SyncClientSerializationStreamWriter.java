@@ -346,7 +346,7 @@ public class SyncClientSerializationStreamWriter extends AbstractSerializationSt
 
     Class<?> clazz = getClassForSerialization(instance);
 
-    serializationPolicy.validateSerialize(clazz);
+//TODO    serializationPolicy.validateSerialize(clazz);
 
     serializeImpl(instance, clazz);
   }

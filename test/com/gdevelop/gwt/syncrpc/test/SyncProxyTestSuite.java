@@ -4,15 +4,21 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-  CollectionsTest.class
-  , CustomFieldSerializerTest.class
+  ValueTypesTest.class
   , EnumsTest.class
-  , ExceptionTest.class
   , InheritanceTest.class
+  , CollectionsTest.class
+  , CoreJavaTest.class
+  , CustomFieldSerializerTest.class
+  , ExceptionTest.class
   , ObjectGraphTest.class
-  , RunTimeSerializationErrorsTest.class
+  // , RemoteServiceServletTest.class
+  // , RpcTokenTest.class
   , UnicodeEscapingTest.class
-  , ValueTypesTest.class
+  , RunTimeSerializationErrorsTest.class
+  , RecursiveClassTest.class
+  , TypeCheckedObjectsTest.class
+  , XsrfProtectionTest.class
 })
 public class SyncProxyTestSuite {
   public SyncProxyTestSuite() {
