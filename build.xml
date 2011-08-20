@@ -23,7 +23,7 @@
       <classpath refid="project.class.path"/>
     </javac>
     <copy todir="${outDir}/classes">
-      <fileset dir="src" excludes="**/DeployToGAE.java **/StartDevMode.java **/StartDevModeGAE.java **/StartGAEDevServer.java" />
+      <fileset dir="src" excludes="**/dev/StartGAEDevServer.java **/dev/StartDevAppServer.java **/dev/Compile.java" />
       <!-- <fileset dir="src"/> -->
     </copy>
   </target>
