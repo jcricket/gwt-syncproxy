@@ -75,15 +75,24 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
   private String remoteServiceRelativePath;
   private String serializationPolicyName;
   private CookieManager cookieManager;
+  private boolean waitForInvocation;
 
   public RemoteServiceInvocationHandler(String moduleBaseURL, 
                                         String remoteServiceRelativePath, 
                                         String serializationPolicyName, 
                                         CookieManager cookieManager){
+    this(moduleBaseURL, remoteServiceRelativePath, serializationPolicyName, cookieManager, false);
+  }
+  public RemoteServiceInvocationHandler(String moduleBaseURL, 
+                                        String remoteServiceRelativePath, 
+                                        String serializationPolicyName, 
+                                        CookieManager cookieManager,
+                                        boolean waitForInvocation){
     this.moduleBaseURL = moduleBaseURL;
     this.remoteServiceRelativePath = remoteServiceRelativePath;
     this.serializationPolicyName = serializationPolicyName;
     this.cookieManager = cookieManager;
+    this.waitForInvocation = waitForInvocation;
   }
   
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable{
@@ -157,7 +166,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
         final Class returnType_2 = returnType;
         final String payload_2 = payload;
         final AsyncCallback callback_2 = callback;
-        new Thread(){
+        Thread thread = new Thread(){
           public void run(){
             Object result;
             try {
@@ -171,7 +180,12 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
               }
             }
           }
-        }.start();
+        };
+        if (this.waitForInvocation){
+          thread.run();
+        }else{
+          thread.start();
+        }
         return null;
       }else{
         return syncProxy.doInvoke(getReaderFor(returnType), payload);
