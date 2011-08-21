@@ -41,6 +41,8 @@ import java.net.URL;
  * Base on {@link com.google.gwt.user.client.rpc.impl.RemoteServiceProxy}
  */
 public class RemoteServiceSyncProxy implements SerializationStreamFactory{
+  public static final boolean DUMP_PAYLOAD = Boolean.getBoolean("gwt.rpc.dumpPayload");
+  
   private static class DummySerializationPolicy extends SerializationPolicy{
     public boolean shouldDeserializeFields(Class<?> clazz) {
       return clazz != null;
@@ -123,6 +125,10 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     InputStream is = null;
     int statusCode;
     
+    if (DUMP_PAYLOAD){
+      System.out.println("Request payload: " + requestData);
+    }
+    
     // Send request
     CookieHandler oldCookieHandler = CookieHandler.getDefault();
     try {
@@ -159,6 +165,10 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
         baos.write(buffer, 0, len);
       }
       String encodedResponse = baos.toString("UTF8");
+      if (DUMP_PAYLOAD){
+        System.out.println("Response code: " + statusCode);
+        System.out.println("Response payload: " + encodedResponse);
+      }
       
       // System.out.println("Response payload (len = " + encodedResponse.length() + "): " + encodedResponse);
       if (statusCode != HttpURLConnection.HTTP_OK) {
