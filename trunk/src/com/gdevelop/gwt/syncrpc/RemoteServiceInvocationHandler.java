@@ -22,15 +22,14 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter.ResponseReader;
+import com.google.gwt.user.server.rpc.impl.SerializabilityUtil;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import java.net.CookieManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -59,18 +58,6 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
     JPRIMITIVETYPE_TO_RESPONSEREADER.put(void.class, ResponseReader.VOID);
   }
   
-  private static final List<Class> PRIMITIVE_TYPES = new ArrayList<Class>();
-  static{
-    PRIMITIVE_TYPES.add(double.class);
-    PRIMITIVE_TYPES.add(float.class);
-    PRIMITIVE_TYPES.add(long.class);
-    PRIMITIVE_TYPES.add(int.class);
-    PRIMITIVE_TYPES.add(short.class);
-    PRIMITIVE_TYPES.add(char.class);
-    PRIMITIVE_TYPES.add(byte.class);
-    PRIMITIVE_TYPES.add(boolean.class);
-  }
-
   private String moduleBaseURL;
   private String remoteServiceRelativePath;
   private String serializationPolicyName;
@@ -152,7 +139,8 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
       
       // Params type
       for (int i=0; i<paramCount; i++){
-        streamWriter.writeString(computeBinaryClassName(paramTypes[i]));
+        // streamWriter.writeString(computeBinaryClassName(paramTypes[i]));
+        streamWriter.writeString(SerializabilityUtil.getSerializedTypeName(paramTypes[i]));
       }
 
       // Params
@@ -209,59 +197,10 @@ public class RemoteServiceInvocationHandler implements InvocationHandler{
         }
       }
       
-//      throw new InvocationException("Exception while invoking the remote service " + 
-//                                    method.getDeclaringClass().getName() + "." +
-//                                    method.getName(), ex);
       throw ex;
     }
   }
   
-  private String computeBinaryClassName(Class type){
-    if (type == double.class){
-      return "D";
-    }
-    if (type == float.class){
-      return "F";
-    }
-    if (type == long.class){
-      return "J";
-    }
-    if (type == int.class){
-      return "I";
-    }
-    if (type == short.class){
-      return "S";
-    }
-    if (type == char.class){
-      return "C";
-    }
-    if (type == byte.class){
-      return "B";
-    }
-    if (type == boolean.class){
-      return "Z";
-    }
-    
-    if (type.isArray()){
-      if (PRIMITIVE_TYPES.contains(type.getComponentType())){
-        return "[" + computeBinaryClassName(type.getComponentType());
-      }else{
-        if (type.getComponentType().isArray()){
-          return "[" + computeBinaryClassName(type.getComponentType());
-        }else{
-          return "[L" + computeBinaryClassName(type.getComponentType()) + ';';
-        }
-      }
-    }
-    
-    Class enclosingClass = type.getEnclosingClass();
-    if (enclosingClass != null){
-      return computeBinaryClassName(enclosingClass) + "$" + type.getSimpleName();
-    }
-    
-    return type.getCanonicalName();
-  }
-
   private void writeParam(SerializationStreamWriter streamWriter, 
           Class paramType, Object paramValue) throws SerializationException {
     if (paramType == boolean.class){
