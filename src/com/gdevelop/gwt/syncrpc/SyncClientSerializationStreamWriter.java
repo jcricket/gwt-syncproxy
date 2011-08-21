@@ -385,8 +385,12 @@ public class SyncClientSerializationStreamWriter extends AbstractSerializationSt
         break;
       default:
         // buffer.append(ch);
-        String hex = Integer.toHexString(ch);
-        buffer.append("\\u0000".substring(0, 6-hex.length()) + hex);
+        if ((ch >= ' ') && (ch <= 127)){
+          buffer.append(ch);
+        }else{
+          String hex = Integer.toHexString(ch);
+          buffer.append("\\u0000".substring(0, 6-hex.length()) + hex);
+        }
       }
     }
     

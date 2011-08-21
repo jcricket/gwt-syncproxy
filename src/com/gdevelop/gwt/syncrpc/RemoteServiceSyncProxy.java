@@ -43,7 +43,7 @@ import java.net.URL;
 public class RemoteServiceSyncProxy implements SerializationStreamFactory{
   public static final boolean DUMP_PAYLOAD = Boolean.getBoolean("gwt.rpc.dumpPayload");
   
-  private static class DummySerializationPolicy extends SerializationPolicy{
+  public static class DummySerializationPolicy extends SerializationPolicy{
     public boolean shouldDeserializeFields(Class<?> clazz) {
       return clazz != null;
     }
