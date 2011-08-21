@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +24,8 @@ import java.util.regex.Pattern;
 public class RpcPolicyFinder {
   private static final String GWT_PRC_POLICY_FILE_EXT = ".gwt.rpc";
   private static final Map<String, String> CACHE_POLICY_FILE = new HashMap<String, String>();
+  
+  private static final Logger logger = Logger.getLogger(RpcPolicyFinder.class.getName());
   
   public static String getCachedPolicyFile(String url){
     return CACHE_POLICY_FILE.get(url);
@@ -39,6 +42,12 @@ public class RpcPolicyFinder {
         result.putAll(searchPolicyFileInDirectory(path));
       }
       // TODO: Search in jar, zip files
+    }
+    
+    if (result.size() == 0){
+      logger.warning("No RemoteService in the classpath");
+    }else{
+      dumpRemoteService(result);
     }
     
     return result;
@@ -122,6 +131,12 @@ public class RpcPolicyFinder {
       }
     }
     
+    if (result.size() == 0){
+      logger.warning("No RemoteService fetched from server");
+    }else{
+      dumpRemoteService(result);
+    }
+    
     return result;
   }
 
@@ -148,6 +163,19 @@ public class RpcPolicyFinder {
     }
     
     return responseText;
+  }
+  
+  private static void dumpRemoteService(Map<String, String> result){
+    if (result.size() > 0){
+      logger.info("Found following RemoteService(s) in the classpath:");
+      String s = "";
+      for (String className : result.keySet()){
+        s += className + "\n";
+      }
+      logger.info(s);
+    }else{
+      logger.warning("No RemoteService in the result");
+    }
   }
   
   // Test
