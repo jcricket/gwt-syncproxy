@@ -23,6 +23,10 @@ import com.google.gwt.user.server.rpc.SerializationPolicy;
 import com.google.gwt.user.server.rpc.impl.SerializabilityUtil;
 import com.google.gwt.user.server.rpc.impl.SerializedInstanceReference;
 
+import java.io.BufferedReader;
+
+import java.io.FileReader;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -333,6 +337,7 @@ public class SyncClientSerializationStreamReader extends AbstractSerializationSt
 
   @Override
   public void prepareToRead(String encoded) throws SerializationException {
+    encoded = deconcat(encoded);
     parse(encoded);
     index = results.size();
     super.prepareToRead(encoded);
@@ -466,7 +471,12 @@ public class SyncClientSerializationStreamReader extends AbstractSerializationSt
    * @param encoded
    */
   private void parse(String encoded){
-    encoded = encoded.substring(1, encoded.length()-1);
+//    encoded = encoded.substring(1, encoded.length()-1);
+    if (encoded.endsWith("]")){
+      encoded = encoded.substring(1, encoded.length()-1);
+    }else{
+      encoded = encoded.substring(1);
+    }
     StringBuffer token = new StringBuffer();
     for (int i=0; i<encoded.length(); i++){
       char ch = encoded.charAt(i);
@@ -489,6 +499,36 @@ public class SyncClientSerializationStreamReader extends AbstractSerializationSt
     if (token.length() > 0){
       results.add(token.toString());
     }
+  }
+  
+  private static final String PRELUDE = "].concat([";
+  private static final String POSTLUDE1 = "],[";
+  private static final String POSTLUDE = "])";
+  private String deconcat(String encoded) {
+    int start = encoded.indexOf(PRELUDE);
+    if (start > 0){
+      StringBuffer ret = new StringBuffer(encoded.length() - PRELUDE.length());
+      ret.append(encoded.substring(0, start));
+      
+      start += PRELUDE.length();
+      int end = encoded.indexOf(POSTLUDE1, start);
+      while (end > 0){
+        ret.append(",");
+        ret.append(encoded.substring(start, end));
+        
+        start = end + POSTLUDE1.length();
+        end = encoded.indexOf(POSTLUDE1, start);
+      }
+
+      end = encoded.indexOf(POSTLUDE, start);
+      if (end > 0){
+        ret.append(",");
+        ret.append(encoded.substring(start, end+1));
+        return ret.toString();
+      }
+    }
+    
+    return encoded;
   }
   
   private Object instantiate(Class<?> customSerializer, Class<?> instanceClass)
@@ -703,5 +743,12 @@ public class SyncClientSerializationStreamReader extends AbstractSerializationSt
     }
     
     return -1;
+  }
+  
+  public static void main(String[] args) throws Exception{
+    BufferedReader reader = new BufferedReader(new FileReader("C:/temp/large.txt"));
+    String encoded = reader.readLine();
+    SyncClientSerializationStreamReader s = new SyncClientSerializationStreamReader(new RemoteServiceSyncProxy.DummySerializationPolicy());
+    s.prepareToRead(encoded);
   }
 }
