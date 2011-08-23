@@ -31,6 +31,8 @@ import com.google.gwt.user.client.rpc.UnicodeEscapingTest;
 import com.google.gwt.user.client.rpc.ValueTypesTestService;
 import com.google.gwt.user.client.rpc.XsrfTestService;
 
+import java.util.List;
+
 public class AllTest implements EntryPoint{
   public AllTest() {
   }
@@ -53,11 +55,13 @@ public class AllTest implements EntryPoint{
     GWT.create(XsrfTestService.class);
     
     GWT.create(ProfileService.class);
+    GWT.create(LargePayloadService.class);
 
     // testProfileService();
     // testEnums();
     // testTypeCheckedObjects();
-    testUnicodeEscaping();
+    // testUnicodeEscaping();
+    testLargePayload();
   }
   
   private void testProfileService(){
@@ -138,5 +142,30 @@ public class AllTest implements EntryPoint{
     } catch (InvalidCharacterException e) {
       e.printStackTrace();
     }
+  }
+  
+  private void testLargePayload(){
+    LargePayloadServiceAsync service = 
+      (LargePayloadServiceAsync)GWT.create(LargePayloadService.class);
+
+    service.testLargeResponsePayload(new AsyncCallback<List<UserInfo>>(){
+      public void onFailure(Throwable caught) {
+        caught.printStackTrace();
+      }
+
+      public void onSuccess(List<UserInfo> result) {
+        System.out.println("result: " + result);
+      }
+    });
+
+    service.testLargeResponseArray(new AsyncCallback<int[]>(){
+      public void onFailure(Throwable caught) {
+        caught.printStackTrace();
+      }
+
+      public void onSuccess(int[] result) {
+        System.out.println("result len: " + result.length);
+      }
+    });
   }
 }

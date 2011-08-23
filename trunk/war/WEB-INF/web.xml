@@ -21,6 +21,16 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>TestLargePayload</servlet-name>
+		<servlet-class>com.gdevelop.gwt.syncrpc.test.server.LargePayloadServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TestLargePayload</servlet-name>
+		<url-pattern>/rpcsuite/largePayload</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
 		<servlet-name>valueTypesTestServiceImpl</servlet-name>
 		<servlet-class>com.google.gwt.user.server.rpc.ValueTypesTestServiceImpl</servlet-class>
 	</servlet>
