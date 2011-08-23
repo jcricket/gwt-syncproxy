@@ -99,6 +99,7 @@
          <hash n="Default">
             <value n="compileBeforeRun" v="true"/>
             <value n="custom" v="false"/>
+            <value n="javaOptions" v="-Dgwt.rpc.dumpPayload=true"/>
             <value n="name" v="Default"/>
             <url n="runDirectoryURL" path="war/"/>
             <url n="targetURL" path="src/dev/StartDevAppServer.java"/>
