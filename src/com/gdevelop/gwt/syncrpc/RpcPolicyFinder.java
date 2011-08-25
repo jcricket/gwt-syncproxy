@@ -167,12 +167,12 @@ public class RpcPolicyFinder {
   
   private static void dumpRemoteService(Map<String, String> result){
     if (result.size() > 0){
-      logger.info("Found following RemoteService(s) in the classpath:");
+      logger.fine("Found following RemoteService(s) in the classpath:");
       String s = "";
       for (String className : result.keySet()){
         s += className + "\n";
       }
-      logger.info(s);
+      logger.fine(s);
     }else{
       logger.warning("No RemoteService in the result");
     }
