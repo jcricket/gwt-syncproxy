@@ -14,8 +14,7 @@ import junit.framework.TestCase;
 public class ValueTypesTest extends TestCase{
   private static ValueTypesTestService service = 
     (ValueTypesTestService)SyncProxy.newProxyInstance(
-        ValueTypesTestService.class, RPCSyncTestSuite.BASE_URL, 
-        "valuetypes");
+        ValueTypesTestService.class, RPCSyncTestSuite.BASE_URL);
   
   public ValueTypesTest()  {
   }
