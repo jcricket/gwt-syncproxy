@@ -99,8 +99,11 @@
          <hash n="Default">
             <value n="compileBeforeRun" v="true"/>
             <value n="custom" v="false"/>
-            <value n="javaOptions" v="-Dgwt.rpc.dumpPayload=true"/>
+            <value n="javaOptions" v="-Dgwt.rpc.dumpPayload=true -Djavax.net.ssl.trustStore=tomcat.ks -Djavax.net.ssl.trustStorePassword=changeit"/>
             <value n="name" v="Default"/>
+            <hash n="oracle.jdevimpl.runner.debug.DebugConfiguration">
+               <value n="tracingExclude" v="javax;sun;sunw;com.sun;apple;com.apple;com.evermind;com.oracle;com.orionserver;EDU.oswego;oracle.as;oracle.aurora;oracle.core;oracle.dms;oracle.gss;oracle.hooks;oracle.ide;oracle.ias;oracle.j2ee;oracle.jdbc;oracle.jdevimpl;oracle.jsp;oracle.oc4j;oracle.ojc;oracle.security;oracle.sql;oracle.webservices;oracle.xml;org.apache;org.omg;org.w3c;org.xml;weblogic"/>
+            </hash>
             <url n="runDirectoryURL" path="war/"/>
             <url n="targetURL" path="src/dev/StartDevAppServer.java"/>
          </hash>

@@ -9,9 +9,8 @@ import junit.textui.TestRunner;
 
 
 public class RPCSyncTestSuite {
+//  public static final String BASE_URL = "https://localhost:8443/rpcsuite/rpcsuite/";
   public static final String BASE_URL = "http://localhost:8888/rpcsuite/";
-//  public static final String BASE_URL = "http://gdevelop-demo.appspot.com/rpcsuite/";
-  
 
   public RPCSyncTestSuite() {
   }
