@@ -12,6 +12,7 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -92,6 +93,57 @@ public class LoginUtils {
         }
       }
       
+      return cookieManager;
+    }finally{
+      CookieHandler.setDefault(oldCookieHandler);
+    }
+  }
+
+  public static CookieManager loginFormBasedJ2EE(String loginUrl, String username, 
+                                             String password) throws IOException,
+                                                                         URISyntaxException {
+    CookieHandler oldCookieHandler = CookieHandler.getDefault();
+    try{
+      CookieManager cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+      CookieHandler.setDefault(cookieManager);
+      
+      // GET the form
+      URL url = new URL(loginUrl);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      int statusCode = connection.getResponseCode();
+      if ((statusCode != HttpURLConnection.HTTP_OK)
+          && (statusCode != HttpURLConnection.HTTP_MOVED_TEMP)) {
+        String responseText = Utils.getResposeText(connection);
+        throw new StatusCodeException(statusCode, responseText);
+      }
+      
+      // Perform login
+      loginUrl += "j_security_check";
+      url = new URL(loginUrl);
+      username = URLEncoder.encode(username, "UTF-8");
+      password = URLEncoder.encode(password, "UTF-8");
+      String requestData = "j_username=" + username + "&j_password=" + password;
+      connection = (HttpURLConnection) url.openConnection();
+      connection.setDoInput(true);
+      connection.setDoOutput(true);
+      connection.setInstanceFollowRedirects(true);
+      connection.setRequestMethod("POST");
+      connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      connection.setRequestProperty("Content-Length", "" + requestData.length());
+      connection.connect();
+      
+      OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+      writer.write(requestData);
+      writer.flush();
+      writer.close();
+      
+      statusCode = connection.getResponseCode();
+      if ((statusCode != HttpURLConnection.HTTP_OK)
+          && (statusCode != HttpURLConnection.HTTP_MOVED_TEMP)) {
+        String responseText = Utils.getResposeText(connection);
+        throw new StatusCodeException(statusCode, responseText);
+      }
+
       return cookieManager;
     }finally{
       CookieHandler.setDefault(oldCookieHandler);

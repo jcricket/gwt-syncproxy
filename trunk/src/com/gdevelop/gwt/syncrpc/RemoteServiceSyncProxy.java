@@ -126,6 +126,7 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory{
     int statusCode;
     
     if (DUMP_PAYLOAD){
+      System.out.println("Send request to " + remoteServiceURL);
       System.out.println("Request payload: " + requestData);
     }
     
