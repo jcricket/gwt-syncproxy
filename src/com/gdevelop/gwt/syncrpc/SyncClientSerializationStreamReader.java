@@ -342,8 +342,10 @@ public class SyncClientSerializationStreamReader extends AbstractSerializationSt
     index = results.size();
     super.prepareToRead(encoded);
     
-    if (getVersion() != SERIALIZATION_STREAM_VERSION) {
-      throw new IncompatibleRemoteServiceException("Expecting version "
+    if ((getVersion() < SERIALIZATION_STREAM_MIN_VERSION) 
+        || (getVersion() > SERIALIZATION_STREAM_VERSION)) {
+      throw new IncompatibleRemoteServiceException("Expecting version between "
+          + SERIALIZATION_STREAM_MIN_VERSION + " and "
           + SERIALIZATION_STREAM_VERSION + " from server, got " + getVersion()
           + ".");
     }
