@@ -1,0 +1,136 @@
+#summary Source Usage and Testing Mechanisms for this system
+
+= Source Code Layout =
+
+The layout of the system has been changed over into multiple Eclipse projects in order to reduce code duplication across the
+Java library and the Android library. Additionally, there are 3 additional Eclipse projects that exist in order to help with
+testing the source code: a Google App Engine/GWT project for hosting the test services and testing the services in GWT, a 
+sample Android app for manual testing, and an Android testing app to conduct automated testing of the library on Android.
+All Eclipse launchers are stored in the {{{.settings}}} folder of the respective projects. On project import, they should be
+directly available to you, check the Run Configurations manually in case they don't show up right away.
+
+For the time being, these descriptions only apply to the source within the AndroidDev branch (Will be available in the next few days).
+Once field testing and documentation updating has completed, the trunk will be updated to reflect the same. The project's original
+testing structure has been maintained for the time being, however it is not utilized in descriptions below as there were functional
+problems in utilizing and verifying the tests in an automated manner. If a user would like to provide documentation on utilizing the
+prior testing system, please let us know and we'll add it to the Wiki.
+
+== Dependencies ==
+
+All testing projects are setup to draw the testing services directly from GWT source so that it can be automatically tested
+against the latest version as GWT changes. As such, you must have a checkout of the entire google-web-toolkit trunk checked out
+to the path {{{google-web-toolkit}}} in your workspace. Additionally, you will need a gdata checked-out to {{{gdata}}} within
+your workspace as well. The Android library is dependent on the included gwt-servlet.jar library. This was taken directly from
+the {{{war/WEB-INF/lib}}} path of a generated GWT/GAE project. While only a few of the sources in the gwt-user are needed for the
+project, there is a lot of internal referencing that can cause errors if ignored. A future release may utilize a smaller subset
+of these source files once they can be verifiably tested (in order to provide a smaller footprint for the library).
+
+Checking out the entire trunk with all necessary dependencies should give you a layout workspace similar to the following:
+
+{{{
+Workspace\
+Workspace\gdata
+Workspace\google-web-toolkit
+Workspace\gwt-syncproxy
+Workspace\SPAAppTest
+Workspace\SPALibrary
+Workspace\SPWebTest
+}}}
+
+All paths within the Eclipse projects are path dependent on the {{{WORKSPACE_LOC}}} variable, so make sure it is set properly to avoid
+build path problems.
+
+=== GWT, GAE, and Android ===
+
+The current library has been compiled against GWT 2.5.0, GAE 1.7.5, and Android V17. Testing against newer versions should be as simple
+as updating the library references within each appropriate project and updating the checked-out source code for GWT and GData.
+
+If you are utilizing the Android library, the account management system is only available on a Google APIS Android Virtual Device.
+It is recommended that you create and utilize an AVD with as much memory as your system will accept (Windows may max at about 768mb)
+and a VM Heap of at least 64 to help with testing.
+
+== Service Hosting ==
+
+The *SPWebTest* project hosts an AppEngine project that serves several of the gwt-user test services for both the Java and Android client
+to send tests to, generally testing serialization of different formats and types. In order to utilize the hosting server:
+
+ # GWT-Compile the *SPWebTest* project
+ # Launch the {{{SPAWebTest}}} launcher
+ # Open the local URL to startup the module
+
+== Java Library ==
+
+In order to use the Java-only Library and testing, you need only get two projects from the source, *gwt-syncproxy* and *SPWebTest*.
+There are two sets of tests contained between these two projects: one to test the hosted services (just to make sure nothing 
+has changed), and one to test the library from a Java-stand alone. The gwt hosting tests can be run utilizing the {{{SPGWTTest-dev}}}
+launcher and the Java stand alone tests can be launched using the {{{PojGSPTests}}} launcher.
+
+== Android Library ==
+
+The Android library requires all of the source hierarchy described above [SourceAndTesting#Dependencies]. Additionally, there is an
+integrated project that will need to be imported into eclipse within the {{{SPAAppTest/tests/}}} path. This contains the source
+for the *SPAAppTester* project, which conducts the Android JUnit testing using the *SPAAppTest* app as a base. The android tests
+can be launched using the {{{SPATests}}} launcher. The actual app for manual testing can be launched using the {{{SPA_App}}} launcher.
+
+= Testing =
+
+This portion of the document will review the process needed to add more tests throughout the system. All testing within the system is 
+currently done utilizing the JUnit structures, and there are 3 separate locations to add tests.
+
+== Testing Against a Service ==
+
+If your test will be run against a service, there are a number of steps to ensure success without compile/run-time issues.
+
+ # Create the service in the *SPWebTest* project
+ # Even if it is not utilized manually, make sure it is referenced in the {{{client/SPAWebTest}}} class so that it's service handle will be serialized for retrieval.
+ # Add the servlet handlers to the {{{web.xml}}}
+ # GWT-Compile the SPWebTest project
+ # Create a test within the {{{test/.../client/gwttests}}} path. Be sure to properly utilize the GWTTestCase finishTest() and delayTestFinish() methods for Asynchronous testing.
+ # Add this test to the {{{/gwttests/GwtTests}}} TestSuite class.
+ 
+== Java Stand Alone Testing ==
+
+You can utilize the same testing structure for the stand along test, but you will need to modify the source-copied to work outside the GWTTestCase
+structure.
+
+ # Copy the test case into the *gwt-syncproxy* project {{{test/.../test/poj/}}} path.
+ # Convert the test from a GWTTestCase to a TestCase
+ # (Recommended not required) Create the SyncProxy service statically in the test case.
+ # Convert the finishTest()/delayTestFinish() to utilize a CountDownLatch. This can be easily done across a large test case with the following search/replacements
+ 	* If you have a standard method start, like _service = GWT.create(...)_, Replace With _final CountDownLatch signal = new CountDownLatch(1)_
+ 	* Search _finishTest()_ Replace with _signal.countDown()_
+ 	* Search _delayTestFinish(2000)_ Replace with _assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS))_
+ # Resolve any pending issues
+ # Add this testcase to {{{PojGSPTests}}} TestSuite class
+ 
+ == Android AppTester Testing ==
+ 
+ As with the Java Stand Alone Testing, you can utilize the converted Java SA test for the Android Testing system. This requires some additional
+ subtle modification since Android requires network access to be completed off the main thread. We do this with the AsyncTask.
+ 
+  # Copy the converted test case in the Java Stand Alone to the * SPAAppTester * {{{test/gwttests}}} path. 
+  # Convert TestCase to {{{ActivityInstrumentationTestCase2<MainActivity>}}}
+  # Connect to the service in the Constructor using the following pattern:
+  	* Take note of the url path that is connected to. Android uses the 10.0.2.2 url to access the locally hosted webserver at 127.0.0.1.
+  	{{{
+  		final CountDownLatch signal = new CountDownLatch(1);
+		final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... arg0) {
+				service = (CollectionsTestServiceAsync) SyncProxy
+						.newProxyInstance(CollectionsTestServiceAsync.class,
+								"http://10.0.2.2:8888/spawebtest/",
+								"collections", true);
+				signal.countDown();
+				return null;
+			}
+		};
+		task.execute();
+		if (!signal.await(20, TimeUnit.SECONDS)) {
+			throw new RuntimeException("Failed to get service started");
+		}
+ 	}}}
+ # Convert to the AsyncTask system utilizing the following Search/Replace systems as a guide. It will be very useful to utilize auto-format after these search/replacements
+ 	* Search _service.echo_ (or your appropriate method call) Replace with _final AsyncTask<Void, Void, Void> myTask = new AsyncTask<Void, Void, Void>() {@Override	protected Void doInBackground(Void... arg0){ service.echo_
+ 	* Search _});_ Replace with _});return null;}};runTestOnUiThread(new Runnable(){@Override public void run(){myTask.execute();}});_
+ 	
