@@ -2,6 +2,8 @@
 
 * NOT YET AVAILABLE *
 
+<wiki:toc max_depth="3" />
+
 = Source Code Layout =
 
 The layout of the system has been changed over into multiple Eclipse projects in order to reduce code duplication across the
@@ -16,6 +18,9 @@ Once field testing and documentation updating has completed, the trunk will be u
 testing structure has been maintained for the time being, however it is not utilized in descriptions below as there were functional
 problems in utilizing and verifying the tests in an automated manner. If a user would like to provide documentation on utilizing the
 prior testing system, please let us know and we'll add it to the Wiki.
+
+Additionally, the SyncProxy system can be used as an excellent tool for Synchronous testing of GWT Services. Please see this 
+[http://cancerberonia.blogspot.com/2012/10/testing-gwt-service-classes.html Sebastian Gurin's Blog] for details.
 
 == Dependencies ==
 
@@ -143,14 +148,26 @@ structure.
  	* Search _{{{});}}}_ Replace with _{{{});return null;}};runTestOnUiThread(new Runnable(){@Override public void run(){myTask.execute();}});}}}_
  	* Search _{{{throws InterruptedException}}}_ Replace with _{{{throws Throwable}}}_
  	
-= Current Testing Failures =
+= Testing Expectations =
+
+The following times are based on my system, so you can expect changes in processing times accordingly (6-core AMD@2.8Ghz, 8GB, Win 7-64) and 
+Eclipse (-Xms1g, -Xmx2g). Android testing takes about 350s (288s within the UnicodeEscapingTest, so remove that test for quicker testing in Android).
+Plain old Java (POJ) testing takes about 10s. GWT testing takes 83s (45s within the UnicodeEscapingTest). All the of re-implemented testing units
+test the system Asynchronously.
+ 	
+== Current Testing Failures ==
  
  Within the current set of tests implemented, there are a couple of tests which are failing, so please see below a for a list of failures and the issue.
  There are also a number of tests in the original test system which were not re-implemented (either for time or other reason, explained below).
  
 || TestCase || Project || Issue || Resolution/Reason ||
 || AsyncEnumsTest & EnumsTest || Java & Android || Failure on Server side because the Enums don't implement the IsSerializable interface || A manual override of those enum classes with the IsSerializable interface makes the tests pass. ||
-|| HttpsTest || Java & Android || SSL Plain Text Error || None at this time ||
-|| RecursiveClassTest || ALL || Not reimplemented || No original implementation ||
-|| SessionTest || ALL || Not reimplemented || Non-Valuable Test for New Testing scenarios ||
-|| XsrfProtectionTest || ALL || Not Fully Implemented || Many of the original tests were not implemented ||
+|| CollectionsTest#testArraysAsList || Java & Android || Fails with a NoClassDefFoundError for GWTBridge || * Not Yet Resolved * ||
+|| EnumsTest#testNull || Android || Server-side throws IncompatibleRemoteServiceException for accessing echo(Object) || * Not Yet Resolved * ||
+|| ExceptionTest || Java & Android || Failure on Server side because the UmbrellaException class doesn't implement the IsSerializable interface || A manual override of this class with the IsSerializable interface makes the test pass. ||
+|| HttpsTest || Java & Android || SSL Plain Text Error || * Not Yet Resolved *||
+|| ~~ RecursiveClassTest ~~ || ALL || * Not reimplemented * || No original implementation ||
+|| SessionTest || ALL || * Not reimplemented * || No value noted for reimplementing this scenario in unit testing ||
+|| ~~TypeCheckedObjectsTes ~~ || ~~ Android ~~ ||~~ All throw a SerializationException on the server side: Invalid type signature for ...client.rpc.TypeUncheckedGenericClass ~~||~~ Resolved - Forgot the CustomFieldSerializers in the Source ~~||
+|| UnicodeEscapingTest#ServerToClientNonBMP || GWT|GAE || Throws a series of StringIndexOutOfBoundsException's || * Not Yet Resolved *||
+|| XsrfProtectionTest || ALL || * Not Fully Implemented * || Many of the original tests were not implemented ||

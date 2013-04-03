@@ -1,8 +1,10 @@
 #summary Description of the features in the Android library
 
-= Android Library =
-
 * NOT YET RELEASED *
+
+<wiki:toc max_depth="3" />
+
+= Android Library =
 
 The SyncProxy Android library (*SPALibrary*) version of the *gwt-syncproxy* project was created to give the same gwt-syncproxy
 functionality to Android devices, with the specific case of being able to utilize Android's internal account manager system
@@ -13,6 +15,9 @@ successfully in development, but I don't yet have this in a production app, so p
 This android interface was created from reviewing and integrating ideas found from the following sources: 
 [http://blog.notdot.net/2010/05/Authenticating-against-App-Engine-from-an-Android-app Authenticating against App Engine from an Android App].
 
+The library currently provides support for GAE backend logins. However, if you are not using a backend (including GAE) that requires a login,
+the system performs nearly identically to the standard Java Library's functionality. However, it is still recommended to review the AsyncTask
+section on calling RPCs as any RPC call still needs to be conducted away from the main thread, see [Android#RPC_in_Android].
 
 == Setup in Eclipse ==
 
@@ -79,6 +84,8 @@ used in RPC calls as follows:
 				GreetingServiceAsync.class, "http://10.0.2.2:8888/spawebtest/",
 				"greet", cm);
 }}}
+
+==== RPC in Android ===
 
 Again, in Android, any network call needs to be done off the main thread, so you can use the following style to create easy-to-manage calls:
 
