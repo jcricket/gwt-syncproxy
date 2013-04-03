@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <description>GWT RPC Testing App</description>
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>RPCSuite.html</welcome-file>
+  </welcome-file-list>
+  
+	<servlet>
+		<servlet-name>ProfileService</servlet-name>
+		<servlet-class>com.gdevelop.gwt.syncrpc.test.server.ProfileServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfileService</servlet-name>
+		<url-pattern>/rpcsuite/profile</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>TestLargePayload</servlet-name>
+		<servlet-class>com.gdevelop.gwt.syncrpc.test.server.LargePayloadServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TestLargePayload</servlet-name>
+		<url-pattern>/rpcsuite/largePayload</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>valueTypesTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.ValueTypesTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>valueTypesTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/valuetypes</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>enumsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.EnumsTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>enumsTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/enums</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>inheritanceTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.InheritanceTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>inheritanceTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/inheritance</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>collectionsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.CollectionsTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>collectionsTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/collections</url-pattern>
+	</servlet-mapping>  
+
+  <servlet>
+    <servlet-name>coreJavaTestServiceImpl</servlet-name>
+    <servlet-class>com.google.gwt.user.server.rpc.CoreJavaTestServiceImpl</servlet-class>
+  </servlet> <servlet-mapping>
+  <servlet-name>coreJavaTestServiceImpl</servlet-name>
+    <url-pattern>/rpcsuite/corejava</url-pattern>
+  </servlet-mapping>
+
+	<servlet>
+		<servlet-name>customFieldSerializerTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.CustomFieldSerializerTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>customFieldSerializerTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/customfieldserializers</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>exceptionsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.ExceptionsTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>exceptionsTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/exceptions</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>objectGraphTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.ObjectGraphTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>objectGraphTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/objectgraphs</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.UnicodeEscapingServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/unicodeEscape</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.MixedSerializableEchoServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/echo</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.RemoteServiceServletTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
+		<url-pattern>/rpcsuite/servlettest</url-pattern>
+	</servlet-mapping>
+  
+  <servlet>
+    <servlet-name>recursiveClassTestServiceImpl</servlet-name>
+    <servlet-class>com.google.gwt.user.server.rpc.RecursiveClassTestServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>recursiveClassTestServiceImpl</servlet-name>
+    <url-pattern>/rpcsuite/recursiveclass</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
+    <servlet-class>com.google.gwt.user.server.rpc.TypeCheckedObjectsTestServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
+    <url-pattern>/rpcsuite/typecheckedobjects</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>xsrfTestServiceImpl</servlet-name>
+    <servlet-class>com.google.gwt.user.server.rpc.XsrfTestServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>xsrfTestServiceImpl</servlet-name>
+    <url-pattern>/rpcsuite/xsrftestservice</url-pattern>
+  </servlet-mapping>
+</web-app>
