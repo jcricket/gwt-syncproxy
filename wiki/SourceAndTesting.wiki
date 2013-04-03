@@ -1,5 +1,7 @@
 #summary Source Usage and Testing Mechanisms for this system
 
+* NOT YET AVAILABLE *
+
 = Source Code Layout =
 
 The layout of the system has been changed over into multiple Eclipse projects in order to reduce code duplication across the
@@ -21,9 +23,11 @@ All testing projects are setup to draw the testing services directly from GWT so
 against the latest version as GWT changes. As such, you must have a checkout of the entire google-web-toolkit trunk checked out
 to the path {{{google-web-toolkit}}} in your workspace. Additionally, you will need a gdata checked-out to {{{gdata}}} within
 your workspace as well. The Android library is dependent on the included gwt-servlet.jar library. This was taken directly from
-the {{{war/WEB-INF/lib}}} path of a generated GWT/GAE project. While only a few of the sources in the gwt-user are needed for the
-project, there is a lot of internal referencing that can cause errors if ignored. A future release may utilize a smaller subset
-of these source files once they can be verifiably tested (in order to provide a smaller footprint for the library).
+the {{{war/WEB-INF/lib}}} path of a generated GWT/GAE project. While only about of the sources in the gwt-user are needed for the
+project, there is a lot of internal referencing that can cause errors if not made available. A future release (likely before the commit to trunk)
+will utilize a smaller subset of these source files once they can be verifiably tested (in order to provide a smaller footprint for the library).
+I've already had some success in reducing the servlet jar down to about 30 linked sources if I modified about 4 files to break the source
+hierarchy, but it will take some more testing before I can reliable say that
 
 Checking out the entire trunk with all necessary dependencies should give you a layout workspace similar to the following:
 
@@ -38,16 +42,20 @@ Workspace\SPWebTest
 }}}
 
 All paths within the Eclipse projects are path dependent on the {{{WORKSPACE_LOC}}} variable, so make sure it is set properly to avoid
-build path problems.
+build path problems. The *google-web-toolkit* dependencies for are primarily for testing purposes as the general *gwt-syncproxy* library
+will function with the _gwt-user.jar_ in place. However, the *gdata* dependencies are utilized directly in the library, so those will be needed
+in production as well. After the dev branch has been made available, I will work on putting together a list of the testing sources linked
+from *google-web-toolkit* for any developer who isn't going to be using the Eclipse environment.
 
 === GWT, GAE, and Android ===
 
 The current library has been compiled against GWT 2.5.0, GAE 1.7.5, and Android V17. Testing against newer versions should be as simple
 as updating the library references within each appropriate project and updating the checked-out source code for GWT and GData.
 
-If you are utilizing the Android library, the account management system is only available on a Google APIS Android Virtual Device.
+If you are utilizing the Android library, the account management system is only available on a Google APIS Android Virtual Device for testing.
 It is recommended that you create and utilize an AVD with as much memory as your system will accept (Windows may max at about 768mb)
-and a VM Heap of at least 64 to help with testing.
+and a VM Heap of at least 64 to help with testing. Additionally, the Android library comes with the ability to send fake accounts while testing
+against a local GAE dev server. Please see the AndroidLibrary wiki doc for details.
 
 == Service Hosting ==
 
@@ -90,20 +98,20 @@ If your test will be run against a service, there are a number of steps to ensur
  
 == Java Stand Alone Testing ==
 
-You can utilize the same testing structure for the stand along test, but you will need to modify the source-copied to work outside the GWTTestCase
+ You can utilize the same testing structure for the stand along test, but you will need to modify the source-copied to work outside the GWTTestCase
 structure.
 
  # Copy the test case into the *gwt-syncproxy* project {{{test/.../test/poj/}}} path.
  # Convert the test from a GWTTestCase to a TestCase
  # (Recommended not required) Create the SyncProxy service statically in the test case.
  # Convert the finishTest()/delayTestFinish() to utilize a CountDownLatch. This can be easily done across a large test case with the following search/replacements
- 	* If you have a standard method start, like _service = GWT.create(...)_, Replace With _final CountDownLatch signal = new CountDownLatch(1)_
- 	* Search _finishTest()_ Replace with _signal.countDown()_
- 	* Search _delayTestFinish(2000)_ Replace with _assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS))_
+ 	* If you have a standard method start, like _service = GWT.create(...)_, Replace With _{{{final CountDownLatch signal = new CountDownLatch(1);}}}_
+ 	* Search _{{{finishTest()}}}_ Replace with _{{{signal.countDown()}}}_
+ 	* Search _{{{delayTestFinish(2000)}}}_ Replace with _{{{assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS))}}}_
  # Resolve any pending issues
  # Add this testcase to {{{PojGSPTests}}} TestSuite class
  
- == Android AppTester Testing ==
+== Android AppTester Testing ==
  
  As with the Java Stand Alone Testing, you can utilize the converted Java SA test for the Android Testing system. This requires some additional
  subtle modification since Android requires network access to be completed off the main thread. We do this with the AsyncTask.
@@ -131,6 +139,18 @@ structure.
 		}
  	}}}
  # Convert to the AsyncTask system utilizing the following Search/Replace systems as a guide. It will be very useful to utilize auto-format after these search/replacements
- 	* Search _service.echo_ (or your appropriate method call) Replace with _final AsyncTask<Void, Void, Void> myTask = new AsyncTask<Void, Void, Void>() {@Override	protected Void doInBackground(Void... arg0){ service.echo_
- 	* Search _});_ Replace with _});return null;}};runTestOnUiThread(new Runnable(){@Override public void run(){myTask.execute();}});_
+ 	* Search _{{{service.echo}}}_ (or your appropriate method call) Replace with _{{{final AsyncTask<Void, Void, Void> myTask = new AsyncTask<Void, Void, Void>() {@Override	protected Void doInBackground(Void... arg0){ service.echo}}}_
+ 	* Search _{{{});}}}_ Replace with _{{{});return null;}};runTestOnUiThread(new Runnable(){@Override public void run(){myTask.execute();}});}}}_
+ 	* Search _{{{throws InterruptedException}}}_ Replace with _{{{throws Throwable}}}_
  	
+= Current Testing Failures =
+ 
+ Within the current set of tests implemented, there are a couple of tests which are failing, so please see below a for a list of failures and the issue.
+ There are also a number of tests in the original test system which were not re-implemented (either for time or other reason, explained below).
+ 
+|| TestCase || Project || Issue || Resolution/Reason ||
+|| AsyncEnumsTest & EnumsTest || Java & Android || Failure on Server side because the Enums don't implement the IsSerializable interface || A manual override of those enum classes with the IsSerializable interface makes the tests pass. ||
+|| HttpsTest || Java & Android || SSL Plain Text Error || None at this time ||
+|| RecursiveClassTest || ALL || Not reimplemented || No original implementation ||
+|| SessionTest || ALL || Not reimplemented || Non-Valuable Test for New Testing scenarios ||
+|| XsrfProtectionTest || ALL || Not Fully Implemented || Many of the original tests were not implemented ||
