@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.android.ide.eclipse.adt.junit.launchConfigurationType">
+<stringAttribute key="com.android.ide.eclipse.adt.avd" value="GAPI_JB"/>
+<stringAttribute key="com.android.ide.eclipse.adt.commandline" value=""/>
+<intAttribute key="com.android.ide.eclipse.adt.delay" value="0"/>
+<stringAttribute key="com.android.ide.eclipse.adt.instrumentation" value="android.test.InstrumentationTestRunner"/>
+<booleanAttribute key="com.android.ide.eclipse.adt.nobootanim" value="false"/>
+<intAttribute key="com.android.ide.eclipse.adt.speed" value="0"/>
+<stringAttribute key="com.android.ide.eclipse.adt.target" value="AUTO"/>
+<stringAttribute key="com.android.ide.eclipse.adt.testSize" value="All Tests"/>
+<booleanAttribute key="com.android.ide.eclipse.adt.wipedata" value="false"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/SPAAppTester/src/com/gdevelop/gwt/syncrpc/spaapptest/test/SPATests.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
+<booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
+<stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
+<stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit3"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.gdevelop.gwt.syncrpc.spaapptest.test.SPATests"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SPAAppTester"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value=""/>
+</launchConfiguration>
