@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry including="**/client/impl/GWTRunnerProxy.java|**/junit/client/impl/MissingTestPlaceHolder.java|**/rebind/GWTRunnerProxyGenerator.java|**/server/JUnitHostImpl.java" kind="src" path="GWT_USER_ASSIST"/>
+	<classpathentry kind="src" output="test-classes" path="test"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/App Engine"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AppEngineTesting"/>
+	<classpathentry excluding="**/CoreJavaTest.java" including="**/CoreJavaTest.java|**/CoreJavaTestService*|**/CustomFieldSerializerTestService*|**/CustomFieldSerializerTestSet*.java|**/CustomPluralsTest.java|**/EnumsTestService*|**/ExceptionsTestService*|**/InheritanceTestService*|**/InheritanceTestSet*.java|**/LogFilterServletContext.java|**/ManuallySerialized*.java|**/MixedSerializable.java|**/MixedSerializableEchoService*|**/ObjectGraphTestService*|**/RecursiveClassTestService*|**/RemoteServiceServletTestService*|**/RpcTestBase.java|**/SerializableGenericWrapperType.java|**/TypeChecked*Class.java|**/TypeCheckedObjectsTestService*|**/TypeCheckedObjectsTestSet*.java|**/TypeUncheckedGenericClass.java|**/UnicodeEscapingService*|**/ValidationClientGwtTestCase.java|**/ValueTypesTestService*|**/XsrfProtectionTest.java|**/XsrfTestService*|**/constraints/PatternValidatorGwtTest.java|**/junit/client/GwtTestCase.java|**/resources/client/CSSResourceTest.java|**/resources/client/NestedBundleTest.java|**/rpc/TestSet*.java|**/rpc/Type*FieldSerializer.java|**/server/JUnitHostImpl.java|**/server/rpc/AnnotatedRpcTokenTestServiceImpl.java|**/server/rpc/RpcTokenServiceImpl.java|**/user/**/Collections*.java|**/user/client/AsyncProxy*.java|**/user/client/rpc/AnnotatedRpcTokenTest*.java|**/user/client/rpc/MockXsrfTokenService*.java|**/user/client/rpc/RpcTokenTest*.java|**/user/server/rpc/MockXsrfTokenServiceImpl.java|**/user/server/rpc/RpcTokenAwareRemoteService.java" kind="src" path="GWT_USER_TESTS"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>
