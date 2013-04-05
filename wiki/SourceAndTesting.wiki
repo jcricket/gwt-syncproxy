@@ -54,8 +54,10 @@ from *google-web-toolkit* for any developer who isn't going to be using the Ecli
 
 === GWT, GAE, and Android ===
 
-The current library has been compiled against GWT 2.5.0, GAE 1.7.5, and Android V17. Testing against newer versions should be as simple
-as updating the library references within each appropriate project and updating the checked-out source code for GWT and GData.
+The current library has been compiled/tested against GWT 2.5.0, GAE 1.7.5, and Android V17. Testing against newer versions should be as simple
+as updating the library references within each appropriate project and updating the checked-out source code for GWT and GData. However, there
+may be some complications that arise with newer versions from GWT source as subtle changes in classes referenced may render the build paths
+incomplete.
 
 If you are utilizing the Android library, the account management system is only available on a Google APIS Android Virtual Device for testing.
 It is recommended that you create and utilize an AVD with as much memory as your system will accept (Windows may max at about 768mb)
