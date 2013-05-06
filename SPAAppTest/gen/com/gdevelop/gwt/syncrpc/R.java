@@ -8,19 +8,19 @@ package com.gdevelop.gwt.syncrpc;
 
 public final class R {
 	public static final class id {
-		public static final int add_custom = 0x7f070003;
-		public static final int add_account = 0x7f070004;
+		public static final int spa_add_account = 0x7f070004;
+		public static final int spa_add_custom = 0x7f070003;
 	}
 	public static final class style {
 		public static final int AppBaseTheme = 0x7f050000;
 		public static final int AppTheme = 0x7f050001;
 	}
 	public static final class string {
-		public static final int accountListTitle = 0x7f040001;
-		public static final int add_custom_menu = 0x7f040003;
-		public static final int add_account_menu = 0x7f040004;
-		public static final int app_name = 0x7f040000;
-		public static final int nonDevToast = 0x7f040002;
+		public static final int spa_account_list_title = 0x7f040001;
+		public static final int spa_add_account_menu = 0x7f040004;
+		public static final int spa_app_name = 0x7f040000;
+		public static final int spa_non_dev_toast = 0x7f040002;
+		public static final int spa_add_custom_menu = 0x7f040003;
 	}
 	public static final class menu {
 		public static final int account_list_menu = 0x7f060000;

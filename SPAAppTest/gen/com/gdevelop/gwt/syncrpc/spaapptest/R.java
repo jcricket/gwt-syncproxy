@@ -15,11 +15,11 @@ public final class R {
     }
     public static final class id {
         public static final int activate=0x7f070001;
-        public static final int add_account=0x7f070004;
-        public static final int add_custom=0x7f070003;
         public static final int input=0x7f070002;
         public static final int menu_settings=0x7f070005;
         public static final int result=0x7f070000;
+        public static final int spa_add_account=0x7f070004;
+        public static final int spa_add_custom=0x7f070003;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -29,14 +29,14 @@ public final class R {
         public static final int activity_main=0x7f060001;
     }
     public static final class string {
-        public static final int accountListTitle=0x7f040001;
         public static final int activate=0x7f040007;
-        public static final int add_account_menu=0x7f040004;
-        public static final int add_custom_menu=0x7f040003;
-        public static final int app_name=0x7f040000;
         public static final int hello_world=0x7f040005;
         public static final int menu_settings=0x7f040006;
-        public static final int nonDevToast=0x7f040002;
+        public static final int spa_account_list_title=0x7f040001;
+        public static final int spa_add_account_menu=0x7f040004;
+        public static final int spa_add_custom_menu=0x7f040003;
+        public static final int spa_app_name=0x7f040000;
+        public static final int spa_non_dev_toast=0x7f040002;
     }
     public static final class style {
         /** 

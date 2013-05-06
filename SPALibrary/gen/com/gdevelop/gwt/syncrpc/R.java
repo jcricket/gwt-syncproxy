@@ -14,18 +14,18 @@ public final class R {
         public static int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static int add_account=0x7f060001;
-        public static int add_custom=0x7f060000;
+        public static int spa_add_account=0x7f060001;
+        public static int spa_add_custom=0x7f060000;
     }
     public static final class menu {
         public static int account_list_menu=0x7f050000;
     }
     public static final class string {
-        public static int accountListTitle=0x7f030001;
-        public static int add_account_menu=0x7f030004;
-        public static int add_custom_menu=0x7f030003;
-        public static int app_name=0x7f030000;
-        public static int nonDevToast=0x7f030002;
+        public static int spa_account_list_title=0x7f030001;
+        public static int spa_add_account_menu=0x7f030004;
+        public static int spa_add_custom_menu=0x7f030003;
+        public static int spa_app_name=0x7f030000;
+        public static int spa_non_dev_toast=0x7f030002;
     }
     public static final class style {
         /** 

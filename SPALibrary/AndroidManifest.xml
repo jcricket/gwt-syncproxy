@@ -4,17 +4,17 @@
 	android:versionName="0.4" android:installLocation="internalOnly">
 
 	<uses-sdk
-		android:minSdkVersion="4"
+		android:minSdkVersion="14"
 		android:targetSdkVersion="17" />
 
 	<application
 		android:allowBackup="true"
 		android:icon="@drawable/ic_launcher"
-		android:label="@string/app_name"
+		android:label="@string/spa_app_name"
 		android:theme="@style/AppTheme" >
 		<activity
 			android:name="com.gdevelop.gwt.syncrpc.android.AccountList"
-			android:label="@string/accountListTitle" />
+			android:label="@string/spa_account_list_title" />
 	</application>
 
 </manifest>

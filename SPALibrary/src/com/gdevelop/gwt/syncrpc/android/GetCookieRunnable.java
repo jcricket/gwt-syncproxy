@@ -106,12 +106,16 @@ public class GetCookieRunnable implements Runnable {
 					}
 				});
 			} else {
-				parent.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						listener.onCMAvailable(cookieManager);
-					}
-				});
+				if (parent != null) {
+					parent.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							listener.onCMAvailable(cookieManager);
+						}
+					});
+				} else {
+					listener.onCMAvailable(cookieManager);
+				}
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Failure in attempt to get cookie: ", e);
