@@ -87,7 +87,7 @@ integrated project that will need to be imported into eclipse within the {{{SPAA
 for the *SPAAppTester* project, which conducts the Android JUnit testing using the *SPAAppTest* app as a base. The android tests
 can be launched using the {{{SPATests}}} launcher. The actual app for manual testing can be launched using the {{{SPA_App}}} launcher.
 
-= Testing =
+= Creating Tests =
 
 This portion of the document will review the process needed to add more tests throughout the system. All testing within the system is 
 currently done utilizing the JUnit structures, and there are 3 separate locations to add tests.
@@ -103,7 +103,7 @@ If your test will be run against a service, there are a number of steps to ensur
  # Create a test within the {{{test/.../client/gwttests}}} path. Be sure to properly utilize the GWTTestCase finishTest() and delayTestFinish() methods for Asynchronous testing.
  # Add this test to the {{{/gwttests/GwtTests}}} TestSuite class.
  
-== Java Stand Alone Testing ==
+== Java Stand Alone Test ==
 
  You can utilize the same testing structure for the stand along test, but you will need to modify the source-copied to work outside the GWTTestCase
 structure.
@@ -118,7 +118,7 @@ structure.
  # Resolve any pending issues
  # Add this testcase to {{{PojGSPTests}}} TestSuite class
  
-== Android AppTester Testing ==
+== Android AppTester Test ==
  
  As with the Java Stand Alone Testing, you can utilize the converted Java SA test for the Android Testing system. This requires some additional
  subtle modification since Android requires network access to be completed off the main thread. We do this with the AsyncTask.
@@ -156,6 +156,9 @@ The following times are based on my system, so you can expect changes in process
 Eclipse (-Xms1g, -Xmx2g). Android testing takes about 350s (288s within the UnicodeEscapingTest, so remove that test for quicker testing in Android).
 Plain old Java (POJ) testing takes about 10s. GWT testing takes 83s (45s within the UnicodeEscapingTest). All the of re-implemented testing units
 test the system Asynchronously.
+
+When running either the Java Standalone Tests {{{PojGSPTests}}} or the Android Tests {{{SPATests}}}, you must make sure the web service has been
+GWT compiled and is running {{{SPAWebTest}}}
  	
 == Current Testing Failures ==
  

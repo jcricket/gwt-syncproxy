@@ -17,7 +17,9 @@ This android interface was created from reviewing and integrating ideas found fr
 
 The library currently provides support for GAE backend logins. However, if you are not using a backend (including GAE) that requires a login,
 the system performs nearly identically to the standard Java Library's functionality. However, it is still recommended to review the AsyncTask
-section on calling RPCs as any RPC call still needs to be conducted away from the main thread, see [Android#RPC_in_Android].
+section on calling RPCs as any RPC call still needs to be conducted away from the main thread, see [Android#RPC_in_Android]. The library requires
+API 14 as a minimum specifically for the token retrieving ability, 
+[https://developer.android.com/reference/android/accounts/AccountManager.html#getAuthToken(android.accounts.Account, java.lang.String, android.os.Bundle, android.app.Activity, android.accounts.AccountManagerCallback<android.os.Bundle>, android.os.Handler) AccountManager#getAuthToken()]
 
 The current development version of the library depends on gwt-servlet.jar, which is in the src/lib for the * SPALibrary * project, or can be
 retrieved from any GAE generated project. Once I get the project layout and some other bugs squared away, I'll be introducing linked sources
