@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.gdevelop.gwt.syncrpc.spawebtest.client.GreetingService;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.FieldVerifier;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -54,6 +57,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public String greetServer2(String input) throws IllegalArgumentException {
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
 		// Verify that the input is valid.
 		if (!FieldVerifier.isValidName(input)) {
 			// If the input is not valid, throw an IllegalArgumentException back
@@ -71,7 +76,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		input = escapeHtml(input);
 		userAgent = escapeHtml(userAgent);
 
-		return "Hello, " + input + "!<br><br>I am running " + serverInfo
+		return "Hello, " + user.getEmail() + ". You said: " + input
+				+ "!<br><br>I am running " + serverInfo
 				+ ".<br><br>It looks like you are using:<br>" + userAgent;
 	}
 

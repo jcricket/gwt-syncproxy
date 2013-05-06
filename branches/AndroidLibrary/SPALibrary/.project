@@ -36,5 +36,10 @@
 			<type>2</type>
 			<locationURI>WORKSPACE_LOC/gwt-syncproxy/src</locationURI>
 		</link>
+		<link>
+			<name>GWT_USER</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/src</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>

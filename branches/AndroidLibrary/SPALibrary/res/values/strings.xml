@@ -1,9 +1,0 @@
-<resources>
-
-	<string name="app_name">SyncProxyAndroid</string>
-	<string name="accountListTitle">Account Selection</string>
-	<string name="nonDevToast">Must choose a Google Account for deployed service</string>
-	<string name="add_custom_menu">Add Test Account</string>
-	<string name="add_account_menu">Add Google Account</string>
-
-</resources>

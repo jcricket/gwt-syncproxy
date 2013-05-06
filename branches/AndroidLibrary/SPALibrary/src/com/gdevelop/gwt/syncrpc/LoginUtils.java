@@ -121,8 +121,8 @@ public class LoginUtils {
 			}
 		}
 		if (localDevMode) {
-			loginUrl += "/_ah/login";
-			URL url = new URL(loginUrl);
+			URL url = new URL(loginUrl + "/_ah/login");
+
 			String email = URLEncoder.encode(account.name, "UTF-8");
 			String serviceUrl = URLEncoder.encode("nowhere", "UTF-8");
 			String requestData = "email=" + email + "&continue=" + serviceUrl;
@@ -133,8 +133,8 @@ public class LoginUtils {
 		// Non Dev Mode
 		else {
 			if (!account.type.equals(GOOGLE_ACCOUNT_TYPE)) {
-				Toast.makeText(parent, R.string.nonDevToast, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(parent, R.string.spa_non_dev_toast,
+						Toast.LENGTH_SHORT).show();
 				if (useAccountSelector && requestCode != -1) {
 					chooseAccount(parent, requestCode);
 					return;

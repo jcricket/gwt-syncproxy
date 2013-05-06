@@ -63,7 +63,7 @@ public class AccountList extends ListActivity {
 		inflater.inflate(R.menu.account_list_menu, menu);
 
 		if (devMode) {
-			MenuItem customItem = menu.findItem(R.id.add_custom);
+			MenuItem customItem = menu.findItem(R.id.spa_add_custom);
 			customItem.setVisible(true);
 		}
 		return true;
@@ -84,9 +84,9 @@ public class AccountList extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
-		if (itemId == R.id.add_account) {
+		if (itemId == R.id.spa_add_account) {
 			startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT));
-		} else if (itemId == R.id.add_custom) {
+		} else if (itemId == R.id.spa_add_custom) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(this);
 			alert.setTitle("Enter Email");
 			alert.setMessage("Enter an Email to use as a mock account");

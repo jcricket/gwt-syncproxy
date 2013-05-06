@@ -20,6 +20,7 @@
 package com.gdevelop.gwt.syncrpc.spaapptest;
 
 import java.net.CookieManager;
+import java.util.ArrayList;
 
 import android.accounts.Account;
 import android.app.Activity;
@@ -83,46 +84,46 @@ class ActivateButton extends AsyncTask<MainActivity, Void, MainActivity> {
 		// });
 
 		// Greet Server Test for Regular String
-		rpcService.greetServer2(((EditText) act.findViewById(R.id.input))
-				.getText().toString(), new AsyncCallback<String>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(final String result) {
-				act.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						final TextView tv = (TextView) act
-								.findViewById(R.id.result);
-						tv.setText(Html.fromHtml(result));
-					}
-				});
-			}
-		});
-
-		// Greet Server Test for ArrayList contain the String
-		// rpcService.greetServerArr(((EditText) act.findViewById(R.id.input))
-		// .getText().toString(), new AsyncCallback<ArrayList<String>>() {
+		// rpcService.greetServer2(((EditText) act.findViewById(R.id.input))
+		// .getText().toString(), new AsyncCallback<String>() {
 		// @Override
 		// public void onFailure(Throwable caught) {
 		// caught.printStackTrace();
 		// }
 		//
 		// @Override
-		// public void onSuccess(final ArrayList<String> result) {
+		// public void onSuccess(final String result) {
 		// act.runOnUiThread(new Runnable() {
 		// @Override
 		// public void run() {
 		// final TextView tv = (TextView) act
 		// .findViewById(R.id.result);
-		// tv.setText(Html.fromHtml(result.get(0)));
+		// tv.setText(Html.fromHtml(result));
 		// }
 		// });
 		// }
 		// });
+
+		// Greet Server Test for ArrayList contain the String
+		rpcService.greetServerArr(((EditText) act.findViewById(R.id.input))
+				.getText().toString(), new AsyncCallback<ArrayList<String>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(final ArrayList<String> result) {
+				act.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						final TextView tv = (TextView) act
+								.findViewById(R.id.result);
+						tv.setText(Html.fromHtml(result.get(0)));
+					}
+				});
+			}
+		});
 	}
 }
 
