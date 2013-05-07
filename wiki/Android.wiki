@@ -1,6 +1,6 @@
 #summary Description of the features in the Android library
 
-* NOT YET RELEASED *
+* BETA RELEASE* 
 
 <wiki:toc max_depth="3" />
 
@@ -21,16 +21,27 @@ section on calling RPCs as any RPC call still needs to be conducted away from th
 API 14 as a minimum specifically for the token retrieving ability, 
 [https://developer.android.com/reference/android/accounts/AccountManager.html#getAuthToken(android.accounts.Account, java.lang.String, android.os.Bundle, android.app.Activity, android.accounts.AccountManagerCallback<android.os.Bundle>, android.os.Handler) AccountManager#getAuthToken()]
 
-The current development version of the library depends on gwt-servlet.jar, which is in the src/lib for the * SPALibrary * project, or can be
+The current BETA version of the library has one dependency that the developer must include in the libs/ path of their Android project.
+It is your server's backend {{{servlet-api.jar}}}. Essentially this is the jar that contains your javax.** classes. In a regular java project,
+these classes are provided within the {{{gwt-user.jar}}}. However, since the this jar is much larger than we need for Android functionality,
+in order to reduce the result library jar size (and ultimately the APK size), we need to have that jar as a separate library. This
+technique (as compared to the Alpha development version (see strikethrough below) has brought the sample project APK size down from 
+approx 2.2MB to 350KB.
+
+~~The current development version of the library depends on gwt-servlet.jar, which is in the src/lib for the * SPALibrary * project, or can be
 retrieved from any GAE generated project. Once I get the project layout and some other bugs squared away, I'll be introducing linked sources
 directly into the SPALibrary so that the created SPALibrary.jar will not depend on the gwt-servlet.jar. Additionally, with the linked sources,
 the footprint of this system will drop dramatically. It's currently at about 2mb (when integrated with the target app), and based on prior testing,
 I expect that to drop to a range of about ~200K, maybe less. The reason for the dramatic drop is that referencing gwt-servlet pulls in a number
 of continuously referenced files within those sources, that have no actual bearing on this library. With a few modifications to a couple of the
 sources high up in the hierarchy, I can cut off the deep references that pull so many sources into the library. It will take some time to get
-a proper set of these linked sources and modifications, but should be possible now that adequate testing is place.
+a proper set of these linked sources and modifications, but should be possible now that adequate testing is place.~~
 
 == Setup in Eclipse ==
+
+The No UI Utilization tag indicates that the developer will not be needing the test Account selection system provided in the library (See
+[Android#Mock_Android_Account]. If you intent to use the mock account system included in the library, you must have the compilation set
+available to eclipse as a library project (not just the {{{spalibrary.jar}}}).
 
 Since I use Eclipse as my IDE, I'll describe the easiest setup for it here, but a similar process should work for most IDE's. As an Android
 library, you must drop this library in the {{{libs/}}} path of your Android project. After that, the easiest way to reduce code duplication
@@ -153,6 +164,11 @@ is recommended to perform an automatic re-login before deciding that there is an
 The ability to create mock accounts is designed for use only in Dev mode. Fake Accounts are tagged as LoginUtils#TEST_ACCOUNT_TYPE for the account
 type. These account types will not work unless you are in dev mode (as defined by loginUrl being set to the loopback interface). Attempts to do so
 will send up a stating the issue and will throw an AccountsException if you are not utilizing the AccountSelector. 
+
+In order to use the built in account selection system for creating mock accounts, you have to checkout the source for the {{{SPALibrary}}}
+and reference it as an Android Library Project within Eclipse (See SourceAndTesting). This is because I haven't found any information online about how to include
+Android resource files (such as layout.xml and string.xml) in with the spalibrary.jar that is created for the library. If anyone knows how to 
+do this, enter a ticket or contact me and I'll revise the functionality.
 
 To utilize the ability to mock Android accounts, make the call to _LoginUtils#useAccountSelector(true)_ prior to making a login request. 
 Once completed, make the request to login to GAE, _LoginUtils#loginAppEngine(Activity parent, CookieManagerAvailableListener listener, Account account, int requestCode)_.

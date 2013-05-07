@@ -1,6 +1,6 @@
 #summary Source Usage and Testing Mechanisms for this system
 
-* NOT YET AVAILABLE *
+* BETA RELEASE *
 
 <wiki:toc max_depth="3" />
 
@@ -51,6 +51,17 @@ build path problems. The *google-web-toolkit* dependencies for are primarily for
 will function with the _gwt-user.jar_ in place. However, the *gdata* dependencies are utilized directly in the library, so those will be needed
 in production as well. After the dev branch has been made available, I will work on putting together a list of the testing sources linked
 from *google-web-toolkit* for any developer who isn't going to be using the Eclipse environment.
+
+For simplicity use, the SPWebTest project also makes use a single user-defined library called AppEngineTesting. It will need to reference the following
+jars which can likely be found in your {{{eclipse\plugins}}} path:
+
+{{{
+junit.jar - org.junit_4.10.0.v4_10_0_v20120426-0900 (or acceptable alternative)
+appengine-testing.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\testing
+appengine-api.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\impl
+appengine-api-labs.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\impl
+appengine-stubs.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\impl
+}}}
 
 === GWT, GAE, and Android ===
 
