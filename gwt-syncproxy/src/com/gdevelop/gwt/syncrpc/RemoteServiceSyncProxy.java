@@ -226,11 +226,11 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 		}
 	}
 
-	static boolean isReturnValue(String encodedResponse) {
+	public static boolean isReturnValue(String encodedResponse) {
 		return encodedResponse.startsWith("//OK");
 	}
 
-	static boolean isThrownException(String encodedResponse) {
+	public static boolean isThrownException(String encodedResponse) {
 		return encodedResponse.startsWith("//EX");
 	}
 }

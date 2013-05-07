@@ -166,7 +166,7 @@ public class CollectionsTest extends
 			}
 		});
 
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(20, TimeUnit.SECONDS));
 	}
 
 	public void testByteArray() throws Throwable {

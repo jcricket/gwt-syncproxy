@@ -38,6 +38,11 @@
 			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/test</locationURI>
 		</link>
 		<link>
+			<name>GWT_USER_TEST_ADDL</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/src</locationURI>
+		</link>
+		<link>
 			<name>SPWeb</name>
 			<type>2</type>
 			<locationURI>WORKSPACE_LOC/SPWebTest/src</locationURI>

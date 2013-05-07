@@ -83,6 +83,7 @@ public class XsrfProtectionTest extends
 
 					@Override
 					public void onFailure(Throwable caught) {
+
 						RpcTokenException e = (RpcTokenException) caught;
 						assertTrue(e.getMessage()
 								.contains("XSRF token missing"));
@@ -92,6 +93,7 @@ public class XsrfProtectionTest extends
 							e1.printStackTrace();
 						} catch (Throwable e1) {
 						}
+
 						signal.countDown();
 					}
 
