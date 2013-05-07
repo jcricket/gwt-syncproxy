@@ -16,21 +16,19 @@
 package com.gdevelop.gwt.syncrpc;
 
 
-import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.client.rpc.impl.AbstractSerializationStreamWriter;
-import com.google.gwt.user.client.rpc.impl.ClientSerializationStreamWriter;
-import com.google.gwt.user.client.rpc.impl.Serializer;
-import com.google.gwt.user.server.rpc.SerializationPolicy;
-import com.google.gwt.user.server.rpc.impl.SerializabilityUtil;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.client.rpc.impl.AbstractSerializationStreamWriter;
+import com.google.gwt.user.client.rpc.impl.Serializer;
+import com.google.gwt.user.server.rpc.SerializationPolicy;
+import com.google.gwt.user.server.rpc.impl.SerializabilityUtil;
 
 
 /**

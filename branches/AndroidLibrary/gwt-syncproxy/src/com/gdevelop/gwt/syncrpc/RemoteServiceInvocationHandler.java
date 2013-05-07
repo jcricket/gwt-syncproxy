@@ -127,7 +127,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 					clazz = Class.forName(serviceIntfName);
 				} catch (ClassNotFoundException e) {
 					throw new InvocationException(
-							"There are not sync version of " + serviceIntfName
+							"There is no sync version of " + serviceIntfName
 									+ "Async");
 				}
 				Method syncMethod = clazz.getMethod(method.getName(),
