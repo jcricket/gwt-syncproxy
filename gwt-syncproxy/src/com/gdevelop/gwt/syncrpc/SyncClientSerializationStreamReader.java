@@ -44,8 +44,6 @@ import com.google.gwt.user.server.rpc.impl.SerializedInstanceReference;
  */
 public class SyncClientSerializationStreamReader extends
 		AbstractSerializationStreamReader {
-	private static final char JS_ESCAPE_CHAR = '\\';
-
 	/**
 	 * Used to accumulate elements while deserializing array types. The generic
 	 * type of the BoundedList will vary from the component type of the array it
@@ -333,6 +331,8 @@ public class SyncClientSerializationStreamReader extends
 		}
 	}
 
+	private static final char JS_ESCAPE_CHAR = '\\';
+
 	/**
 	 * Map of {@link Class} objects to {@link ValueReader}s.
 	 */
@@ -395,9 +395,36 @@ public class SyncClientSerializationStreamReader extends
 
 	private final SerializationPolicy serializationPolicy;
 
+	private static final String PRELUDE = "].concat([";
+
+	private static final String POSTLUDE1 = "],[";
+
+	private static final String POSTLUDE = "])";
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader reader = new BufferedReader(new FileReader(
+				"C:/temp/large.txt"));
+		String encoded = reader.readLine();
+		SyncClientSerializationStreamReader s = new SyncClientSerializationStreamReader(
+				new RemoteServiceSyncProxy.DummySerializationPolicy());
+		s.prepareToRead(encoded);
+	}
+
 	public SyncClientSerializationStreamReader(
 			SerializationPolicy serializationPolicy) {
 		this.serializationPolicy = serializationPolicy;
+	}
+
+	public Object deserializeValue(Class<?> type) throws SerializationException {
+		ValueReader valueReader = CLASS_TO_VALUE_READER.get(type);
+		if (valueReader != null) {
+			return valueReader.readValue(this);
+		} else {
+			// Arrays of primitive or reference types need to go through
+			// readObject.
+			return SyncClientSerializationStreamReader.ValueReader.OBJECT
+					.readValue(this);
+		}
 	}
 
 	@Override
@@ -417,84 +444,6 @@ public class SyncClientSerializationStreamReader extends
 		}
 
 		buildStringTable();
-	}
-
-	@Override
-	protected Object deserialize(String typeSignature)
-			throws SerializationException {
-		Object instance = null;
-		SerializedInstanceReference serializedInstRef = SerializabilityUtil
-				.decodeSerializedInstanceReference(typeSignature);
-
-		try {
-			// Class<?> instanceClass =
-			// Class.forName(serializedInstRef.getName(),
-			// false, null);
-			Class<?> instanceClass = Class.forName(serializedInstRef.getName());
-
-			assert (serializationPolicy != null);
-
-			try {
-				serializationPolicy.validateDeserialize(instanceClass);
-			} catch (SerializationException e) {
-				System.err.println("WARN: " + e.getMessage());
-			}
-
-			// TODO validateTypeVersions(instanceClass, serializedInstRef);
-
-			Class<?> customSerializer = SerializabilityUtil
-					.hasCustomFieldSerializer(instanceClass);
-
-			int index = reserveDecodedObjectIndex();
-
-			instance = instantiate(customSerializer, instanceClass);
-
-			rememberDecodedObject(index, instance);
-
-			Object replacement = deserializeImpl(customSerializer,
-					instanceClass, instance);
-
-			// It's possible that deserializing an object requires the original
-			// proxy
-			// object to be replaced.
-			if (instance != replacement) {
-				rememberDecodedObject(index, replacement);
-				instance = replacement;
-			}
-
-			return instance;
-
-		} catch (ClassNotFoundException e) {
-			throw new SerializationException(e);
-
-		} catch (InstantiationException e) {
-			throw new SerializationException(e);
-
-		} catch (IllegalAccessException e) {
-			throw new SerializationException(e);
-
-		} catch (IllegalArgumentException e) {
-			throw new SerializationException(e);
-
-		} catch (InvocationTargetException e) {
-			throw new SerializationException(e);
-
-		} catch (NoSuchMethodException e) {
-			throw new SerializationException(e);
-		}
-	}
-
-	@Override
-	protected String getString(int index) {
-		if (index == 0) {
-			return null;
-		}
-		// index is 1-based
-		assert (index > 0);
-		assert (index <= stringTable.size());
-
-		// index is 1-based
-		return this.stringTable.get(index - 1);
 	}
 
 	@Override
@@ -524,7 +473,12 @@ public class SyncClientSerializationStreamReader extends
 
 	@Override
 	public int readInt() {
-		return Integer.parseInt(results.get(--index));
+		try {
+			Integer val = Integer.parseInt(results.get(--index));
+			return val;
+		} catch (NumberFormatException nfe) {
+			return 0;
+		}
 	}
 
 	@Override
@@ -534,7 +488,9 @@ public class SyncClientSerializationStreamReader extends
 		} else {
 			String s = results.get(--index);
 			// remove quotes
-			s = s.substring(1, s.length() - 1);
+			if (s.length() > 1) {
+				s = s.substring(1, s.length() - 1);
+			}
 			return Utils.longFromBase64(s);
 		}
 	}
@@ -547,208 +503,6 @@ public class SyncClientSerializationStreamReader extends
 	@Override
 	public String readString() {
 		return getString(readInt());
-	}
-
-	/**
-	 * Parse response from GWT RPC example:
-	 * [3,23456,0,2,0,0,0,1,1,["dab.rpp.client.Person/1455343364"
-	 * ,"My dad name","GWT User"],0,5]
-	 * 
-	 * @param encoded
-	 */
-	private void parse(String encoded) {
-		// encoded = encoded.substring(1, encoded.length()-1);
-		if (encoded.endsWith("]")) {
-			encoded = encoded.substring(1, encoded.length() - 1);
-		} else {
-			encoded = encoded.substring(1);
-		}
-		StringBuffer token = new StringBuffer();
-		for (int i = 0; i < encoded.length(); i++) {
-			char ch = encoded.charAt(i);
-			if (ch == ',') {
-				results.add(token.toString());
-				token = new StringBuffer();
-				continue;
-			}
-			if (ch == '[') {
-				int pos = encoded.lastIndexOf(']');
-				if (pos < 0) {
-					// TODO: throw exeption
-				}
-				results.add(encoded.substring(i + 1, pos));
-				i = pos + 1;
-				continue;
-			}
-			token.append(ch);
-		}
-		if (token.length() > 0) {
-			results.add(token.toString());
-		}
-	}
-
-	private static final String PRELUDE = "].concat([";
-	private static final String POSTLUDE1 = "],[";
-	private static final String POSTLUDE = "])";
-
-	private String deconcat(String encoded) {
-		int start = encoded.indexOf(PRELUDE);
-		if (start > 0) {
-			StringBuffer ret = new StringBuffer(encoded.length()
-					- PRELUDE.length());
-			ret.append(encoded.substring(0, start));
-
-			start += PRELUDE.length();
-			int end = encoded.indexOf(POSTLUDE1, start);
-			while (end > 0) {
-				ret.append(",");
-				ret.append(encoded.substring(start, end));
-
-				start = end + POSTLUDE1.length();
-				end = encoded.indexOf(POSTLUDE1, start);
-			}
-
-			end = encoded.indexOf(POSTLUDE, start);
-			if (end > 0) {
-				ret.append(",");
-				ret.append(encoded.substring(start, end + 1));
-				return ret.toString();
-			}
-		}
-
-		return encoded;
-	}
-
-	private Object instantiate(Class<?> customSerializer, Class<?> instanceClass)
-			throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SerializationException {
-		if (customSerializer != null) {
-			for (Method method : customSerializer.getMethods()) {
-				if ("instantiate".equals(method.getName())) {
-					return method.invoke(null, this);
-				}
-			}
-			// Ok to not have one.
-		}
-
-		if (instanceClass.isArray()) {
-			int length = readInt();
-			// We don't pre-allocate the array; this prevents an allocation
-			// attack
-			return new BoundedList<Object>(instanceClass.getComponentType(),
-					length);
-		} else if (instanceClass.isEnum()) {
-			Enum<?>[] enumConstants = (Enum[]) instanceClass.getEnumConstants();
-			int ordinal = readInt();
-			assert (ordinal >= 0 && ordinal < enumConstants.length);
-			return enumConstants[ordinal];
-		} else {
-			Constructor<?> constructor = instanceClass.getDeclaredConstructor();
-			constructor.setAccessible(true);
-			return constructor.newInstance();
-		}
-	}
-
-	private Object deserializeImpl(Class<?> customSerializer,
-			Class<?> instanceClass, Object instance)
-			throws NoSuchMethodException, IllegalArgumentException,
-			IllegalAccessException, InvocationTargetException,
-			SerializationException, ClassNotFoundException {
-
-		if (customSerializer != null) {
-			deserializeWithCustomFieldDeserializer(customSerializer,
-					instanceClass, instance);
-		} else if (instanceClass.isArray()) {
-			instance = deserializeArray(instanceClass, instance);
-		} else if (instanceClass.isEnum()) {
-			// Enums are deserialized when they are instantiated
-		} else {
-			deserializeClass(instanceClass, instance);
-		}
-
-		return instance;
-	}
-
-	private void deserializeWithCustomFieldDeserializer(
-			Class<?> customSerializer, Class<?> instanceClass, Object instance)
-			throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException {
-		assert (!instanceClass.isArray());
-
-		for (Method method : customSerializer.getMethods()) {
-			if ("deserialize".equals(method.getName())) {
-				method.invoke(null, this, instance);
-				return;
-			}
-		}
-		throw new NoSuchMethodException("deserialize");
-	}
-
-	/**
-	 * Deserialize an instance that is an array. Will default to deserializing
-	 * as an Object vector if the instance is not a primitive vector.
-	 * 
-	 * @param instanceClass
-	 * @param instance
-	 * @throws SerializationException
-	 */
-	@SuppressWarnings("unchecked")
-	private Object deserializeArray(Class<?> instanceClass, Object instance)
-			throws SerializationException {
-		assert (instanceClass.isArray());
-
-		BoundedList<Object> buffer = (BoundedList<Object>) instance;
-		VectorReader instanceReader = CLASS_TO_VECTOR_READER.get(instanceClass);
-		if (instanceReader != null) {
-			return instanceReader.read(this, buffer);
-		} else {
-			return SyncClientSerializationStreamReader.VectorReader.OBJECT_VECTOR
-					.read(this, buffer);
-		}
-	}
-
-	private void deserializeClass(Class<?> instanceClass, Object instance)
-			throws SerializationException, IllegalAccessException,
-			NoSuchMethodException, InvocationTargetException,
-			ClassNotFoundException {
-		Field[] serializableFields = SerializabilityUtil
-				.applyFieldSerializationPolicy(instanceClass);
-
-		for (Field declField : serializableFields) {
-			assert (declField != null);
-
-			Object value = deserializeValue(declField.getType());
-
-			boolean isAccessible = declField.isAccessible();
-			boolean needsAccessOverride = !isAccessible
-					&& !Modifier.isPublic(declField.getModifiers());
-			if (needsAccessOverride) {
-				// Override access restrictions
-				declField.setAccessible(true);
-			}
-
-			declField.set(instance, value);
-		}
-
-		Class<?> superClass = instanceClass.getSuperclass();
-		if (serializationPolicy.shouldDeserializeFields(superClass)) {
-			deserializeImpl(
-					SerializabilityUtil.hasCustomFieldSerializer(superClass),
-					superClass, instance);
-		}
-	}
-
-	public Object deserializeValue(Class<?> type) throws SerializationException {
-		ValueReader valueReader = CLASS_TO_VALUE_READER.get(type);
-		if (valueReader != null) {
-			return valueReader.readValue(this);
-		} else {
-			// Arrays of primitive or reference types need to go through
-			// readObject.
-			return SyncClientSerializationStreamReader.ValueReader.OBJECT
-					.readValue(this);
-		}
 	}
 
 	private void buildStringTable() {
@@ -831,6 +585,123 @@ public class SyncClientSerializationStreamReader extends
 		}
 	}
 
+	private String deconcat(String encoded) {
+		int start = encoded.indexOf(PRELUDE);
+		if (start > 0) {
+			StringBuffer ret = new StringBuffer(encoded.length()
+					- PRELUDE.length());
+			ret.append(encoded.substring(0, start));
+
+			start += PRELUDE.length();
+			int end = encoded.indexOf(POSTLUDE1, start);
+			while (end > 0) {
+				ret.append(",");
+				ret.append(encoded.substring(start, end));
+
+				start = end + POSTLUDE1.length();
+				end = encoded.indexOf(POSTLUDE1, start);
+			}
+
+			end = encoded.indexOf(POSTLUDE, start);
+			if (end > 0) {
+				ret.append(",");
+				ret.append(encoded.substring(start, end + 1));
+				return ret.toString();
+			}
+		}
+
+		return encoded;
+	}
+
+	/**
+	 * Deserialize an instance that is an array. Will default to deserializing
+	 * as an Object vector if the instance is not a primitive vector.
+	 * 
+	 * @param instanceClass
+	 * @param instance
+	 * @throws SerializationException
+	 */
+	@SuppressWarnings("unchecked")
+	private Object deserializeArray(Class<?> instanceClass, Object instance)
+			throws SerializationException {
+		assert (instanceClass.isArray());
+
+		BoundedList<Object> buffer = (BoundedList<Object>) instance;
+		VectorReader instanceReader = CLASS_TO_VECTOR_READER.get(instanceClass);
+		if (instanceReader != null) {
+			return instanceReader.read(this, buffer);
+		} else {
+			return SyncClientSerializationStreamReader.VectorReader.OBJECT_VECTOR
+					.read(this, buffer);
+		}
+	}
+
+	private void deserializeClass(Class<?> instanceClass, Object instance)
+			throws SerializationException, IllegalAccessException,
+			NoSuchMethodException, InvocationTargetException,
+			ClassNotFoundException {
+		Field[] serializableFields = SerializabilityUtil
+				.applyFieldSerializationPolicy(instanceClass);
+
+		for (Field declField : serializableFields) {
+			assert (declField != null);
+
+			Object value = deserializeValue(declField.getType());
+
+			boolean isAccessible = declField.isAccessible();
+			boolean needsAccessOverride = !isAccessible
+					&& !Modifier.isPublic(declField.getModifiers());
+			if (needsAccessOverride) {
+				// Override access restrictions
+				declField.setAccessible(true);
+			}
+
+			declField.set(instance, value);
+		}
+
+		Class<?> superClass = instanceClass.getSuperclass();
+		if (serializationPolicy.shouldDeserializeFields(superClass)) {
+			deserializeImpl(
+					SerializabilityUtil.hasCustomFieldSerializer(superClass),
+					superClass, instance);
+		}
+	}
+
+	private Object deserializeImpl(Class<?> customSerializer,
+			Class<?> instanceClass, Object instance)
+			throws NoSuchMethodException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException,
+			SerializationException, ClassNotFoundException {
+
+		if (customSerializer != null) {
+			deserializeWithCustomFieldDeserializer(customSerializer,
+					instanceClass, instance);
+		} else if (instanceClass.isArray()) {
+			instance = deserializeArray(instanceClass, instance);
+		} else if (instanceClass.isEnum()) {
+			// Enums are deserialized when they are instantiated
+		} else {
+			deserializeClass(instanceClass, instance);
+		}
+
+		return instance;
+	}
+
+	private void deserializeWithCustomFieldDeserializer(
+			Class<?> customSerializer, Class<?> instanceClass, Object instance)
+			throws NoSuchMethodException, IllegalAccessException,
+			InvocationTargetException {
+		assert (!instanceClass.isArray());
+
+		for (Method method : customSerializer.getMethods()) {
+			if ("deserialize".equals(method.getName())) {
+				method.invoke(null, this, instance);
+				return;
+			}
+		}
+		throw new NoSuchMethodException("deserialize");
+	}
+
 	private byte hex2byte(char ch) {
 		if ((ch >= '0') && (ch <= '9')) {
 			return (byte) (ch - '0');
@@ -845,12 +716,150 @@ public class SyncClientSerializationStreamReader extends
 		return -1;
 	}
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"C:/temp/large.txt"));
-		String encoded = reader.readLine();
-		SyncClientSerializationStreamReader s = new SyncClientSerializationStreamReader(
-				new RemoteServiceSyncProxy.DummySerializationPolicy());
-		s.prepareToRead(encoded);
+	private Object instantiate(Class<?> customSerializer, Class<?> instanceClass)
+			throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SerializationException {
+		if (customSerializer != null) {
+			for (Method method : customSerializer.getMethods()) {
+				if ("instantiate".equals(method.getName())) {
+					return method.invoke(null, this);
+				}
+			}
+			// Ok to not have one.
+		}
+
+		if (instanceClass.isArray()) {
+			int length = readInt();
+			// We don't pre-allocate the array; this prevents an allocation
+			// attack
+			return new BoundedList<Object>(instanceClass.getComponentType(),
+					length);
+		} else if (instanceClass.isEnum()) {
+			Enum<?>[] enumConstants = (Enum[]) instanceClass.getEnumConstants();
+			int ordinal = readInt();
+			assert (ordinal >= 0 && ordinal < enumConstants.length);
+			return enumConstants[ordinal];
+		} else {
+			Constructor<?> constructor = instanceClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			return constructor.newInstance();
+		}
+	}
+
+	/**
+	 * Parse response from GWT RPC example:
+	 * [3,23456,0,2,0,0,0,1,1,["dab.rpp.client.Person/1455343364"
+	 * ,"My dad name","GWT User"],0,5]
+	 * 
+	 * @param encoded
+	 */
+	private void parse(String encoded) {
+		// encoded = encoded.substring(1, encoded.length()-1);
+		if (encoded.endsWith("]")) {
+			encoded = encoded.substring(1, encoded.length() - 1);
+		} else {
+			encoded = encoded.substring(1);
+		}
+		StringBuffer token = new StringBuffer();
+		for (int i = 0; i < encoded.length(); i++) {
+			char ch = encoded.charAt(i);
+			if (ch == ',') {
+				results.add(token.toString());
+				token = new StringBuffer();
+				continue;
+			}
+			if (ch == '[') {
+				int pos = encoded.lastIndexOf(']');
+				if (pos < 0) {
+					// TODO: throw exeption
+				}
+				results.add(encoded.substring(i + 1, pos));
+				i = pos + 1;
+				continue;
+			}
+			token.append(ch);
+		}
+		if (token.length() > 0) {
+			results.add(token.toString());
+		}
+	}
+
+	@Override
+	protected Object deserialize(String typeSignature)
+			throws SerializationException {
+		Object instance = null;
+		SerializedInstanceReference serializedInstRef = SerializabilityUtil
+				.decodeSerializedInstanceReference(typeSignature);
+
+		try {
+			// Class<?> instanceClass =
+			// Class.forName(serializedInstRef.getName(),
+			// false, null);
+			Class<?> instanceClass = Class.forName(serializedInstRef.getName());
+
+			assert (serializationPolicy != null);
+
+			try {
+				serializationPolicy.validateDeserialize(instanceClass);
+			} catch (SerializationException e) {
+				System.err.println("WARN: " + e.getMessage());
+			}
+
+			// TODO validateTypeVersions(instanceClass, serializedInstRef);
+
+			Class<?> customSerializer = SerializabilityUtil
+					.hasCustomFieldSerializer(instanceClass);
+
+			int index = reserveDecodedObjectIndex();
+
+			instance = instantiate(customSerializer, instanceClass);
+
+			rememberDecodedObject(index, instance);
+
+			Object replacement = deserializeImpl(customSerializer,
+					instanceClass, instance);
+
+			// It's possible that deserializing an object requires the original
+			// proxy
+			// object to be replaced.
+			if (instance != replacement) {
+				rememberDecodedObject(index, replacement);
+				instance = replacement;
+			}
+
+			return instance;
+
+		} catch (ClassNotFoundException e) {
+			throw new SerializationException(e);
+
+		} catch (InstantiationException e) {
+			throw new SerializationException(e);
+
+		} catch (IllegalAccessException e) {
+			throw new SerializationException(e);
+
+		} catch (IllegalArgumentException e) {
+			throw new SerializationException(e);
+
+		} catch (InvocationTargetException e) {
+			throw new SerializationException(e);
+
+		} catch (NoSuchMethodException e) {
+			throw new SerializationException(e);
+		}
+	}
+
+	@Override
+	protected String getString(int index) {
+		if (index == 0) {
+			return null;
+		}
+		// index is 1-based
+		assert (index > 0);
+		assert (index <= stringTable.size());
+
+		// index is 1-based
+		return this.stringTable.get(index - 1);
 	}
 }
