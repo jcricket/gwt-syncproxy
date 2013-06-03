@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="SyncProxyAndroid-0.4.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/SPALibrary/SyncProxyAndroid-jardesc.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/gwt-syncproxy/Manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{Response.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RpcTokenException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{SerializationException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RpcRequestBuilder.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.user.client.rpc.impl"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.core.java.math"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{RPCRequest.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.gdevelop.gwt.syncrpc.android{GAEAMCallback.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.impl{RpcStatsContext.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{Header.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{Utils.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.client.impl{SerializableThrowable.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.core.java.sql"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RpcTokenExceptionHandler.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{AsyncCallback.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc.impl"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.typedarrays.shared{ArrayBuffer.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.shared"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.core.java.util"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.client{GWT.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.impl{AbstractSerializationStreamWriter.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RemoteServiceRelativePath.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{RpcPolicyFinder.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{IncompatibleRemoteServiceException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{ServiceDefTarget.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{SyncProxy.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{ServerCustomFieldSerializer.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.gdevelop.gwt.syncrpc.android{CookieManagerAvailableListener.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{RemoteServiceInvocationHandler.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{AbstractRemoteServiceServlet.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.core.java.lang"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.impl{Serializer.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{SerializationStreamWriter.java"/>
+        <folder path="/SPALibrary/GWT_USER/com/google/gwt/core/client/testing"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.client{JavaScriptObject.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{RequestPermissionException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server{Base64Utils.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.core.java.util.logging"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{CustomFieldSerializer.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RemoteService.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.client{RunAsyncCallback.java"/>
+        <javaElement handleIdentifier="=SPALibrary/gen"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{RequestCallback.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{SerializationStreamReader.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.client{Duration.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{SyncClientSerializationStreamReader.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{SerializedTypeViolationException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{UnexpectedException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.web.bindery.event.shared{UmbrellaException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{GwtTransient.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.impl{AbstractSerializationStreamReader.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.user.client"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{StringValidator.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{StatusCodeException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{RemoteServiceSyncProxy.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.gdevelop.gwt.syncrpc.android{AccountList.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{RPC.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.lang"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{Request.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RpcToken.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.impl{AbstractSerializationStream.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{SerializationPolicyLoader.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{HasRpcToken.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.user.server.rpc"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{RequestTimeoutException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{SerializationPolicy.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{RequestException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{SyncClientSerializationStreamWriter.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.event.shared{UmbrellaException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.gdevelop.gwt.syncrpc"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{RPCServletUtils.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc{SerializationPolicyProvider.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.xhr.client{ReadyStateChangeHandler.java"/>
+        <folder path="/SPALibrary/GWT_USER/com/google/gwt/core/client/prefetch"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.core.client.impl"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.gdevelop.gwt.syncrpc.android{GetCookieRunnable.java"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.http.client"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.xhr.client{XMLHttpRequest.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{SerializationStreamFactory.java"/>
+        <folder path="/SPALibrary/GWT_USER/com/google/gwt/core/client/debug"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.core.shared"/>
+        <javaElement handleIdentifier="=SPALibrary/src&lt;com.google.gwt.core.client"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.http.client{RequestBuilder.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{InvocationException.java"/>
+        <file path="/SPALibrary/LICENSE"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{IsSerializable.java"/>
+    </selectedElements>
+</jardesc>
