@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry including="java/lib/gdata-client-1.0.jar" kind="src" path="GData"/>
+	<classpathentry including="**/Collections*.java" kind="src" path="SPAWeb"/>
+	<classpathentry including="**/CollectionsTestService*|**/CoreJavaTest.java|**/CoreJavaTestService*|**/CustomFieldSerializerTestService*|**/CustomFieldSerializerTestSet*.java|**/EnumsTestService*|**/ExceptionsTestService*|**/InheritanceTestService*|**/InheritanceTestSet*.java|**/LogFilterServletContext.java|**/ManuallySerialized*.java|**/MixedSerializable.java|**/MixedSerializableEchoService*|**/ObjectGraphTestService*|**/RecursiveClassTestService*|**/RemoteServiceServletTestService*|**/RpcTestBase.java|**/SerializableGenericWrapperType.java|**/TypeChecked*Class.java|**/TypeCheckedObjectsTestService*|**/TypeCheckedObjectsTestSet*.java|**/TypeUncheckedGenericClass.java|**/UnicodeEscapingService*|**/UnicodeEscapingTest.java|**/ValueTypesTestService*|**/XsrfProtectionTest.java|**/XsrfTestService*|**/rpc/TestSet*.java|**/rpc/Type*_CustomFieldSerializer.java|com/google/gwt/user/RPCSuite.gwt.xml" kind="src" path="GWT_USER_TESTS"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SPWebTest"/>
+	<classpathentry kind="lib" path="GData/java/lib/gdata-client-1.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<item
+		android:id="@+id/spa_add_custom"
+		android:showAsAction="ifRoom|withText"
+		android:title="@string/spa_add_custom_menu"
+		android:visible="false">
+	</item>
+	<item
+		android:id="@+id/spa_add_account"
+		android:showAsAction="ifRoom|withText"
+		android:title="@string/spa_add_account_menu">
+	</item>
+
+</menu>
