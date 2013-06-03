@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry including="**/user/client/rpc/XsrfProtectedService.java|**/user/client/rpc/XsrfProtectedServiceAsync.java" kind="src" path="GWT_USER_TEST_ADDL"/>
+	<classpathentry including="**/Collections*.java|**/UnicodeEscapingTest.java" kind="src" path="SPWeb"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SPAAppTest"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry including="**/CoreJavaTest.java|**/CoreJavaTestService*|**/CustomFieldSerializerTestService*|**/CustomFieldSerializerTestSet*.java|**/EnumsTestService*|**/ExceptionsTestService*|**/InheritanceTestService*|**/InheritanceTestSet*.java|**/LogFilterServletContext.java|**/ManuallySerialized*.java|**/MixedSerializable.java|**/MixedSerializableEchoService*|**/ObjectGraphTestService*|**/RecursiveClassTestService*|**/RemoteServiceServletTestService*|**/RpcTestBase.java|**/SerializableGenericWrapperType.java|**/Type*_*CustomFieldSerializer.java|**/TypeChecked*Class.java|**/TypeCheckedObjectsTestService*|**/TypeCheckedObjectsTestSet*.java|**/TypeUncheckedGenericClass.java|**/UnicodeEscapingService*|**/ValidationClientGwtTestCase.java|**/ValueTypesTestService*|**/XsrfTestService*|**/constraints/PatternValidatorGwtTest.java|**/junit/client/GwtTestCase.java|**/rpc/TestSet*.java|**/user/**/Collections*.java|**/user/client/AsyncProxy*.java|**/user/client/rpc/AnnotatedRpcTokenTest*.java|**/user/client/rpc/MockXsrfTokenService*.java|**/user/client/rpc/RpcTokenTestService*.java|**/user/server/rpc/MockXsrfTokenServiceImpl.java" kind="src" path="GWT_USER_TESTS"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
