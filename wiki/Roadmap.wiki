@@ -1,0 +1,18 @@
+#summary Roadmap of items to work on in the future
+
+= Roadmap =
+
+At current there are very few things on the roadmap for this project as it is relatively self-contained. However
+as time permits, we will attempt to resolve the remaining issues (or close them if we cannot verify or get
+further input). Additionally, below are some of the goals for the next version. 
+
+== 0.5 ==
+
+  * Update main gwt-syncproxy project to use Java Generics
+  * Fix some non-critical warnings in the source code throughout the project
+  * Modify the system as needed when GWT 2.6 releases towards the end of this year (see gwtproject.com or the 2013 IO Presentation on the GWT Roadmap)
+  * Update the Android library portion of this project to comply with the new Android Studio (if possible)
+  * Mavenize
+  * Cleanup unused tests dev files
+  * Increase testing Code Coverage to > 95% (currently approx 70% for gwt-syncproxy src)
+  * Change download section to Google Drive in compliance with [http://google-opensource.blogspot.com/2013/05/a-change-to-google-code-download-service.html]

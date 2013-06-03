@@ -1,7 +1,5 @@
 #summary Description of the features in the Android library
 
-* BETA RELEASE* 
-
 <wiki:toc max_depth="3" />
 
 = Android Library =

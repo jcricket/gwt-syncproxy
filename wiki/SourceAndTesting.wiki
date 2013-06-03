@@ -1,7 +1,5 @@
 #summary Source Usage and Testing Mechanisms for this system
 
-* BETA RELEASE *
-
 <wiki:toc max_depth="3" />
 
 = Source Code Layout =
@@ -13,11 +11,11 @@ sample Android app for manual testing, and an Android testing app to conduct aut
 All Eclipse launchers are stored in the {{{.settings}}} folder of the respective projects. On project import, they should be
 directly available to you, check the Run Configurations manually in case they don't show up right away.
 
-For the time being, these descriptions only apply to the source within the AndroidDev branch (Will be available in the next few days).
-Once field testing and documentation updating has completed, the trunk will be updated to reflect the same. The project's original
-testing structure has been maintained for the time being, however it is not utilized in descriptions below as there were functional
-problems in utilizing and verifying the tests in an automated manner. If a user would like to provide documentation on utilizing the
-prior testing system, please let us know and we'll add it to the Wiki.
+~~For the time being, these descriptions only apply to the source within the AndroidDev branch (Will be available in the next few days).
+Once field testing and documentation updating has completed, the trunk will be updated to reflect the same.~~ All updated source code
+has now been moved back into the trunk. The project's original testing structure has been maintained for the time being, however it is
+not utilized in descriptions below as there were functional problems in utilizing and verifying the tests in an automated manner.
+If a user would like to provide documentation on utilizing the prior testing system, please let us know and we'll add it to the Wiki.
 
 Additionally, the SyncProxy system can be used as an excellent tool for Synchronous testing of GWT Services. Please see this 
 [http://cancerberonia.blogspot.com/2012/10/testing-gwt-service-classes.html Sebastian Gurin's Blog] for details.

@@ -1,0 +1,14 @@
+#summary Release Notes
+
+= Release Notes =
+
+== 0.4 - 2013-06-03 ==
+
+Restructured entire syncproxy source into a slightly more compilable, maintainable, testable system.
+Created Junit testing systems (See SourceAndTesting). Implemented Android client library for SyncProxy.
+
+  * Fixed Issue 3 - New Library jar available
+  * Fixed Issue 23 - Patch applied
+  * Closed Issue 24 - Unverified
+  * Fixed Issue 26 - Wiki includes link
+  * Fixed Issue 28 - Patch applied
