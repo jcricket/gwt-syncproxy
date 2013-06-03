@@ -1,0 +1,12 @@
+<module rename-to="rpcsuite">
+  <inherits name='com.google.gwt.user.User' />
+  <inherits name='com.google.gwt.junit.JUnit' />
+  <inherits name='com.google.gwt.user.RPCSuite' />
+
+<!--
+  <set-property name="user.agent" value="gecko1_8"/>
+-->
+  
+  <source path="client"/>
+  <entry-point class="com.gdevelop.gwt.syncrpc.test.client.AllTest"/>
+</module>
