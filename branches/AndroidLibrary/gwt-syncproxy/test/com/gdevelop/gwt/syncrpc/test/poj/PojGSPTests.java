@@ -5,7 +5,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Preethum
- * @since
+ * @since 0.4
  * 
  */
 public class PojGSPTests extends TestSuite {
