@@ -8,6 +8,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.gdevelop.gwt.syncrpc.spaapptest.MainActivity;
+import com.gdevelop.gwt.syncrpc.spaapptest.test.SPATests;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.MixedSerializable;
@@ -36,7 +37,7 @@ public class RunTimeSerializationErrorsTest extends
 			}
 		};
 		task.execute();
-		if (!signal.await(20, TimeUnit.SECONDS)) {
+		if (!signal.await(SPATests.WAIT_TIME_MEDIUM, TimeUnit.SECONDS)) {
 			throw new RuntimeException("Failed to get service started");
 		}
 	}
@@ -70,7 +71,7 @@ public class RunTimeSerializationErrorsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testBadSerialization2() throws Throwable {
@@ -102,7 +103,7 @@ public class RunTimeSerializationErrorsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testGoodSerialization1() throws Throwable {
@@ -136,7 +137,7 @@ public class RunTimeSerializationErrorsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void xtestBadSerialization3() throws RequestException {

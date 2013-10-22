@@ -8,6 +8,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.gdevelop.gwt.syncrpc.spaapptest.MainActivity;
+import com.gdevelop.gwt.syncrpc.spaapptest.test.SPATests;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ObjectGraphTestServiceAsync;
 import com.google.gwt.user.client.rpc.TSFAccessor;
@@ -39,7 +40,7 @@ public class ObjectGraphTest extends
 			}
 		};
 		task.execute();
-		if (!signal.await(20, TimeUnit.SECONDS)) {
+		if (!signal.await(SPATests.WAIT_TIME_MEDIUM, TimeUnit.SECONDS)) {
 			throw new RuntimeException("Failed to get service started");
 		}
 	}
@@ -77,7 +78,7 @@ public class ObjectGraphTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testComplexCyclicGraph() throws Throwable {
@@ -114,7 +115,7 @@ public class ObjectGraphTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testComplexCyclicGraph2() throws Throwable {
@@ -152,7 +153,7 @@ public class ObjectGraphTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testDoublyReferencedArray() throws Throwable {
@@ -189,7 +190,7 @@ public class ObjectGraphTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrivateNoArg() throws Throwable {
@@ -226,7 +227,7 @@ public class ObjectGraphTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testTrivialCyclicGraph() throws Throwable {
@@ -263,7 +264,7 @@ public class ObjectGraphTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 }

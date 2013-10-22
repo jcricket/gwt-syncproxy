@@ -8,6 +8,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.gdevelop.gwt.syncrpc.spaapptest.MainActivity;
+import com.gdevelop.gwt.syncrpc.spaapptest.test.SPATests;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RpcTokenException;
 import com.google.gwt.user.client.rpc.TestSetValidator;
@@ -32,7 +33,7 @@ public class XsrfProtectionTest extends
 			}
 		};
 		task.execute();
-		if (!signal.await(20, TimeUnit.SECONDS)) {
+		if (!signal.await(SPATests.WAIT_TIME_MEDIUM, TimeUnit.SECONDS)) {
 			throw new RuntimeException("Failed to get service started");
 		}
 	}
@@ -66,7 +67,7 @@ public class XsrfProtectionTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	@Override

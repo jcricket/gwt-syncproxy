@@ -32,4 +32,8 @@ public class SPATests extends TestSuite {
 		suite.addTest(SPAGWTTests.suite());
 		return suite;
 	}
+	
+	public static int WAIT_TIME_SHORT = 2;
+	public static int WAIT_TIME_MEDIUM = 20;
+	public static int WAIT_TIME_LONG = 120;
 }

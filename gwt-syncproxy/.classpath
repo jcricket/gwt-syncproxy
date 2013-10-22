@@ -8,7 +8,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/App Engine 1.8.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SPWebTest"/>
 	<classpathentry kind="lib" path="GData/java/lib/gdata-client-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>

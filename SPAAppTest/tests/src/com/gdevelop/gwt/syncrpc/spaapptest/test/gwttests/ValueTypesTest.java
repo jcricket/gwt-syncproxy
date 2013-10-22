@@ -8,6 +8,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.gdevelop.gwt.syncrpc.spaapptest.MainActivity;
+import com.gdevelop.gwt.syncrpc.spaapptest.test.SPATests;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ValueTypesTestServiceAsync;
 
@@ -33,7 +34,7 @@ public class ValueTypesTest extends
 			}
 		};
 		task.execute();
-		if (!signal.await(20, TimeUnit.SECONDS)) {
+		if (!signal.await(SPATests.WAIT_TIME_MEDIUM, TimeUnit.SECONDS)) {
 			throw new RuntimeException("Failed to get service started");
 		}
 	}
@@ -68,7 +69,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testBoolean_TRUE() throws Throwable {
@@ -100,7 +101,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testByte() throws Throwable {
@@ -134,7 +135,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testByte_MAX_VALUE() throws Throwable {
@@ -167,7 +168,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testByte_MIN_VALUE() throws Throwable {
@@ -200,7 +201,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testChar() throws Throwable {
@@ -234,7 +235,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testChar_MAX_VALUE() throws Throwable {
@@ -268,7 +269,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testChar_MIN_VALUE() throws Throwable {
@@ -302,7 +303,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testDouble() throws Throwable {
@@ -334,7 +335,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testDouble_MAX_VALUE() throws Throwable {
@@ -368,7 +369,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testDouble_MIN_VALUE() throws Throwable {
@@ -402,7 +403,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	/**
@@ -440,7 +441,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	/**
@@ -480,7 +481,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	/**
@@ -520,7 +521,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testFloat() throws Throwable {
@@ -552,7 +553,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testFloat_MAX_VALUE() throws Throwable {
@@ -586,7 +587,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testFloat_MIN_VALUE() throws Throwable {
@@ -620,7 +621,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	/**
@@ -658,7 +659,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	/**
@@ -698,7 +699,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	/**
@@ -738,7 +739,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testInteger() throws Throwable {
@@ -772,7 +773,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testInteger_MAX_VALUE() throws Throwable {
@@ -804,7 +805,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testInteger_MIN_VALUE() throws Throwable {
@@ -836,7 +837,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testLong() throws Throwable {
@@ -868,7 +869,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testLong_MAX_VALUE() throws Throwable {
@@ -901,7 +902,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testLong_MIN_VALUE() throws Throwable {
@@ -934,7 +935,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testShort() throws Throwable {
@@ -968,7 +969,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testShort_MAX_VALUE() throws Throwable {
@@ -1002,7 +1003,7 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testShort_MIN_VALUE() throws Throwable {
@@ -1036,6 +1037,6 @@ public class ValueTypesTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 }
