@@ -18,6 +18,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.gdevelop.gwt.syncrpc.spaapptest.MainActivity;
+import com.gdevelop.gwt.syncrpc.spaapptest.test.SPATests;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.CollectionsTestServiceAsync;
 import com.google.gwt.user.client.rpc.TestSetFactory;
@@ -55,7 +56,7 @@ public class CollectionsTest extends
 			}
 		};
 		task.execute();
-		if (!signal.await(20, TimeUnit.SECONDS)) {
+		if (!signal.await(SPATests.WAIT_TIME_MEDIUM, TimeUnit.SECONDS)) {
 			throw new RuntimeException("Failed to get service started");
 		}
 	}
@@ -93,7 +94,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 
 	}
 
@@ -131,7 +132,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testBooleanArray() throws Throwable {
@@ -166,7 +167,7 @@ public class CollectionsTest extends
 			}
 		});
 
-		assertTrue("Failed to Complete", signal.await(20, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_MEDIUM, TimeUnit.SECONDS));
 	}
 
 	public void testByteArray() throws Throwable {
@@ -201,7 +202,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testCharArray() throws Throwable {
@@ -236,7 +237,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testDoubleArray() throws Throwable {
@@ -271,7 +272,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testFloatArray() throws Throwable {
@@ -306,7 +307,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testHashMap() throws Throwable {
@@ -345,7 +346,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testHashSet() throws Throwable {
@@ -383,7 +384,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testIntegerArray() throws Throwable {
@@ -417,7 +418,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testLinkedHashMap() throws Throwable {
@@ -458,7 +459,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 
 	}
 
@@ -501,7 +502,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testLongArray() throws Throwable {
@@ -535,7 +536,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveBooleanArray() throws Throwable {
@@ -569,7 +570,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveByteArray() throws Throwable {
@@ -603,7 +604,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveCharArray() throws Throwable {
@@ -637,7 +638,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveDoubleArray() throws Throwable {
@@ -671,7 +672,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveFloatArray() throws Throwable {
@@ -705,7 +706,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveIntegerArray() throws Throwable {
@@ -739,7 +740,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveLongArray() throws Throwable {
@@ -773,7 +774,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testPrimitiveShortArray() throws Throwable {
@@ -807,7 +808,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testShortArray() throws Throwable {
@@ -841,7 +842,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testSqlDateArray() throws Throwable {
@@ -875,7 +876,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testSqlTimeArray() throws Throwable {
@@ -909,7 +910,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testSqlTimestampArray() throws Throwable {
@@ -943,7 +944,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testStringArray() throws Throwable {
@@ -977,7 +978,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testStringArrayArray() throws Throwable {
@@ -1011,7 +1012,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testTreeMapOptTrue() throws Throwable {
@@ -1051,7 +1052,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testTreeMapOptFalse() throws Throwable {
@@ -1091,7 +1092,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testTreeSetOptTrue() throws Throwable {
@@ -1129,7 +1130,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testTreeSetOptFalse() throws Throwable {
@@ -1167,7 +1168,7 @@ public class CollectionsTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 	public void testVector() throws Throwable {
@@ -1205,7 +1206,7 @@ public class CollectionsTest extends
 			}
 		});
 
-		assertTrue("Failed to Complete", signal.await(2, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 
 }

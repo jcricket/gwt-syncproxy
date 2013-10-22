@@ -51,6 +51,6 @@ public class LargePayloadServiceTest extends
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to complete", signal.await(15, TimeUnit.SECONDS));
+		assertTrue("Failed to complete", signal.await(SPATests.WAIT_TIME_MEDIUM, TimeUnit.SECONDS));
 	}
 }

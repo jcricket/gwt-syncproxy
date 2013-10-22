@@ -20,5 +20,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl SPAWebTest.html -logLevel INFO -codeServerPort 9997 -port 8888 -server com.google.appengine.tools.development.gwt.AppEngineLauncher -war &quot;${workspace_loc}\SPWebTest\war&quot; com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SPWebTest"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx512m -javaagent:D:\Programs\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\agent\appengine-agent.jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx512m -javaagent:D:\Programs\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\agent\appengine-agent.jar"/>
 </launchConfiguration>
