@@ -55,15 +55,15 @@ jars which can likely be found in your {{{eclipse\plugins}}} path:
 
 {{{
 junit.jar - org.junit_4.10.0.v4_10_0_v20120426-0900 (or acceptable alternative)
-appengine-testing.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\testing
-appengine-api.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\impl
-appengine-api-labs.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\impl
-appengine-stubs.jar - com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5\lib\impl
+appengine-testing.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\testing
+appengine-api.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\impl
+appengine-api-labs.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\impl
+appengine-stubs.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\impl
 }}}
 
 === GWT, GAE, and Android ===
 
-The current library has been compiled/tested against GWT 2.5.0, GAE 1.7.5, and Android V17. Testing against newer versions should be as simple
+The current library (0.4.1) has been compiled/tested against GWT 2.5.1, GAE 1.8.6, and Android V17. Testing against newer versions should be as simple
 as updating the library references within each appropriate project and updating the checked-out source code for GWT and GData. However, there
 may be some complications that arise with newer versions from GWT source as subtle changes in classes referenced may render the build paths
 incomplete.

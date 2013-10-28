@@ -1,0 +1,12 @@
+#summary Common Issues
+
+= Common Issues =
+
+A couple of common issues pop up from time to time. See below for a likely resolution to your problem.
+
+ # Server-side java.lang.SecurityException: Blocked request without GWT permutation header (XSRF attack?). 
+  * This occurs because the local (Android) app tried to read the .gwt.rpc file from the server, and probably did not find it. GWT compile the web app and make those files available to to remote users. Make sure to restart the web-app after these files are made available
+ # Client-side RemoteServiceInvocationError or 
+  * Make sure the type that is throwing the error is implementing Serializable or IsSerializable and has a default constructor.
+ # SerializationException: Invalid type signature for some.package.
+  * If you are receiving this error from the Android client, make sure your server is using the same version of GWT as the SPA-Library you are using. Because the Android library is compiled with GWT and not against it, if you are using a different version of GWT in your library source code, the RPC system recognizes the differences. The Android library is compiled with GWT due to some customized files from GWT that are overriden in  order to reduce the size of the library to function quickly and correctly in the Dalvik environment.

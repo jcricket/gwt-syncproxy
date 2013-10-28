@@ -12,3 +12,9 @@ Created Junit testing systems (See SourceAndTesting). Implemented Android client
   * Closed Issue 24 - Unverified
   * Fixed Issue 26 - Wiki includes link
   * Fixed Issue 28 - Patch applied
+  
+ == 0.4.1 - 2013-10-28 ==
+ 
+ Compiled Library against GWT 2.5.1 to get Android Library compatible with GWT 2.5.1 server code
+ 
+  * Fixed Issue 31 - GWT 2.5.1 Compatible
