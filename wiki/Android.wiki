@@ -19,12 +19,12 @@ section on calling RPCs as any RPC call still needs to be conducted away from th
 API 14 as a minimum specifically for the token retrieving ability, 
 [https://developer.android.com/reference/android/accounts/AccountManager.html#getAuthToken(android.accounts.Account, java.lang.String, android.os.Bundle, android.app.Activity, android.accounts.AccountManagerCallback<android.os.Bundle>, android.os.Handler) AccountManager#getAuthToken()]
 
-The current BETA version of the library has one dependency that the developer must include in the libs/ path of their Android project.
+~~The current BETA version of the library has one dependency that the developer must include in the libs/ path of their Android project.
 It is your server's backend {{{servlet-api.jar}}}. Essentially this is the jar that contains your javax.** classes. In a regular java project,
 these classes are provided within the {{{gwt-user.jar}}}. However, since the this jar is much larger than we need for Android functionality,
 in order to reduce the result library jar size (and ultimately the APK size), we need to have that jar as a separate library. This
 technique (as compared to the Alpha development version (see strikethrough below) has brought the sample project APK size down from 
-approx 2.2MB to 350KB.
+approx 2.2MB to 350KB.~~
 
 ~~The current development version of the library depends on gwt-servlet.jar, which is in the src/lib for the * SPALibrary * project, or can be
 retrieved from any GAE generated project. Once I get the project layout and some other bugs squared away, I'll be introducing linked sources
@@ -47,8 +47,18 @@ is to Source-Link your gwt services Async files and shared paths. In your Androi
 the path to your GWT/GAE {{{project/src}}} path and give it a name, like _GWTServices_. Then, add the following inclusion filters:
 
 {{{
+**/*Service.java
 **/*ServicesAsync.java
 **/shared/**
+}}}
+
+Lastly, the GWT-App must be GWT-compiled to function in Dev Mode and the following line must be modified in appengine-web.xml on line 19
+(if using GAE):
+
+{{{
+<exclude path="**.gwt.rpc" /> 
+	to
+<include path="**.gwt.rpc" />
 }}}
 
 Now your Android project has everything it needs to know about your GWT/GAE project's services and shared files.

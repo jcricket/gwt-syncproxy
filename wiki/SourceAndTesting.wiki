@@ -25,12 +25,13 @@ Additionally, the SyncProxy system can be used as an excellent tool for Synchron
 All testing projects are setup to draw the testing services directly from GWT source so that it can be automatically tested
 against the latest version as GWT changes. As such, you must have a checkout of the entire google-web-toolkit trunk checked out
 to the path {{{google-web-toolkit}}} in your workspace. Additionally, you will need a gdata checked-out to {{{gdata}}} within
-your workspace as well. The Android library is dependent on the included gwt-servlet.jar library. This was taken directly from
-the {{{war/WEB-INF/lib}}} path of a generated GWT/GAE project. While only about of the sources in the gwt-user are needed for the
-project, there is a lot of internal referencing that can cause errors if not made available. A future release (likely before the commit to trunk)
+your workspace as well. The Android library is dependent on the included ~gwt-servlet.jar~ web-app's servlet-api.jar library. This was taken directly from
+the {{{war/WEB-INF/lib}}} path of a generated GWT/GAE project. While only a fraction of the sources in the gwt-user are needed for the
+project, there is a lot of internal referencing that can cause errors if not made available. This is compensated for by using a modified version of 
+a couple of the gwt-user source files to break the referencing chain. ~A future release (likely before the commit to trunk)
 will utilize a smaller subset of these source files once they can be verifiably tested (in order to provide a smaller footprint for the library).
 I've already had some success in reducing the servlet jar down to about 30 linked sources if I modified about 4 files to break the source
-hierarchy, but it will take some more testing before I can reliable say that
+hierarchy, but it will take some more testing before I can reliable say that~
 
 Checking out the entire trunk with all necessary dependencies should give you a layout workspace similar to the following:
 
