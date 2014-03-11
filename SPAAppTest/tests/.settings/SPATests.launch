@@ -5,7 +5,7 @@
 <stringAttribute key="com.android.ide.eclipse.adt.instrumentation" value="android.test.InstrumentationTestRunner"/>
 <booleanAttribute key="com.android.ide.eclipse.adt.nobootanim" value="false"/>
 <intAttribute key="com.android.ide.eclipse.adt.speed" value="0"/>
-<stringAttribute key="com.android.ide.eclipse.adt.target" value="MANUAL"/>
+<stringAttribute key="com.android.ide.eclipse.adt.target" value="ALL_DEVICES_AND_EMULATORS"/>
 <stringAttribute key="com.android.ide.eclipse.adt.testSize" value="All Tests"/>
 <booleanAttribute key="com.android.ide.eclipse.adt.wipedata" value="false"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
