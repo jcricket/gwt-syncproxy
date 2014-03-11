@@ -130,8 +130,17 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 							"There is no sync version of " + serviceIntfName
 									+ "Async");
 				}
-				Method syncMethod = clazz.getMethod(method.getName(),
+				Method syncMethod = null;
+				try{
+				 syncMethod = clazz.getMethod(method.getName(),
 						syncParamTypes);
+				}catch(NoSuchMethodException nsme){
+					String temp = "";
+					for(Class<?> cl:syncParamTypes){
+						temp += cl.getSimpleName() + ",";
+					}
+					throw new NoSuchMethodException("SPNoMeth " + method.getName() + " class " + clazz.getSimpleName() + " params " + temp);
+				}
 				if (syncMethod != null) {
 					returnType = syncMethod.getReturnType();
 				} else {
@@ -197,7 +206,8 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 			 * payload); if (callback != null){ callback.onSuccess(result); }
 			 * return result;
 			 */
-		} catch (Throwable ex) {
+		}
+		catch (Throwable ex) {
 			if (callback != null) {
 				callback.onFailure(ex);
 				return null;

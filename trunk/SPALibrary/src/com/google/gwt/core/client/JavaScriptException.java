@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  * 
- * Modified for the SPA Library May 2013 to eliminate the JavascriptObject dependency
+ * Modified for SPALibrary in Mar 2014 to remove StackTraceCreator Dependancy
  */
 package com.google.gwt.core.client;
 
@@ -46,6 +46,8 @@ package com.google.gwt.core.client;
  */
 public final class JavaScriptException extends RuntimeException {
 
+  private static final Object NOT_SET = new Object();
+
   private static String getExceptionDescription(Object e) {
     if (e instanceof JavaScriptObject) {
       return getExceptionDescription0((JavaScriptObject) e);
@@ -74,12 +76,10 @@ public final class JavaScriptException extends RuntimeException {
     return (e == null) ? null : e.name;
   }-*/;
 
-  private static String getExceptionProperties(Object e) {
-	  return "";
-	  // SP EDIT
+//  private static String getExceptionProperties(Object e) {
 //    return (GWT.isScript() && e instanceof JavaScriptObject)
 //        ? StackTraceCreator.getProperties((JavaScriptObject) e) : "";
-  }
+//  }
 
   /**
    * The original description of the JavaScript exception this class wraps,
@@ -128,28 +128,40 @@ public final class JavaScriptException extends RuntimeException {
      * thrown object, although this is not possible in all browsers.
      */
     if (GWT.isScript()) {
-     // StackTraceCreator.createStackTrace(this);
+      //StackTraceCreator.createStackTrace(this);
     }
   }
-  
+
   public JavaScriptException(String name, String description) {
     this.message = "JavaScript " + name + " exception: " + description;
     this.name = name;
     this.description = description;
-    this.e = null;
+    this.e = NOT_SET;
   }
 
   /**
-   * Used for server-side instantiation during JUnit runs. Exceptions are
-   * manually marshaled through
-   * <code>com.google.gwt.junit.client.impl.ExceptionWrapper</code> objects.
-   * 
+   * Used for testing instantiations.
+   *
    * @param message the detail message
    */
   protected JavaScriptException(String message) {
     super(message);
     this.message = this.description = message;
-    this.e = null;
+    this.e = NOT_SET;
+  }
+
+  /**
+   * Returns {@code true} if a thrown object is not set for the exception.
+   */
+  public boolean isThrownSet() {
+    return e != NOT_SET;
+  }
+
+  /**
+   * Returns the original thrown object from javascript; may be {@code null}.
+   */
+  public Object getThrown() {
+    return e == NOT_SET ? null : e;
   }
 
   /**
@@ -157,24 +169,23 @@ public final class JavaScriptException extends RuntimeException {
    * <code>null</code>.
    */
   public String getDescription() {
-    if (message == null) {
-      init();
-    }
+    ensureInit();
     return description;
   }
 
   /**
    * Returns the original JavaScript the exception; may be <code>null</code>.
+   *
+   * @deprecated deprecated in favor for {@link #getThrown()} and {@link #isThrownSet()}
    */
+  @Deprecated
   public JavaScriptObject getException() {
     return (e instanceof JavaScriptObject) ? (JavaScriptObject) e : null;
   }
 
   @Override
   public String getMessage() {
-    if (message == null) {
-      init();
-    }
+    ensureInit();
     return message;
   }
 
@@ -183,16 +194,17 @@ public final class JavaScriptException extends RuntimeException {
    * <code>null</code>.
    */
   public String getName() {
-    if (message == null) {
-      init();
-    }
+    ensureInit();
     return name;
   }
 
-  private void init() {
-    name = getExceptionName(e);
-    description = description + ": " + getExceptionDescription(e);
-    message = "(" + name + ") " + getExceptionProperties(e) + description;
+  private void ensureInit() {
+    if (message == null) {
+      Object exception = getThrown();
+      name = getExceptionName(exception);
+      description = description + ": " + getExceptionDescription(exception);
+      message = "(" + name + ") " + /*getExceptionProperties(exception) +*/ description;
+    }
   }
 
 }

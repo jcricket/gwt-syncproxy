@@ -5,7 +5,6 @@ import junit.framework.TestCase;
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.rpc.ExceptionsTestService;
-import com.google.gwt.user.client.rpc.ExceptionsTestService.ExceptionsTestServiceException;
 import com.google.gwt.user.client.rpc.TestSetFactory;
 import com.google.gwt.user.client.rpc.TestSetValidator;
 
@@ -17,7 +16,7 @@ public class ExceptionTest extends TestCase {
 	public ExceptionTest() {
 	}
 
-	public void testException() throws ExceptionsTestServiceException {
+	public void testException(){
 		final UmbrellaException expected = TestSetFactory
 				.createUmbrellaException();
 		UmbrellaException result = service.echo(expected);
