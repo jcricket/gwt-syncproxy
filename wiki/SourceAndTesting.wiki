@@ -24,14 +24,16 @@ Additionally, the SyncProxy system can be used as an excellent tool for Synchron
 
 All testing projects are setup to draw the testing services directly from GWT source so that it can be automatically tested
 against the latest version as GWT changes. As such, you must have a checkout of the entire google-web-toolkit trunk checked out
-to the path {{{google-web-toolkit}}} in your workspace. Additionally, you will need a gdata checked-out to {{{gdata}}} within
-your workspace as well. The Android library is dependent on the included ~gwt-servlet.jar~ web-app's servlet-api.jar library. This was taken directly from
+to the path {{{google-web-toolkit}}} in your workspace. Make sure to checkout the proper branch release version (eg. 2.6.0) AND change all project
+dependencies to the same GWT version. When updating App Engine dependencies, make sure to copy the new versions _servlet-api.jar_ into the SPALibrary projects "lib" folder.
+Additionally, you will need a gdata checked-out to {{{gdata}}} within
+your workspace as well. The Android library is dependent on the included ~~gwt-servlet.jar~~ web-app's _servlet-api.jar_ library. This was taken directly from
 the {{{war/WEB-INF/lib}}} path of a generated GWT/GAE project. While only a fraction of the sources in the gwt-user are needed for the
 project, there is a lot of internal referencing that can cause errors if not made available. This is compensated for by using a modified version of 
-a couple of the gwt-user source files to break the referencing chain. ~A future release (likely before the commit to trunk)
+a couple of the gwt-user source files to break the referencing chain. ~~A future release (likely before the commit to trunk)
 will utilize a smaller subset of these source files once they can be verifiably tested (in order to provide a smaller footprint for the library).
 I've already had some success in reducing the servlet jar down to about 30 linked sources if I modified about 4 files to break the source
-hierarchy, but it will take some more testing before I can reliable say that~
+hierarchy, but it will take some more testing before I can reliable say that~~
 
 Checking out the entire trunk with all necessary dependencies should give you a layout workspace similar to the following:
 
@@ -56,15 +58,15 @@ jars which can likely be found in your {{{eclipse\plugins}}} path:
 
 {{{
 junit.jar - org.junit_4.10.0.v4_10_0_v20120426-0900 (or acceptable alternative)
-appengine-testing.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\testing
-appengine-api.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\impl
-appengine-api-labs.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\impl
-appengine-stubs.jar - com.google.appengine.eclipse.sdkbundle_1.8.6\appengine-java-sdk-1.8.6\lib\impl
+appengine-testing.jar - com.google.appengine.eclipse.sdkbundle_1.9.0\appengine-java-sdk-1.9.0\lib\testing
+appengine-api.jar - com.google.appengine.eclipse.sdkbundle_1.9.0\appengine-java-sdk-1.9.0\lib\impl
+appengine-api-labs.jar - com.google.appengine.eclipse.sdkbundle_1.9.0\appengine-java-sdk-1.9.0\lib\impl
+appengine-stubs.jar - com.google.appengine.eclipse.sdkbundle_1.9.0\appengine-java-sdk-1.9.0\lib\impl
 }}}
 
 === GWT, GAE, and Android ===
 
-The current library (0.4.1) has been compiled/tested against GWT 2.5.1, GAE 1.8.6, and Android V17. Testing against newer versions should be as simple
+The current library (0.4.2) has been compiled/tested against GWT 2.6.0, GAE 1.9.0, and Android V19 (KitKat). Testing against newer versions should be as simple
 as updating the library references within each appropriate project and updating the checked-out source code for GWT and GData. However, there
 may be some complications that arise with newer versions from GWT source as subtle changes in classes referenced may render the build paths
 incomplete.

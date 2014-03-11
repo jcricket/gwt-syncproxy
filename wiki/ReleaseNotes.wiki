@@ -2,6 +2,18 @@
 
 = Release Notes =
 
+== 0.4.2 - 2014-03-11 ==
+
+Compiled Library against GWT 2.6.0 to get Android Library compatible with GWT 2.6.0 server code
+
+  * Fixed Issue 34 - GWT 2.6.0 Compatible
+
+== 0.4.1 - 2013-10-28 ==
+ 
+Compiled Library against GWT 2.5.1 to get Android Library compatible with GWT 2.5.1 server code
+ 
+  * Fixed Issue 31 - GWT 2.5.1 Compatible
+
 == 0.4 - 2013-06-03 ==
 
 Restructured entire syncproxy source into a slightly more compilable, maintainable, testable system.
@@ -13,8 +25,11 @@ Created Junit testing systems (See SourceAndTesting). Implemented Android client
   * Fixed Issue 26 - Wiki includes link
   * Fixed Issue 28 - Patch applied
   
- == 0.4.1 - 2013-10-28 ==
- 
- Compiled Library against GWT 2.5.1 to get Android Library compatible with GWT 2.5.1 server code
- 
-  * Fixed Issue 31 - GWT 2.5.1 Compatible
+== 0.3 - 2011-08-20 ==
+  * Use standard Java CookieManager
+  * Fixed issue 17
+  * Auto fetch Serialization Policy Files from server base on the patch described in issue 13.
+
+== 0.2 - 2010-11-13 ==
+  * Fixed issue 2, issue 4 and issue 9
+  * Multiple sessions as described in issue 6.

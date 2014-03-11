@@ -10,7 +10,7 @@ further input). Additionally, below are some of the goals for the next version.
 
   * Update main gwt-syncproxy project to use Java Generics
   * Fix some non-critical warnings in the source code throughout the project
-  * Modify the system as needed when GWT 2.6 releases towards the end of this year (see gwtproject.com or the 2013 IO Presentation on the GWT Roadmap)
+  * Modify the system as needed when GWT 3.0 releases towards the end of this year (see gwtproject.com or the 2013 IO Presentation on the GWT Roadmap)
   * Update the Android library portion of this project to comply with the new Android Studio (if possible)
   * Mavenize
   * Cleanup unused tests dev files

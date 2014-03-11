@@ -1,0 +1,101 @@
+== Introduction ==
+GWT uses asynchronous RPC between client (e.g Browser) and RemoteService servlet.
+
+GWT SyncProxy provides synchronous RPC between Java client and RemoteService servlet. By using SyncProxy, we can invoke the GWT RemoteService methods from pure Java (no JSNI) code.
+
+GWT SyncProxy [Android] library provides a functional system for calling RPC's from Android in the same way the SyncProxy library allows calls to be made from pure Java.
+
+== Usage ==
+=== The service interface ===
+For example, we have an helloApp application and our GreetingService:
+{{{
+@RemoteServiceRelativePath("greet")
+public interface GreetingService extends RemoteService {
+  String greetServer(String name);
+}
+}}}
+
+And the service implementation:
+{{{
+public class GreetingServiceImpl extends RemoteServiceServlet
+      implements GreetingService {
+  public String greetServer(String name) {
+    return "Hello, " + name;
+  }
+}
+}}}
+
+Compile the helloApp and deploy it to a web server. For example, the application is deployed and servlet URL is configured at http://example.com/helloApp/greet
+
+=== Java client code ===
+Create new proxy instance for the service interface:
+{{{
+private static GreetingService rpcService =
+  SyncProxy.newProxyInstance(GreetingService.class,
+        "http://example.com/helloApp", "greet");
+}}}
+
+SyncProxy.newProxyInstance() method requires a service interface class, a base URL and a relative servlet path.
+
+Then invoke the RPC method:
+{{{
+String result = rpcService.greetServer("SyncProxy");
+}}}
+
+=== Simulating Async ===
+Create new proxy instance for the Async service interface:
+{{{
+private static GreetingServiceAsync rpcServiceAsync =
+  SyncProxy.newProxyInstance(GreetingServiceAsync.class,
+        "http://example.com/helloApp", "greet");
+}}}
+
+Then invoke the RPC method asynchronously:
+{{{
+rpcServiceAsync.greetServer("SyncProxy", new AsyncCallback(){
+  public void onFailure(Throwable caught) {
+    ...
+  }
+  public void onSuccess(String result) {
+    ...
+  }
+});
+}}}
+
+=== Multiple sessions ===
+Form version 0.3, SyncPoryy use standard Java java.net.CookieManager to manage client session.
+{{{
+CookieManager empSession = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+CookieManager mgrSession = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+GreetingService empRpcService =
+  SyncProxy.newProxyInstance(GreetingService.class,
+        "http://example.com/helloApp", "greet", empSession);
+GreetingService mgrRpcService =
+  SyncProxy.newProxyInstance(GreetingService.class,
+        "http://example.com/helloApp", "greet", mgrSession);
+}}}
+
+== Invoke GWT RPC services deployed on AppEngine ==
+For security-enabled RPC services deployed on AppEngine, we have to login before calling RPC methods.
+
+{{{
+CookieManager userSession = LoginUtils.loginAppEngine("https://example.appspot.com",
+    "http://example.appspot.com/helloApp/greet",
+    "emailaddress@gmail.com", "password");
+}}}
+
+Then invoke the RPC method:
+
+{{{
+private static GreetingService rpcService =
+  SyncProxy.newProxyInstance(GreetingService.class,
+        "http://example.appspot.com/helloApp", "greet", userSession);
+
+String result = rpcService.greetServer("SyncProxy");
+}}}
+
+== Changes ==
+
+ReleaseNotes
+[Roadmap]
+CommonIssues
