@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="SyncProxyAndroid-0.4.2.jar"/>
+    <jar path="SyncProxyAndroid-0.4.3.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/SPALibrary/SyncProxyAndroid-jardesc.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -24,8 +24,8 @@
         <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc{Utils.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.client.impl{SerializableThrowable.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc.core.java.sql"/>
-        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RpcTokenExceptionHandler.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{AsyncCallback.java"/>
+        <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.client.rpc{RpcTokenExceptionHandler.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server.rpc.impl"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.typedarrays.shared{ArrayBuffer.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.shared"/>
