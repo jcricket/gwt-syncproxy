@@ -3,6 +3,12 @@
 
 = Release Notes =
 
+== 0.4.3 - 2014-06-23 ==
+
+Compiled Library against GWT 2.6.1 to get Android Library compatible with GWT 2.6.1 server code
+
+  * Fixed Issue 37 - GWT 2.6.1 Compatible
+
 == 0.4.2 - 2014-03-11 ==
 
 Compiled Library against GWT 2.6.0 to get Android Library compatible with GWT 2.6.0 server code

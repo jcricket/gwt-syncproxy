@@ -1,11 +1,18 @@
 == Introduction ==
+
 GWT uses asynchronous RPC between client (e.g Browser) and RemoteService servlet.
 
 GWT SyncProxy provides synchronous RPC between Java client and RemoteService servlet. By using SyncProxy, we can invoke the GWT RemoteService methods from pure Java (no JSNI) code.
 
 GWT SyncProxy [Android] library provides a functional system for calling RPC's from Android in the same way the SyncProxy library allows calls to be made from pure Java.
 
+=== Contribute ===
+
+This project is under new management. If you would like to contribute 
+to this project, please contact the p.prith member or open a new issue (Contrib-Request) to get added on to this project.
+
 == Usage ==
+
 === The service interface ===
 For example, we have an helloApp application and our GreetingService:
 {{{

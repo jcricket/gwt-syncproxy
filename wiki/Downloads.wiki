@@ -8,6 +8,8 @@
 
 This for use in an Android app to access remote GWT RPC services. Please see the [Android] wiki for details on usage and dependencies. You must use the a version of Syncproxy that is compiled for the GWT version deployed on the server. 
 
+[https://gwt-syncproxy.googlecode.com/svn/downloads/SyncProxyAndroid-0.4.3.zip SyncProxyAndroid-0.4.3.zip] - GWT 2.6.1 - Released 2014-06-23
+
 [https://gwt-syncproxy.googlecode.com/svn/downloads/SyncProxyAndroid-0.4.2.zip SyncProxyAndroid-0.4.2.zip] - GWT 2.6.0 - Released 2014-03-11
 
 [https://gwt-syncproxy.googlecode.com/svn/downloads/SyncProxyAndroid-0.4.1.zip SyncProxyAndroid-0.4.1.zip] - GWT 2.5.1 - Released 2013-10-28
