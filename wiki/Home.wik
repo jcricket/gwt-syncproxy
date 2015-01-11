@@ -1,6 +1,6 @@
 == Introduction ==
 
-GWT uses asynchronous RPC between client (e.g Browser) and RemoteService servlet. Written in Java, the client-side code is converted to JS  when compiled.
+GWT uses asynchronous RPC between client (e.g Browser) and RemoteService servlet. Written in Java, the client-side code is converted to JS when compiled.
 The client side uses dynamically created Proxy's to handle method calls and serialization back and forth with the server. As such, there is no library
 within the GWT project to make these method calls from Java that is not translated. GWT-SyncProxy fills that gap.
 
@@ -17,67 +17,34 @@ Both libraries also provide Utility methods for providing and using login creden
 
 This project is currently working with GWT 2.7.0 as a base, and has some support back to GWT 2.2 with previous versions of SyncProxy.
 
-This project is under new management (effective 2014). If you would like to contribute to this project, please open a new issue (Contrib-Request) to get added on to this project.
+This project is under new management (effective Feb 2014). If you would like to contribute to this project, please open a new issue (Contrib-Request) to get added on to this project.
 
 == Usage ==
 
 GWT SyncProxy allows you to make both Synchronous and Asynchronous calls from a Java or Android application. While most will still prefer the Async
 style utilized in GWT for the majority of RPC calls, there is a specific scenario where the synchronized method comes in handy. This is for testing GWT
-services in unit tests. Please see this [Sebastian Gurin's Blog http://cancerberonia.blogspot.com/2012/10/testing-gwt-service-classes.html] for details
-and examples.
-
-=== The service interface ===
-For example, we have an helloApp application and our GreetingService:
-{{{
-@RemoteServiceRelativePath("greet")
-public interface GreetingService extends RemoteService {
-  String greetServer(String name);
-}
-}}}
-
-And the service implementation:
-{{{
-public class GreetingServiceImpl extends RemoteServiceServlet
-      implements GreetingService {
-  public String greetServer(String name) {
-    return "Hello, " + name;
-  }
-}
-}}}
-
-See the [QuickStart] guide for sample syntax and usage cases.
-
-=== Multiple sessions ===
-Form version 0.3, SyncPoryy use standard Java java.net.CookieManager to manage client session.
-{{{
-CookieManager empSession = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
-CookieManager mgrSession = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
-GreetingService empRpcService =
-  SyncProxy.newProxyInstance(GreetingService.class,
-        "http://example.com/helloApp", "greet", empSession);
-GreetingService mgrRpcService =
-  SyncProxy.newProxyInstance(GreetingService.class,
-        "http://example.com/helloApp", "greet", mgrSession);
-}}}
-
-== Invoke GWT RPC services deployed on AppEngine ==
-For security-enabled RPC services deployed on AppEngine, we have to login before calling RPC methods.
+services in unit tests. Please see [http://cancerberonia.blogspot.com/2012/10/testing-gwt-service-classes.html Sebastian Gurin's Blog] for details
+and examples. Below is a quick example of what SyncProxy allows you to do from a Java or Android application (Android is slightly more complex as it needs
+to be run off the main thread: See [Android] wiki).
 
 {{{
-CookieManager userSession = LoginUtils.loginAppEngine("https://example.appspot.com",
-    "http://example.appspot.com/helloApp/greet",
-    "emailaddress@gmail.com", "password");
+	SyncProxy.setBaseUrl("http://myapp.appspot.com/gwt");
+	// Normal Async Call Handling
+	GreetingServiceAsync greetingServiceAsync = SyncProxy.create(GreetingService.class);
+	greetingServiceAsync.greet("Hello", new AsyncCallback<String>(){
+		void onFailure(Throwable throwable){
+			// TODO Handle exception
+		}
+		void onSuccess(String value){
+			// Handle return value
+		} 
+	}
+	// Synchronous calls
+	GreetingService greetingService = SyncProxy.createSync(GreetingService.class);
+	String value = greetingService.greet("Hello");
 }}}
 
-Then invoke the RPC method:
-
-{{{
-private static GreetingService rpcService =
-  SyncProxy.newProxyInstance(GreetingService.class,
-        "http://example.appspot.com/helloApp", "greet", userSession);
-
-String result = rpcService.greetServer("SyncProxy");
-}}}
+See the [QuickStart] guide for more sample syntax and usage cases.
 
 == Users ==
 
@@ -86,7 +53,7 @@ Let us know which library (Java/Android) and a website if you have it!
 
 == Changes ==
 
-The latest [ReleaseNotes] are available up to version 0.5
-The [Roadmap] is a work in progress
+The latest [ReleaseNotes] are available up to version 0.5.
+The [Roadmap] is a work in progress and currently targeting version 0.6.
 Check the [CommonIssues] wiki for a list of problems that may occur and how to resolve them before submitting
 a ticket. You may also post up to StackOverflow with the 'gwt-syncproxy' tag and we'll help you there. 

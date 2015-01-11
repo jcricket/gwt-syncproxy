@@ -36,6 +36,11 @@ of continuously referenced files within those sources, that have no actual beari
 sources high up in the hierarchy, I can cut off the deep references that pull so many sources into the library. It will take some time to get
 a proper set of these linked sources and modifications, but should be possible now that adequate testing is place.~~
 
+=== EnumMap Not Supported on Android ===
+
+The EnumMap object is not supported on Android because the Serializer provided with GWT serializes a different version of the EnumMap class than
+is provided in the Android OS.
+
 == Setup in Eclipse ==
 
 The No UI Utilization tag indicates that the developer will not be needing the test Account selection system provided in the library (See

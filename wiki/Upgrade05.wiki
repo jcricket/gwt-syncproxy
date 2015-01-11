@@ -34,7 +34,7 @@ which must be implemented with flag setting to ignore a service missing the expe
 	GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
 	((ServiceDefTarget) greetService).setServiceEntryPoint(getModuleBaseURL()
 		+ "greetingEntryPoint");
-	// You may also use the settings object to manually set the Entry Point as shown above #setRemoteServiceRelativePath
+	// You may also use the ProxySettings() object to manually set the Entry Point as shown above #setRemoteServiceRelativePath
 }}}
 
 == XSRF Protection ==

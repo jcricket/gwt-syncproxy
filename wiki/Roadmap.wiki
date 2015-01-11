@@ -6,7 +6,16 @@ At current there are very few things on the roadmap for this project as it is re
 as time permits, we will attempt to resolve the remaining issues (or close them if we cannot verify or get
 further input). Additionally, below are some of the goals for the next version. 
 
-== 0.5 ==
+== 0.6 - Target Completion by Q3 2015 ==
+
+  * Migrate App Engine login utilities to Google API from GData [https://code.google.com/p/gdata-java-client/wiki/MigratingToGoogleApiJavaClient]
+  * Migrate library to Gradle basis (AndroidStudio Compatibility pending resolution of issue [https://code.google.com/p/android/issues/detail?id=64957])
+  * Support for XSRF Servlets (RpcToken support was added in 0.5)
+  * Resolve Cookie issues with proper and complete testing
+  * Verification and testing enhancement of the LoginUtil properties for GAE in POJ and Andorid Library
+  * Conversion to Git Repository from current SVN
+  
+== 0.5 - Releasing Jan 2015 ==
 
   * ~~Update main gwt-syncproxy project to use Java Generics~~
   * ~~Fix some non-critical warnings in the source code throughout the project~~
@@ -16,12 +25,4 @@ further input). Additionally, below are some of the goals for the next version.
   * ~~Cleanup unused tests dev files~~
   * ~~Increase testing Code Coverage to > 95% (currently approx 70% for gwt-syncproxy src)~~ Arbitrarily completed, significant testing enhancements in place
   * ~~Change download section to Google Drive in compliance with [http://google-opensource.blogspot.com/2013/05/a-change-to-google-code-download-service.html]~~ - Completed as of Version 0.4.2
-  
-== 0.6 - Target Completion by Q3 2015 ==
-
-  * Migrate App Engine login utilities to Google API from GData [https://code.google.com/p/gdata-java-client/wiki/MigratingToGoogleApiJavaClient]
-  * Migrate library to Gradle basis (AndroidStudio Compatibility pending resolution of issue [https://code.google.com/p/android/issues/detail?id=64957])
-  * Support for XSRF Servlets (RpcToken support was added in 0.5)
-  * Resolve Cookie issues with proper and complete testing
-  * Verification and testing enhancement of the LoginUtil properties for GAE in POJ and Andorid Library
-  * Conversion to Git Repository from current SVN 
+   

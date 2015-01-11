@@ -39,18 +39,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet
 
 == Customized Proxy Creation ==
 
-The SyncProxy library allows you to customize some of the details of creating the service using the SyncProxy#Settings object. So using the settings
+The SyncProxy library allows you to customize some of the details of creating the service using the SyncProxy#ProxySettings() object. So using the ProxySettings()
 object, you can create services on the fly as such:
 
 {{{
 // Note in this case that createProxy takes the ServiceAsync class when that's the goal
 GreetingServiceAsync greetService = SyncProxy.createProxy(GreetingServiceAsync.class, 
-	new Settings().setServerBaseUrl("http://127.0.0.1:8888/myapp") // Overrides SyncProxy.setBaseUrl if set
+	new ProxySettings()().setServerBaseUrl("http://127.0.0.1:8888/myapp") // Overrides SyncProxy.setBaseUrl if set
 	.setRemoteServiceRelativePath("greetme") // Overrides the Annotation of the service
 	.setCookieManager(myCookieManager); // Can have different sessions, uses default unless specified
 // Note in this case that createProxy takes the Service class since that's the object wanted
 GreetingService greetServiceSync = SyncProxy.createProxy(GreetingService.class, 
-	new Settings().setServerBaseUrl("http://127.0.0.1:3333/myapp2") // Overrides SyncProxy.setBaseUrl if set
+	new ProxySettings()().setServerBaseUrl("http://127.0.0.1:3333/myapp2") // Overrides SyncProxy.setBaseUrl if set
 	.setRemoteServiceRelativePath("greetmethere") // Overrides the Annotation of the service
 	.setCookieManager(myCookieManager2); // Can have different sessions, uses default unless specified
 }}}
@@ -63,7 +63,7 @@ If you typically use the ServiceDefTarget interface to specify the service's ent
 	GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
 	((ServiceDefTarget) greetService).setServiceEntryPoint(getModuleBaseURL()
 		+ "greetingEntryPoint");
-	// You may also use the settings object to manually set the Entry Point as shown above #setRemoteServiceRelativePath
+	// You may also use the ProxySettings() object to manually set the Entry Point as shown above #setRemoteServiceRelativePath
 }}}
 
 
@@ -102,4 +102,42 @@ for viewing within the LogCat viewer as well. To utilize the logger, simply do t
 	}
 	// Plain Old Java and Android
 	SyncProxy.setLoggingLevel(Level.FINER); // You may choose any Level
+}}}
+
+= Legacy Support =
+
+The following methods were made available in previous versions of SyncProxy, but have not been fully tested in the 0.5 release. The should continue
+to function as before, but full support for these features will be upgraded in the next release: See [Roadmap]. 
+
+== Multiple sessions ==
+From version 0.3, SyncProxy uses standard Java java.net.CookieManager to manage client session.
+
+{{{
+CookieManager empSession = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+CookieManager mgrSession = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+SyncProxy.setBaseURL("http://example.com/helloApp");
+GreetingServiceAsync empRpcService =
+  SyncProxy.create(GreetingService.class, new ProxySettings()().setCookieManager(empSession));
+GreetingService mgrRpcService =
+  SyncProxy.createSync(GreetingService.class,
+        new ProxySettings()().setCookieManager(mgrSession));
+}}}
+
+== Invoke GWT RPC services deployed on AppEngine ==
+For security-enabled RPC services deployed on AppEngine, we have to login before calling RPC methods.
+
+{{{
+CookieManager userSession = LoginUtils.loginAppEngine("https://example.appspot.com",
+    "http://example.appspot.com/helloApp/greet",
+    "emailaddress@gmail.com", "password");
+}}}
+
+Then invoke the RPC method:
+
+{{{
+private static GreetingService rpcService =
+  SyncProxy.createSync(GreetingService.class,
+        new ProxySettings()().setCookieManager(userSession));
+
+String result = rpcService.greetServer("SyncProxy");
 }}}
