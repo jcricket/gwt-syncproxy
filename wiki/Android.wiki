@@ -22,7 +22,7 @@ API 14 as a minimum specifically for the token retrieving ability,
 
 ~~The current BETA version of the library has one dependency that the developer must include in the libs/ path of their Android project.
 It is your server's backend {{{servlet-api.jar}}}. Essentially this is the jar that contains your javax.** classes. In a regular java project,
-these classes are provided within the {{{gwt-user.jar}}}. However, since the this jar is much larger than we need for Android functionality,
+these classes are provided within the {{{gwt-user.jar}}}. However, since this jar is much larger than we need for Android functionality,
 in order to reduce the result library jar size (and ultimately the APK size), we need to have that jar as a separate library. This
 technique (as compared to the Alpha development version (see strikethrough below) has brought the sample project APK size down from 
 approx 2.2MB to 350KB.~~
@@ -44,7 +44,7 @@ is provided in the Android OS.
 == Setup in Eclipse ==
 
 The No UI Utilization tag indicates that the developer will not be needing the test Account selection system provided in the library (See
-[Android#Mock_Android_Account]. If you intent to use the mock account system included in the library, you must have the compilation set
+[Android#Mock_Android_Account]. If you intend to use the mock account system included in the library, you must have that compilation set
 available to eclipse as a library project (not just the {{{spalibrary.jar}}}).
 
 Since I use Eclipse as my IDE, I'll describe the easiest setup for it here, but a similar process should work for most IDE's. As an Android

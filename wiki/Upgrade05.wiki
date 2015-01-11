@@ -34,13 +34,13 @@ which must be implemented with flag setting to ignore a service missing the expe
 	GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
 	((ServiceDefTarget) greetService).setServiceEntryPoint(getModuleBaseURL()
 		+ "greetingEntryPoint");
-	// You may also use the ProxySettings() object to manually set the Entry Point as shown above #setRemoteServiceRelativePath
+	// You may also use the ProxySettings() object to manually set the Entry Point as shown in the QuickStart wiki
 }}}
 
 == XSRF Protection ==
 
-XSRF Protected Scripts are not fully support in 0.5, but we have made steps towards proper support of these scripts. The RpcToken system is now implemented and sufficiently test
-within the library. However, a lack of experience with XSRF has forced the decision to push off this implementation in favor of provided the upgraded library features
+XSRF Protected Scripts are not fully support in 0.5, but we have made steps towards proper support of these scripts. The RpcToken system is now implemented and sufficiently tested
+within the library. However, a lack of experience with XSRF has forced the decision to push off this implementation in favor of providing the upgraded library features
 sooner. Anyone with more experience with XSRF, please feel free to join this project and contribute to the support of XSRF in SyncProxy.
 
 == Cookie Issues and Support ==

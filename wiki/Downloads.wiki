@@ -2,11 +2,11 @@
 
 == Downloads ==
 
-[https://gwt-syncproxy.googlecode.com/svn/downloads/SyncProxy-0.4.zip SyncProxy-0.4.zip] - This is for use in any POJO system to access remote GWT RPC services. - Released 2013-06-13
+[https://gwt-syncproxy.googlecode.com/svn/downloads/SyncProxy-0.4.zip SyncProxy-0.4.zip] - This is for use in any POJ system to access remote GWT RPC services. - Released 2013-06-13
 
 === Android ===
 
-This for use in an Android app to access remote GWT RPC services. Please see the [Android] wiki for details on usage and dependencies. You must use the a version of Syncproxy that is compiled for the GWT version deployed on the server. 
+This is for use in an Android app to access remote GWT RPC services. Please see the [Android] wiki for details on usage and dependencies. You must use the version of Syncproxy that is compiled for the GWT version deployed on the server or you may encounter serialization exceptions that may occur for older CustomSerializers. 
 
 [https://gwt-syncproxy.googlecode.com/svn/downloads/SyncProxyAndroid-0.4.3.zip SyncProxyAndroid-0.4.3.zip] - GWT 2.6.1 - Released 2014-06-23
 

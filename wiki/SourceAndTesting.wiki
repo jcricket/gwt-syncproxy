@@ -4,18 +4,14 @@
 
 = Source Code Layout =
 
-The layout of the system has been changed over into multiple Eclipse projects in order to reduce code duplication across the
-Java library and the Android library. Additionally, there are 3 additional Eclipse projects that exist in order to help with
+As of version 0.4, the layout of the system has been changed over into multiple Eclipse projects in order to reduce code duplication across the
+Java library and the Android library. As such, there are 3 additional Eclipse projects that exist in order to help with
 testing the source code: a Google App Engine/GWT project for hosting the test services and testing the services in GWT, a 
 sample Android app for manual testing, and an Android testing app to conduct automated testing of the library on Android.
 All Eclipse launchers are stored in the {{{.settings}}} folder of the respective projects. On project import, they should be
 directly available to you, check the Run Configurations manually in case they don't show up right away.
 
-~~For the time being, these descriptions only apply to the source within the AndroidDev branch (Will be available in the next few days).
-Once field testing and documentation updating has completed, the trunk will be updated to reflect the same.~~ All updated source code
-has now been moved back into the trunk. The project's original testing structure has been maintained for the time being, however it is
-not utilized in descriptions below as there were functional problems in utilizing and verifying the tests in an automated manner.
-If a user would like to provide documentation on utilizing the prior testing system, please let us know and we'll add it to the Wiki.
+Traces of the prior build/test system, which was non-functional have been removed as of version 0.5.
 
 Additionally, the SyncProxy system can be used as an excellent tool for Synchronous testing of GWT Services. Please see this 
 [http://cancerberonia.blogspot.com/2012/10/testing-gwt-service-classes.html Sebastian Gurin's Blog] for details.
@@ -23,23 +19,20 @@ Additionally, the SyncProxy system can be used as an excellent tool for Synchron
 == Dependencies ==
 
 All testing projects are setup to draw the testing services directly from GWT source so that it can be automatically tested
-against the latest version as GWT changes. As such, you must have a checkout of the entire google-web-toolkit trunk checked out
-to the path {{{google-web-toolkit}}} in your workspace. Make sure to checkout the proper branch release version (eg. 2.6.0) AND change all project
-dependencies to the same GWT version. When updating App Engine dependencies, make sure to copy the new versions _servlet-api.jar_ into the SPALibrary projects "lib" folder.
-Additionally, you will need a gdata checked-out to {{{gdata}}} within
-your workspace as well. The Android library is dependent on the included ~~gwt-servlet.jar~~ web-app's _servlet-api.jar_ library. This was taken directly from
-the {{{war/WEB-INF/lib}}} path of a generated GWT/GAE project. While only a fraction of the sources in the gwt-user are needed for the
+against the latest version as GWT changes whenever possible. The current Android and POJ tests are slightly modified replicates of the GWT tests 
+at the 2.7.0 version (minor modifications were made to remove/modify the {{{GWTTestCase}}} dependency). As such, you must have a checkout of the entire google-web-toolkit trunk checked out
+to the path {{{google-web-toolkit}}} in your workspace. Make sure to checkout the proper branch release version (eg. 2.7.0) AND change all project
+dependencies to the same GWT version. When updating App Engine dependencies, make sure to copy the new versions _servlet-api.jar_ into the SPALibrary projects "lib" folder (this is found in the AppEngine Dependency module listing).
+Additionally, you will need gdata checked-out to {{{gdata}}} within
+your workspace as well (a future version will look to remove/upgrade this dependency: See [Roadmap]). The Android library is dependent on the included ~~gwt-servlet.jar~~ web-app's _servlet-api.jar_ library. While only a fraction of the sources in the gwt-user are needed for the
 project, there is a lot of internal referencing that can cause errors if not made available. This is compensated for by using a modified version of 
-a couple of the gwt-user source files to break the referencing chain. ~~A future release (likely before the commit to trunk)
-will utilize a smaller subset of these source files once they can be verifiably tested (in order to provide a smaller footprint for the library).
-I've already had some success in reducing the servlet jar down to about 30 linked sources if I modified about 4 files to break the source
-hierarchy, but it will take some more testing before I can reliable say that~~
+a couple of the gwt-user source files to break the referencing chain.
 
 Checking out the entire trunk with all necessary dependencies should give you a layout workspace similar to the following:
 
 {{{
 Workspace\
-~~Workspace\gdata~~
+Workspace\gdata
 Workspace\google-web-toolkit
 Workspace\gwt-syncproxy
 Workspace\SPAAppTest
@@ -49,11 +42,12 @@ Workspace\SPWebTest
 
 All paths within the Eclipse projects are path dependent on the {{{WORKSPACE_LOC}}} variable, so make sure it is set properly to avoid
 build path problems. The *google-web-toolkit* dependencies for are primarily for testing purposes as the general *gwt-syncproxy* library
-will function with the _gwt-user.jar_ in place. However, the *gdata* dependencies are utilized directly in the library, so those will be needed
-in production as well. After the dev branch has been made available, I will work on putting together a list of the testing sources linked
-from *google-web-toolkit* for any developer who isn't going to be using the Eclipse environment.
+will function with the _gwt-user.jar_ in place. It is also utilized for drawing source code into the Andorid library. 
+However, the *gdata* dependencies are utilized directly in the library, so those will be needed
+in production as well. See the .project and .classpath files to note the appropriate dependencies. A future version will upgrade this system to
+utilize Gradle (see [Roadmap]) and hopefully eliminate the strict dependency on Eclipse.
 
-For simplicity use, the SPWebTest project also makes use a single user-defined library called AppEngineTesting. It will need to reference the following
+For simplicity, the SPWebTest project also makes use of a single user-defined library called AppEngineTesting. It will need to reference the following
 jars which can likely be found in your {{{eclipse\plugins}}} path:
 
 {{{
@@ -66,15 +60,17 @@ appengine-stubs.jar - com.google.appengine.eclipse.sdkbundle_1.9.17\appengine-ja
 
 === GWT, GAE, and Android ===
 
-The current library (0.4.4) has been compiled/tested against GWT 2.7.0, GAE 1.9.17, and Android V21 (Lollipop). Testing against newer versions should be as simple
+The current library (0.5) has been compiled/tested against GWT 2.7.0, GAE 1.9.17, and Android V21 (Lollipop). Testing against newer versions should be as simple
 as updating the library references within each appropriate project and updating the checked-out source code for GWT and GData. However, there
 may be some complications that arise with newer versions from GWT source as subtle changes in classes referenced may render the build paths
 incomplete.
 
-If you are utilizing the Android library, the account management system is only available on a Google APIS Android Virtual Device for testing.
+If you are utilizing the Android library, the account management system is only available on a Google APIs Android Virtual Device for testing.
 It is recommended that you create and utilize an AVD with as much memory as your system will accept (Windows may max at about 768mb)
 and a VM Heap of at least 64 to help with testing. Additionally, the Android library comes with the ability to send fake accounts while testing
-against a local GAE dev server. Please see the AndroidLibrary wiki doc for details.
+against a local GAE dev server. Please see the [Android] wiki doc for details.
+
+Alternatively, as of version 0.5, you can use a hardware device to conduct testing against any specified URL for the server.
 
 == Service Hosting ==
 
@@ -83,7 +79,7 @@ to send tests to, generally testing serialization of different formats and types
 
  # GWT-Compile the *SPWebTest* project
  # Launch the {{{SPAWebTest}}} launcher
- # Open the local URL to startup the module
+ # Open the local URL to startup the module (may take a few minutes to load the first time...a future upgrade will support SuperDevMode)
 
 == Java Library ==
 
@@ -130,7 +126,7 @@ structure.
  # Resolve any pending issues
  # Add this testcase to {{{PojGSPTests}}} TestSuite class
  
-== ~~Android AppTester Test~~ See Below for Update ==
+== Android AppTester Test - _See Below for Update_ ==
  
  As with the Java Stand Alone Testing, you can utilize the converted Java SA test for the Android Testing system. This requires some additional
  subtle modification since Android requires network access to be completed off the main thread. We do this with the AsyncTask.
@@ -167,7 +163,7 @@ structure.
  by changing the value in the strings.xml file, you can switch between the emulator's loopback interface (10.0.2.2) and any url you may wish to specify. For device testing locally,
  you will likely use a local IP address such as 192.168.1.XXX. Make sure that your device and the computer hosting the App Engine Dev Server are on the same network.
 
-== Android AppTester Test New ==
+== Android AppTester Test - New from Version 0.5 ==
 
  Similar to the above with slight modifications to build from AndroidGWTTestCase.
  Create a template for quick use with the following: 
@@ -187,17 +183,27 @@ structure.
  and this will automatically surround the given code with AsyncTasked Code for use in Android Testing. The rest of the async needs and waiting are handled by AndroidGWTTestCase.
  Remember that the call to {{{delayTestFinishForRpc()}}} must come before the call to set the Task.
  
-= Testing Expectations =
+= Testing Expectations - 0.5 =
 
 The following times are based on my system, so you can expect changes in processing times accordingly (6-core AMD@2.8Ghz, 8GB, Win 7-64) and 
-Eclipse (-Xms1g, -Xmx2g). Android testing takes about 350s (288s within the UnicodeEscapingTest, so remove that test for quicker testing in Android).
-Plain old Java (POJ) testing takes about 10s. GWT testing takes 83s (45s within the UnicodeEscapingTest). All the of re-implemented testing units
-test the system Asynchronously.
+Eclipse (-Xms1g, -Xmx2g). Android testing takes about 600s (Heavy in UnicodeEscaping, ValueTypes, and Collections).
+Plain old Java (POJ) testing takes about 110s (Heavy in Collections and ValueTypes). GWT testing takes 83s (45s within the UnicodeEscapingTest). 
 
 When running either the Java Standalone Tests {{{PojGSPTests}}} or the Android Tests {{{SPATests}}}, you must make sure the web service has been
 GWT compiled and is running {{{SPAWebTest}}}
  	
-== Current Testing Failures 0.4.* ==
+== Current Testing Failures 0.5 ==
+
+|| TestCase || Project || Issue || Resolution/Reason ||
+|| CollectionsTest || Android || Failure in EnumMap tests. EnumMap serializer does not work for Android version of this class (different that in current JRE). || * Not Yet Resolved * ||
+|| ExceptionTest || Java & Android || Failure on Server side because the UmbrellaException class doesn't implement the IsSerializable interface || A manual override of this class with the IsSerializable interface makes the test pass. ||
+|| FinalFieldsTest || GWT || IncompatibleRemoteServiceException for FinalFieldsNode || * Not Yet Resolved * ||
+|| RemoteServiceServletTests || Java & Android || Methods utilizing Request or RequestBuilder fail as they are not yet supported by SyncProxy || * Will be supported in a future version * ||
+|| RunTimeSerializationTests || Java & Android || SAA || SAA ||
+|| ValueTypesTest || Java & Android || The _over64KB tests fail with insufficient time or data match failure || * Not Yet Resolved * ||
+|| XsrfProtectionTest || Java _ & Android _ || Failures due to lack of Xsrf support in SyncProxy. However, they unexpectedly pass in Android tests. || * Will be supported in a future version * ||
+
+=== Testing Failures 0.4 ===
  
  Within the current set of tests implemented, there are a couple of tests which are failing, so please see below a for a list of failures and the issue.
  There are also a number of tests in the original test system which were not re-implemented (either for time or other reason, explained below).
@@ -213,8 +219,3 @@ GWT compiled and is running {{{SPAWebTest}}}
 || ~~TypeCheckedObjectsTes ~~ || ~~ Android ~~ ||~~ All throw a SerializationException on the server side: Invalid type signature for ...client.rpc.TypeUncheckedGenericClass ~~||~~ Resolved - Forgot the CustomFieldSerializers in the Source ~~||
 || UnicodeEscapingTest#ServerToClientNonBMP || GWT|GAE || Throws a series of StringIndexOutOfBoundsException's || * Not Yet Resolved *||
 || XsrfProtectionTest || ALL || * Not Fully Implemented * || Many of the original tests were not implemented ||
-
-== Current Testing Failures 0.5 ==
-
-|| TestCase || Project || Issue || Resolution/Reason ||
-|| ExceptionTest || Java & Android || Failure on Server side because the UmbrellaException class doesn't implement the IsSerializable interface || A manual override of this class with the IsSerializable interface makes the test pass. ||

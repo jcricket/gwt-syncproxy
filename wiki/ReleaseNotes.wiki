@@ -15,6 +15,8 @@ Compiled Library against GWT 2.7.0 to get Android Library compatible with GWT 2.
   * Fixed Issue 27 and Issue 29 - POTENTIALLY BREAKING - Many of the old newProxyInstance methods had printStackTrace for exceptions. These have been converted to RuntimeExceptions for handling to remove exception output to an uncontrolled console. It is recommended to change over to the new #create methods.
   * Fixed Issue 38 with updates to RpcPolicyFinder
   * Fixed Issue 35 (merged with Issue 42 and Issue 43) Support for XS-IFrame linker, which is default as of GWT 2.7
+  * Fixed Issue 41 SafeHtml, SafeHtmlString, SafeHtmlBuilder, SafeHtmlUtils available on Android client-side. See [CommonIssues] wiki for details on a small modification that had to be made
+  * Added in GwtReg classes (Java Pattern emulation style, not the JS Super-source)
 
 == 0.4.3 - 2014-06-23 ==
 
@@ -39,7 +41,7 @@ Compiled Library against GWT 2.5.1 to get Android Library compatible with GWT 2.
 Restructured entire syncproxy source into a slightly more compilable, maintainable, testable system.
 Created Junit testing systems (See SourceAndTesting). Implemented Android client library for SyncProxy.
 
-  * Fixed Issue 3 - New Library jar available
+  * Fixed Issue 3 - New Android Library jar available
   * Fixed Issue 23 - Patch applied
   * Closed Issue 24 - Unverified
   * Fixed Issue 26 - Wiki includes link
