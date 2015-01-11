@@ -12,7 +12,11 @@ further input). Additionally, below are some of the goals for the next version.
   * Fix some non-critical warnings in the source code throughout the project
   * Modify the system as needed when GWT 3.0 releases towards the end of this year (see gwtproject.com or the 2013 IO Presentation on the GWT Roadmap)
   * Update the Android library portion of this project to comply with the new Android Studio (if possible)
-  * Mavenize
+  * ~~Mavenize~~ Expecting to use Gradle to allow compatibility with Android Studio for Andorid Library. Will also start publishing to maven-repo (or other alternative)
   * Cleanup unused tests dev files
   * Increase testing Code Coverage to > 95% (currently approx 70% for gwt-syncproxy src)
-  * Change download section to Google Drive in compliance with [http://google-opensource.blogspot.com/2013/05/a-change-to-google-code-download-service.html]
+  * ~~Change download section to Google Drive in compliance with [http://google-opensource.blogspot.com/2013/05/a-change-to-google-code-download-service.html]~~ - Completed as of Version 0.4.2
+  
+== 0.5.1 ==
+
+  * Migrate App Engine login utilities to Google API from GData [https://code.google.com/p/gdata-java-client/wiki/MigratingToGoogleApiJavaClient]

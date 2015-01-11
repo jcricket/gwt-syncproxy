@@ -16,7 +16,7 @@ A couple of common issues pop up from time to time. See below for a likely resol
  # Unable to find RPC Policy File
   * GWT-Compile your web-app, make sure your service is running where you expect it to be (deployed vs local testing urls), and if using GAE, make sure to alter your appengine-web.xml as noted in the [Android#Setup_in_Eclipse] section. Essentially, you need to make sure that the .gwt.rpc files are available to access from the "remote" Android client.
  # ECONNREFUSED Error
-  * make sure pointint to 10.0.2.2:8888 for android loopback
+  * make sure pointing to 10.0.2.2:8888 for android loopback
  # javax.`*` classes cannot be found
   * make sure included servlet-api.jar
  # javax.servlet.ServletContext log: sampleServlet: ERROR: The serialization policy file '/appname/null.gwt.rpc' was not found; did you forget to include it in this deployment? AND/OR javax.servlet.ServletContext log: sampleServlet: WARNING: Failed to get the SerializationPolicy 'null' for module 'http://localhost:8888/appname/'
