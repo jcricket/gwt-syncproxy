@@ -6,6 +6,7 @@
 While there are no specifically breaking changes in this version's release, a number of faulty methods which could not be properly tested were updated
 for testability, readability, and accuracy. As such, introduction of some of the exception handling in these methods may cause previously functional service
 calls to fail. Please submit issue reports for any unexpected failures. You may need to support better exception handling as a result of these changes.
+Cookies have been tested as part of the library, so cookies and multiple session support are again available.
 
 == GWT#create style Service Creation
 
@@ -37,15 +38,31 @@ which must be implemented with flag setting to ignore a service missing the expe
 	// You may also use the ProxySettings() object to manually set the Entry Point as shown in the QuickStart wiki
 }}}
 
+== Cookie Issues and Support ==
+
+Cookies have been repaired in the 0.5 release. The key problem was that manually created HttpCookie's needed to have their {{{#path}}} set for the
+HttpUrlConnection to automatically pass them along. We have resolved this by automatically populating Cookie's in the specified CookieManager with
+the proper path (removeServicePath) if it is missing. With this fix, multiple sessions are again supported. Please see the [QuickStart] guide for a
+review of these methods. If you are using Sessions on App-Engine, make sure to add the {{{ <sessions-enabled>true</sessions-enabled> }}} flag in the
+{{{WEB-INF/appengine-web.xml}}} file. Additionally, the SyncProxy generated services also implement a new interface which allows access to the stored
+CookieManager for the service in question. To access the CookieManager for a given service, do the following:
+
+{{{
+	GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
+	CookieManager cm = ((HasProxySettings) greetService).getCookieManager();
+	String domain = URI.create(getModuleBaseURL()).getHost();
+	HttpCookie cookie = new HttpCookie("myCookie", "myCookieValue");
+	// You should set these values, but if don't, SyncProxy will use the current target's Domain and Path
+	cookie.setDomain(domain);
+	cookie.setPath("path/to/servlet");
+	cm.getCookieStore().add(URI.create("http://" + domain), cookie);
+	// If you need to change the CookieManager on the fly, that is also possible in between service Calls
+	CookieManager cm2 = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+	((HasProxySettings) greetService).setCookieManager(cm2);
+}}}
+
 == XSRF Protection ==
 
 XSRF Protected Scripts are not fully support in 0.5, but we have made steps towards proper support of these scripts. The RpcToken system is now implemented and sufficiently tested
 within the library. However, a lack of experience with XSRF has forced the decision to push off this implementation in favor of providing the upgraded library features
 sooner. Anyone with more experience with XSRF, please feel free to join this project and contribute to the support of XSRF in SyncProxy.
-
-== Cookie Issues and Support ==
-
-Implementing unit testing for the Cookie issues has proved more time-consuming than expected, so full resolution of the cookie issues has been delayed until the next version
-where proper testing and support for the multiple session feature of SyncProxy can be properly tested. However, given the relative ubiquity of the Sessions and Cookie issues,
-I have included the patches provided by users in this source code, activated by temporary flag methods which will be deprecated once proper testing can be completed for these
-patches. 

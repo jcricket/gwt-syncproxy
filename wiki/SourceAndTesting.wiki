@@ -11,7 +11,7 @@ sample Android app for manual testing, and an Android testing app to conduct aut
 All Eclipse launchers are stored in the {{{.settings}}} folder of the respective projects. On project import, they should be
 directly available to you, check the Run Configurations manually in case they don't show up right away.
 
-Traces of the prior build/test system, which was non-functional have been removed as of version 0.5.
+Traces of the prior build/test system, which was non-functional, have been removed as of version 0.5.
 
 Additionally, the SyncProxy system can be used as an excellent tool for Synchronous testing of GWT Services. Please see this 
 [http://cancerberonia.blogspot.com/2012/10/testing-gwt-service-classes.html Sebastian Gurin's Blog] for details.

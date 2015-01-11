@@ -15,7 +15,7 @@ Both libraries also provide Utility methods for providing and using login creden
 
 === Contribute ===
 
-This project is currently working with GWT 2.7.0 as a base, and has some support back to GWT 2.2 with previous versions of SyncProxy.
+This project is currently (0.5) working with GWT 2.7.0 as a base, and has some support back to GWT 2.2 with previous versions of SyncProxy.
 
 This project is under new management (effective Feb 2014). If you would like to contribute to this project, please open a new issue (Contrib-Request) to get added on to this project.
 
@@ -28,7 +28,7 @@ and examples. Below is a quick example of what SyncProxy allows you to do from a
 to be run off the main thread: See [Android] wiki).
 
 {{{
-	SyncProxy.setBaseUrl("http://myapp.appspot.com/gwt");
+	SyncProxy.setBaseUrl("http://myapp.appspot.com/module");
 	// Normal Async Call Handling
 	GreetingServiceAsync greetingServiceAsync = SyncProxy.create(GreetingService.class);
 	greetingServiceAsync.greet("Hello", new AsyncCallback<String>(){
