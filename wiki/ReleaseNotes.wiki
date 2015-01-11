@@ -5,12 +5,14 @@
 
 == 0.5.0 - 2014-06-23 ==
 
-Compiled Library against GWT 2.7.0 to get Android Library compatible with GWT 2.7.0 server code.
+Compiled Library against GWT 2.7.0 to get Android Library compatible with GWT 2.7.0 server code. Also made service creation more GWT-Style and enhanced the policy finder to work with the XSI-Frame linker.
 
   * Updated Android and POJ tests for modifiable module base path
   * Updated all tests to reflect source code tests in GWT 2.7.0
   * Added Support for Java Generics to Service Creation (IE No more casting the service)
   * GWT Style Service creation methods SyncProxy.create and SyncProxy.createSync
+  * Fixed Issue 27 and Issue 29 - POTENTIALLY BREAKING - Many of the old newProxyInstance methods had printStackTrace for exceptions. These have been converted to RuntimeExceptions for handling to remove exception output to an uncontrolled console. It is recommended to change over to the new #create methods.
+  * Fixed Issue 38 with updates to RpcPolicyFinder
 
 == 0.4.3 - 2014-06-23 ==
 

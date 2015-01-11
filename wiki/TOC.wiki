@@ -1,0 +1,12 @@
+#summary Sidebar Table of Contents
+#sidebar TOC
+
+* SyncProxy 0.5
+  * [QuickStart Quick Start Guide]
+  * [Upgrade05 Upgrading to 0.5]
+  * [SourceAndTesting Source/Testing]
+  * [Android]
+* [ReleaseNotes Release Notes]
+* [CommonIssues]
+* [Roadmap]
+* [Downloads]

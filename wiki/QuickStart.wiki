@@ -29,12 +29,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet
 == Client Code ==
 
 {{{
-// Not specifically necessary, but makes it easier to utilize the create methods directly
-SyncProxy.setBaseURL("http://127.0.0.1:8888/myapp");
-// Note you do not need to cast
-GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
-// Note that in both cases, the non-Async interface is the provided class
-GreetingService greetServiceSync = SyncProxy.createSync(GreetingService.class); 
+	// Not specifically necessary, but makes it easier to utilize the create methods directly
+	SyncProxy.setBaseURL("http://127.0.0.1:8888/myapp");
+	// Note you do not need to cast
+	GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
+	// Note that in both cases, the non-Async interface is the provided class
+	GreetingService greetServiceSync = SyncProxy.createSync(GreetingService.class); 
 }}}
 
 == Customized Proxy Creation ==
@@ -58,12 +58,12 @@ GreetingService greetServiceSync = SyncProxy.createProxy(GreetingService.class,
 If you typically use the ServiceDefTarget interface to specify the service's entry point, you may do that with the SyncProxy object as follows:
 
 {{{
-// Suppress exception that the service interface doesn't have the RemoteServiceRelativePath annotation
-SyncProxy.suppressRelativePathWarning(true);
-GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
-((ServiceDefTarget) greetService).setServiceEntryPoint(getModuleBaseURL()
-							+ "greetingEntryPoint");
-// You may also use the settings object to manually set the Entry Point as shown above #setRemoteServiceRelativePath
+	// Suppress exception that the service interface doesn't have the RemoteServiceRelativePath annotation
+	SyncProxy.suppressRelativePathWarning(true);
+	GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
+	((ServiceDefTarget) greetService).setServiceEntryPoint(getModuleBaseURL()
+		+ "greetingEntryPoint");
+	// You may also use the settings object to manually set the Entry Point as shown above #setRemoteServiceRelativePath
 }}}
 
 
@@ -72,14 +72,14 @@ GreetingServiceAsync greetService = SyncProxy.create(GreetingService.class);
 Asynchronous calls are made in the same way as in GWT, utilizing the same AsyncCallback class:
 
 {{{
-greetService.greetServer("SyncProxy", new AsyncCallback(){
-  public void onFailure(Throwable caught) {
-    ...
-  }
-  public void onSuccess(String result) {
-    ...
-  }
-});
+	greetService.greetServer("SyncProxy", new AsyncCallback(){
+  		public void onFailure(Throwable caught) {
+    		...
+  		}
+  		public void onSuccess(String result) {
+    		...
+  		}
+	});
 }}}
 
 In the event that an asynchronous call is not what you want, as shown above, you can create a proxy based on the non-Async interface. In such a case,
@@ -87,5 +87,19 @@ you can easily place the following method call which will hang that thread until
 greetServiceSync object, as created above.
 
 {{{
-String result = greetServiceSync.greetServer("SyncProxy");
-}}} 
+	String result = greetServiceSync.greetServer("SyncProxy");
+}}}
+
+== Logging ==
+
+As of SyncProxy 0.5, all logging is done using the java.util Logging system. There is a custom handler built into the Android library to convert these logs
+for viewing within the LogCat viewer as well. To utilize the logger, simply do the following:
+
+{{{
+	// For Android	
+	for (Class<?> clazz : SyncProxy.getLoggerClasses()) {
+		FixedAndroidHandler.setupLogger(Logger.getLogger(clazz.getName()));
+	}
+	// Plain Old Java and Android
+	SyncProxy.setLoggingLevel(Level.FINER); // You may choose any Level
+}}}

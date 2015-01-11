@@ -197,7 +197,7 @@ test the system Asynchronously.
 When running either the Java Standalone Tests {{{PojGSPTests}}} or the Android Tests {{{SPATests}}}, you must make sure the web service has been
 GWT compiled and is running {{{SPAWebTest}}}
  	
-== Current Testing Failures ==
+== Current Testing Failures 0.4.* ==
  
  Within the current set of tests implemented, there are a couple of tests which are failing, so please see below a for a list of failures and the issue.
  There are also a number of tests in the original test system which were not re-implemented (either for time or other reason, explained below).
@@ -213,3 +213,8 @@ GWT compiled and is running {{{SPAWebTest}}}
 || ~~TypeCheckedObjectsTes ~~ || ~~ Android ~~ ||~~ All throw a SerializationException on the server side: Invalid type signature for ...client.rpc.TypeUncheckedGenericClass ~~||~~ Resolved - Forgot the CustomFieldSerializers in the Source ~~||
 || UnicodeEscapingTest#ServerToClientNonBMP || GWT|GAE || Throws a series of StringIndexOutOfBoundsException's || * Not Yet Resolved *||
 || XsrfProtectionTest || ALL || * Not Fully Implemented * || Many of the original tests were not implemented ||
+
+== Current Testing Failures 0.5 ==
+
+|| TestCase || Project || Issue || Resolution/Reason ||
+|| ExceptionTest || Java & Android || Failure on Server side because the UmbrellaException class doesn't implement the IsSerializable interface || A manual override of this class with the IsSerializable interface makes the test pass. ||
