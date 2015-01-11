@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
- *  See Android wiki (https://code.google.com/p/gwt-syncproxy/wiki/Android) for 
+ *
+ *  See Android wiki (https://code.google.com/p/gwt-syncproxy/wiki/Android) for
  *  coding details. This android interface was created from reviewing and integrating
  *  ideas found from: http://blog.notdot.net/2010/05/Authenticating-against-App-Engine-from-an-Android-app.
  *  This is a modified LoginUtils.java file from the original SyncProxy project.
@@ -62,21 +62,12 @@ import com.gdevelop.gwt.syncrpc.android.GetCookieRunnable;
  * activity that will be making a call to GAE needs to call the
  * {@link #loginAppEngine(Activity, CookieManagerAvailableListener, Account, String)}
  * method from it's onResume().
- * 
+ *
  * @author Preethum
  * @since 0.4
- * 
+ *
  */
 public class LoginUtils {
-	public static final String GAE_SERVICE_NAME = "ah";
-	public static final String LOCAL_DEV_MODE_FLAG = "DevModeFlag";
-	public static final String ACCOUNT_KEY = "account";
-	public static final String GOOGLE_ACCOUNT_TYPE = "com.google";
-	public static final String TEST_ACCOUNT_TYPE = "test.test";
-	private static String loginUrl = null;
-	static boolean localDevMode = false;
-	public static boolean useAccountSelector = false;
-
 	public static void chooseAccount(Activity parent, int requestCode) {
 		Intent intent = new Intent(parent, AccountList.class);
 		intent.putExtra(LOCAL_DEV_MODE_FLAG, localDevMode);
@@ -96,7 +87,7 @@ public class LoginUtils {
 	 *            calls
 	 * @param account
 	 *            is the account with which you want to login
-	 * 
+	 *
 	 * @param requestCode
 	 *            is the code that will be used to call back to the calling
 	 *            activity if the user needed to select an account to use and
@@ -163,7 +154,19 @@ public class LoginUtils {
 	public static void setLoginUrl(String loginUrl) {
 		LoginUtils.loginUrl = loginUrl;
 		// if (loginUrl.startsWith("http://localhost")) {
-		localDevMode = loginUrl.startsWith("http://10.0.2.2");
+		localDevMode = loginUrl.startsWith("http://10.0.2.2")
+				|| loginUrl.startsWith("http://localhost");
+	}
+
+	/**
+	 * Allows override of the devMode access in cases of using a device against
+	 * a local IP address that cannot be auto-detected
+	 *
+	 * @param loginUrl
+	 */
+	public static void setLoginUrl(String loginUrl, boolean testMode) {
+		LoginUtils.loginUrl = loginUrl;
+		localDevMode = testMode;
 	}
 
 	/**
@@ -172,5 +175,20 @@ public class LoginUtils {
 	 */
 	public static void useAccountSelector(boolean useAccountSelector) {
 		LoginUtils.useAccountSelector = useAccountSelector;
-	};
+	}
+
+	public static final String GAE_SERVICE_NAME = "ah";
+	public static final String LOCAL_DEV_MODE_FLAG = "DevModeFlag";
+
+	public static final String ACCOUNT_KEY = "account";
+
+	public static final String GOOGLE_ACCOUNT_TYPE = "com.google";
+
+	public static final String TEST_ACCOUNT_TYPE = "test.test";
+
+	private static String loginUrl = null;
+
+	static boolean localDevMode = false;
+
+	public static boolean useAccountSelector = false;;
 }

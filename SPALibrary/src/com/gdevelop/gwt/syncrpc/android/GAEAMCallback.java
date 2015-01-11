@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
- *  See Android wiki (https://code.google.com/p/gwt-syncproxy/wiki/Android) for 
+ *
+ *  See Android wiki (https://code.google.com/p/gwt-syncproxy/wiki/Android) for
  *  coding details. This android interface was created from reviewing and integrating
  *  ideas found from: http://blog.notdot.net/2010/05/Authenticating-against-App-Engine-from-an-Android-app.
  */
@@ -35,7 +35,7 @@ import com.gdevelop.gwt.syncrpc.LoginUtils;
 
 /**
  * Call back from request for authorization token.
- * 
+ *
  * @author Preethum
  * @since 0.4
  */
@@ -54,7 +54,7 @@ public class GAEAMCallback implements AccountManagerCallback<Bundle> {
 		this.account = account;
 		this.loginUrl = loginUrl;
 		this.primaryListener = listener;
-		localListener = new CookieManagerAvailableListener() {
+		this.localListener = new CookieManagerAvailableListener() {
 			@Override
 			public void onAuthFailure() {
 				AccountManager accountManager = AccountManager
@@ -86,20 +86,21 @@ public class GAEAMCallback implements AccountManagerCallback<Bundle> {
 			bundle = result.getResult();
 			Intent intent = (Intent) bundle.get(AccountManager.KEY_INTENT);
 			if (intent != null) {
-				parent.startActivity(intent);
+				this.parent.startActivity(intent);
 			} else {
-				auth_token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-				loginUrl = loginUrl + "/_ah/login";
+				this.auth_token = bundle
+						.getString(AccountManager.KEY_AUTHTOKEN);
+				this.loginUrl = this.loginUrl + "/_ah/login";
 				String request = "?continue="
 						+ URLEncoder.encode("nowhere", "UTF-8") + "&auth="
-						+ auth_token;
-				URL url = new URL(loginUrl);
-				Runnable runnable = new GetCookieRunnable(parent, url, request,
-						localListener);
+						+ this.auth_token;
+				URL url = new URL(this.loginUrl);
+				Runnable runnable = new GetCookieRunnable(this.parent, url,
+						request, this.localListener);
 				new Thread(runnable).start();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 }

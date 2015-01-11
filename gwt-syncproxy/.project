@@ -26,9 +26,14 @@
 			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/test</locationURI>
 		</link>
 		<link>
-			<name>SPAWeb</name>
+			<name>SPWeb</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/SPAWebTest/src</locationURI>
+			<location>D:/SPWKN/SPWebTest/src</location>
+		</link>
+		<link>
+			<name>SPWebTest</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/SPWebTest/test</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

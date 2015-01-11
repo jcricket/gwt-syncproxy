@@ -11,6 +11,9 @@
 <mapEntry key="[debug]" value="org.eclipse.jdt.junit.launchconfig"/>
 <mapEntry key="[run]" value="org.eclipse.jdt.junit.launchconfig"/>
 </mapAttribute>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
@@ -27,5 +30,5 @@
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.gdevelop.gwt.syncrpc.spawebtest.client.StandardTests"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SPWebTest"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dgwt.args=&quot;-standardsMode -logLevel WARN&quot; -Xmx256M"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dgwt.args=&quot; -logLevel WARN&quot; -Xmx256M"/>
 </launchConfiguration>

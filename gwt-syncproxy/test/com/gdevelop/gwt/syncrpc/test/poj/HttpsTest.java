@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ValueTypesTestServiceAsync;
 
 public class HttpsTest extends TestCase {
-	private static ValueTypesTestServiceAsync service = (ValueTypesTestServiceAsync) SyncProxy
+	private static ValueTypesTestServiceAsync service = SyncProxy
 			.newProxyInstance(ValueTypesTestServiceAsync.class,
 					"https://127.0.0.1:8888/spawebtest/", "valuetypes", true);
 
@@ -25,7 +25,7 @@ public class HttpsTest extends TestCase {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				caught.printStackTrace();
+				throw new RuntimeException(caught);
 			}
 
 			@Override

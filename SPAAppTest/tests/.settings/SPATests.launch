@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.android.ide.eclipse.adt.junit.launchConfigurationType">
+<stringAttribute key="com.android.ide.eclipse.adt.avd" value="Nexus_5_API_21_x86"/>
 <stringAttribute key="com.android.ide.eclipse.adt.commandline" value=""/>
 <intAttribute key="com.android.ide.eclipse.adt.delay" value="0"/>
 <stringAttribute key="com.android.ide.eclipse.adt.instrumentation" value="android.test.InstrumentationTestRunner"/>
+<stringAttribute key="com.android.ide.eclipse.adt.last.used.device" value="FA35GS400346"/>
 <booleanAttribute key="com.android.ide.eclipse.adt.nobootanim" value="false"/>
+<booleanAttribute key="com.android.ide.eclipse.adt.reuse.last.used.device" value="true"/>
 <intAttribute key="com.android.ide.eclipse.adt.speed" value="0"/>
-<stringAttribute key="com.android.ide.eclipse.adt.target" value="ALL_DEVICES_AND_EMULATORS"/>
+<stringAttribute key="com.android.ide.eclipse.adt.target" value="MANUAL"/>
 <stringAttribute key="com.android.ide.eclipse.adt.testSize" value="All Tests"/>
 <booleanAttribute key="com.android.ide.eclipse.adt.wipedata" value="false"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
@@ -13,6 +16,9 @@
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>

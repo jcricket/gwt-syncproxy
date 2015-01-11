@@ -5,31 +5,31 @@ import java.util.List;
 
 import com.gdevelop.gwt.syncrpc.spawebtest.client.LargePayloadService;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.UserInfo;
-import com.google.gwt.user.server.rpc.HybridServiceServlet;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 @SuppressWarnings("serial")
-public class LargePayloadServiceImpl extends HybridServiceServlet implements
+public class LargePayloadServiceImpl extends RemoteServiceServlet implements
 		LargePayloadService {
 	public LargePayloadServiceImpl() {
 	}
 
 	@Override
-	public List<UserInfo> testLargeResponsePayload() {
-		List<UserInfo> result = new ArrayList<UserInfo>();
-		for (int i = 0; i < 1000; i++) {
-			UserInfo userInfo = new UserInfo();
-			userInfo.setId("user_id_" + i);
-			userInfo.setEmail("user" + i + "@example.com");
-			result.add(userInfo);
+	public int[] testLargeResponseArray() {
+		int[] result = new int[ARRAY_SIZE];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = i;
 		}
 		return result;
 	}
 
 	@Override
-	public int[] testLargeResponseArray() {
-		int[] result = new int[70000];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = i;
+	public List<UserInfo> testLargeResponsePayload() {
+		List<UserInfo> result = new ArrayList<UserInfo>();
+		for (int i = 0; i < PAYLOAD_SIZE; i++) {
+			UserInfo userInfo = new UserInfo();
+			userInfo.setId("user_id_" + i);
+			userInfo.setEmail("user" + i + "@example.com");
+			result.add(userInfo);
 		}
 		return result;
 	}

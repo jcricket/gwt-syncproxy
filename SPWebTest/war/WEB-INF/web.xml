@@ -1,14 +1,25 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.5"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<!-- Servlets -->
 	<servlet>
 		<servlet-name>greetServlet</servlet-name>
 		<servlet-class>com.gdevelop.gwt.syncrpc.spawebtest.server.GreetingServiceImpl</servlet-class>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>greetServlet</servlet-name>
 		<url-pattern>/spawebtest/greet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>cookieServlet</servlet-name>
+		<servlet-class>com.gdevelop.gwt.syncrpc.spawebtest.server.CookieServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>cookieServlet</servlet-name>
+		<url-pattern>/spawebtest/cookieservice</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>TestLargePayload</servlet-name>
@@ -18,18 +29,17 @@
 		<servlet-name>TestLargePayload</servlet-name>
 		<url-pattern>/spawebtest/rpcsuite/largePayload</url-pattern>
 	</servlet-mapping>
+	<listener>
+    	<listener-class>com.gdevelop.gwt.syncrpc.spawebtest.server.SessionsTracker</listener-class>
+	</listener>
 	<!-- GWT Services to Host -->
 	<servlet>
-		<servlet-name>enumsTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.EnumsTestServiceImpl</servlet-class>
+		<servlet-name>collectionsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.CollectionsTestServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>enumsTestServiceImpl</servlet-name>
-		<url-pattern>spawebtest/rpcsuite/enums</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>enumsTestServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/enums</url-pattern>
+		<servlet-name>collectionsTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/collections</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>coreJavaTestServiceImpl</servlet-name>
@@ -40,20 +50,22 @@
 		<url-pattern>/spawebtest/corejava</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>collectionsTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.CollectionsTestServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>collectionsTestServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/collections</url-pattern>
-	</servlet-mapping>
-	<servlet>
 		<servlet-name>customFieldSerializerTestServiceImpl</servlet-name>
 		<servlet-class>com.google.gwt.user.server.rpc.CustomFieldSerializerTestServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>customFieldSerializerTestServiceImpl</servlet-name>
 		<url-pattern>/spawebtest/customfieldserializers</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>enumsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.EnumsTestServiceImpl</servlet-class>
+	</servlet>
+	<!-- <servlet-mapping> <servlet-name>enumsTestServiceImpl</servlet-name> 
+		<url-pattern>spawebtest/rpcsuite/enums</url-pattern> </servlet-mapping> -->
+	<servlet-mapping>
+		<servlet-name>enumsTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/enums</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>exceptionsTestServiceImpl</servlet-name>
@@ -64,21 +76,21 @@
 		<url-pattern>/spawebtest/exceptions</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.TypeCheckedObjectsTestServiceImpl</servlet-class>
+		<servlet-name>finalFieldsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.FinalFieldsTestServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/typecheckedobjects</url-pattern>
+		<servlet-name>finalFieldsTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/finalfields</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>xsrfTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.XsrfTestServiceImpl</servlet-class>
+	    <servlet-name>loggingRPCTestServiceImpl</servlet-name>
+	    <servlet-class>com.google.gwt.user.server.rpc.LoggingRPCTestServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>xsrfTestServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/xsrftestservice</url-pattern>
-	</servlet-mapping>
+	    <servlet-name>loggingRPCTestServiceImpl</servlet-name>
+	    <url-pattern>/spawebtest/loggingrpc</url-pattern>
+	</servlet-mapping>	
 	<servlet>
 		<servlet-name>inheritanceTestServiceImpl</servlet-name>
 		<servlet-class>com.google.gwt.user.server.rpc.InheritanceTestServiceImpl</servlet-class>
@@ -86,22 +98,6 @@
 	<servlet-mapping>
 		<servlet-name>inheritanceTestServiceImpl</servlet-name>
 		<url-pattern>/spawebtest/inheritance</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.MixedSerializableEchoServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/echo</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.UnicodeEscapingServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/unicodeEscape</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>objectGraphTestServiceImpl</servlet-name>
@@ -112,12 +108,84 @@
 		<url-pattern>/spawebtest/objectgraphs</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>recursiveClassTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.RecursiveClassTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>recursiveClassTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/recursiveclass</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.RemoteServiceServletTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/servlettest</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>annotatedRpcTokenTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.AnnotatedRpcTokenTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>annotatedRpcTokenTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/rpctokentest-annotation</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>rpcTokenServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.RpcTokenServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>rpcTokenServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/rpctokentest</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.MixedSerializableEchoServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>mixedSerializableEchoServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/echo</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.TypeCheckedObjectsTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>typeCheckedObjectsTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/typecheckedobjects</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.UnicodeEscapingServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>unicodeEscapingServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/unicodeEscape</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>valueTypesTestServiceImpl</servlet-name>
 		<servlet-class>com.google.gwt.user.server.rpc.ValueTypesTestServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>valueTypesTestServiceImpl</servlet-name>
 		<url-pattern>/spawebtest/valuetypes</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>xsrfTestServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.XsrfTestServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>xsrfTestServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/xsrftestservice</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>mockXsrfTokenServiceImpl</servlet-name>
+		<servlet-class>com.google.gwt.user.server.rpc.MockXsrfTokenServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>mockXsrfTokenServiceImpl</servlet-name>
+		<url-pattern>/spawebtest/xsrfmock</url-pattern>
 	</servlet-mapping>
 	<!-- End GWT Services to Host -->
 	<!-- Servlets Hosting for Unused Tests -->
@@ -129,50 +197,14 @@
 		<servlet-name>jUnitHostImpl</servlet-name>
 		<url-pattern>/spawebtest/junithost/*</url-pattern>
 	</servlet-mapping>
+	
 	<servlet>
-		<servlet-name>annotatedRpcTokenTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.AnnotatedRpcTokenTestServiceImpl</servlet-class>
+		<servlet-name>jUnitHostImpl</servlet-name>
+		<servlet-class>com.google.gwt.junit.server.JUnitHostImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>annotatedRpcTokenTestServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/rpctokentest-annotation</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>recursiveClassTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.RecursiveClassTestServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>recursiveClassTestServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/recursiveclass</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>mockXsrfTokenServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.MockXsrfTokenServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>mockXsrfTokenServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/xsrfmock</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.RemoteServiceServletTestServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>remoteServiceServletTestServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/servlettest</url-pattern>
-	</servlet-mapping>
-
-
-	<servlet>
-		<servlet-name>rpcTokenServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.user.server.rpc.RpcTokenServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>rpcTokenServiceImpl</servlet-name>
-		<url-pattern>/spawebtest/rpctokentest</url-pattern>
+		<servlet-name>jUnitHostImpl</servlet-name>
+		<url-pattern>/spawebtest/remote_logging</url-pattern>
 	</servlet-mapping>
 	<!-- End Unsused Test Listing -->
 	<!-- Default page to serve -->
@@ -185,7 +217,7 @@
 		<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
 		<init-param>
 			<param-name>services</param-name>
-			<param-value/>
+			<param-value />
 		</init-param>
 	</servlet>
 

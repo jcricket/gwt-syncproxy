@@ -15,5 +15,9 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f030000;
+        /**  Use this url for tests on an emulator. Accesses the Loopback interface 
+ <string name="test_server_url">http://10.0.2.2:8888/spawebtest/</string> 
+         */
+        public static final int test_server_url=0x7f030001;
     }
 }
