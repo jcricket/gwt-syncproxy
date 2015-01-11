@@ -12,13 +12,16 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  */
 package com.gdevelop.gwt.syncrpc.spawebtest.client;
 
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -30,6 +33,9 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.junit.client.impl.JUnitHost;
 import com.google.gwt.junit.client.impl.JUnitHostAsync;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.rpc.AnnotatedRpcTokenTestService;
+import com.google.gwt.user.client.rpc.AnnotatedRpcTokenTestServiceAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.CollectionsTestService;
 import com.google.gwt.user.client.rpc.CollectionsTestServiceAsync;
@@ -38,16 +44,32 @@ import com.google.gwt.user.client.rpc.CoreJavaTestServiceAsync;
 import com.google.gwt.user.client.rpc.CustomFieldSerializerTestService;
 import com.google.gwt.user.client.rpc.CustomFieldSerializerTestServiceAsync;
 import com.google.gwt.user.client.rpc.EnumsTestService;
+import com.google.gwt.user.client.rpc.EnumsTestService.Basic;
 import com.google.gwt.user.client.rpc.EnumsTestServiceAsync;
+import com.google.gwt.user.client.rpc.ExceptionsTestService;
+import com.google.gwt.user.client.rpc.ExceptionsTestServiceAsync;
+import com.google.gwt.user.client.rpc.FinalFieldsTestService;
+import com.google.gwt.user.client.rpc.FinalFieldsTestService.FinalFieldsNode;
+import com.google.gwt.user.client.rpc.FinalFieldsTestServiceAsync;
 import com.google.gwt.user.client.rpc.InheritanceTestService;
 import com.google.gwt.user.client.rpc.InheritanceTestServiceAsync;
+import com.google.gwt.user.client.rpc.LoggingRPCTestService;
+import com.google.gwt.user.client.rpc.LoggingRPCTestServiceAsync;
 import com.google.gwt.user.client.rpc.MixedSerializableEchoService;
 import com.google.gwt.user.client.rpc.MixedSerializableEchoServiceAsync;
 import com.google.gwt.user.client.rpc.ObjectGraphTestService;
 import com.google.gwt.user.client.rpc.ObjectGraphTestServiceAsync;
+import com.google.gwt.user.client.rpc.RecursiveClassTestService;
+import com.google.gwt.user.client.rpc.RecursiveClassTestServiceAsync;
+import com.google.gwt.user.client.rpc.RemoteServiceServletTestService;
+import com.google.gwt.user.client.rpc.RemoteServiceServletTestServiceAsync;
+import com.google.gwt.user.client.rpc.RpcTokenTestService;
+import com.google.gwt.user.client.rpc.RpcTokenTestServiceAsync;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.rpc.TestSetFactory;
 import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeArrayList;
+import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeEnum;
+import com.google.gwt.user.client.rpc.TestSetFactory.MarkerTypeEnumMapValue;
 import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestService;
 import com.google.gwt.user.client.rpc.TypeCheckedObjectsTestServiceAsync;
 import com.google.gwt.user.client.rpc.UnicodeEscapingService;
@@ -71,6 +93,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @since 0.4
  */
 public class SPAWebTest implements EntryPoint {
+	private static LogRecord createLogRecord() {
+		LogRecord result = new LogRecord(Level.INFO, "Test Log Record");
+
+		// Only set serialized fields.
+
+		result.setLoggerName("Test Logger Name");
+		result.setMillis(1234567);
+
+		Throwable thrown = new Throwable("Test LogRecord Throwable 1");
+		thrown.initCause(new Throwable("Test LogRecord Throwable cause"));
+		result.setThrown(thrown);
+
+		return result;
+	}
+
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -78,38 +115,54 @@ public class SPAWebTest implements EntryPoint {
 	private static final String SERVER_ERROR = "An error occurred while "
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
-
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting
 	 * service.
 	 */
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
+	private final CookieServiceAsync cookieService = GWT
+			.create(CookieService.class);
 	public final LargePayloadServiceAsync payloadService = GWT
 			.create(LargePayloadService.class);
 	public final CollectionsTestServiceAsync collectionsService = GWT
 			.create(CollectionsTestService.class);
 	public final CoreJavaTestServiceAsync coreJavaService = GWT
 			.create(CoreJavaTestService.class);
-	public final EnumsTestServiceAsync enumTestService = GWT
-			.create(EnumsTestService.class);
 	public final CustomFieldSerializerTestServiceAsync customFieldSerService = GWT
 			.create(CustomFieldSerializerTestService.class);
+	public final EnumsTestServiceAsync enumTestService = GWT
+			.create(EnumsTestService.class);
+	public final ExceptionsTestServiceAsync customExceptionService = GWT
+			.create(ExceptionsTestService.class);
+	public final FinalFieldsTestServiceAsync finalFieldSerService = GWT
+			.create(FinalFieldsTestService.class);
+	public final LoggingRPCTestServiceAsync loggingRPCService = GWT
+			.create(LoggingRPCTestService.class);
 	public final InheritanceTestServiceAsync inheritanceService = GWT
 			.create(InheritanceTestService.class);
 	public final ObjectGraphTestServiceAsync objectGraphService = GWT
 			.create(ObjectGraphTestService.class);
+	public final RecursiveClassTestServiceAsync recursiveClassService = GWT
+			.create(RecursiveClassTestService.class);
+	public final RemoteServiceServletTestServiceAsync remoteServiceServletService = GWT
+			.create(RemoteServiceServletTestService.class);
+	public final AnnotatedRpcTokenTestServiceAsync annotatedRpcTokenService = GWT
+			.create(AnnotatedRpcTokenTestService.class);
+	public final RpcTokenTestServiceAsync rpcTokenService = GWT
+			.create(RpcTokenTestService.class);
 	public final MixedSerializableEchoServiceAsync mixedEchoService = GWT
 			.create(MixedSerializableEchoService.class);
 	public final TypeCheckedObjectsTestServiceAsync typeCheckedService = GWT
 			.create(TypeCheckedObjectsTestService.class);
 	public final UnicodeEscapingServiceAsync unicodeService = GWT
 			.create(UnicodeEscapingService.class);
-	public final XsrfTestServiceAsync xsrfTestService = GWT
-			.create(XsrfTestService.class);
-	public final JUnitHostAsync junitService = GWT.create(JUnitHost.class);
 	public final ValueTypesTestServiceAsync valuesService = GWT
 			.create(ValueTypesTestService.class);
+	public final XsrfTestServiceAsync xsrfTestService = GWT
+			.create(XsrfTestService.class);
+
+	public final JUnitHostAsync junitService = GWT.create(JUnitHost.class);
 
 	/**
 	 * This is the entry point method.
@@ -130,9 +183,9 @@ public class SPAWebTest implements EntryPoint {
 				return null;
 			}
 		};
-		ServiceDefTarget serTarget = (ServiceDefTarget) unicodeService;
+		ServiceDefTarget serTarget = (ServiceDefTarget) this.unicodeService;
 		serTarget.setServiceEntryPoint("/spawebtest/unicodeEscape");
-		unicodeService.getStringContainingCharacterRange(0, 1,
+		this.unicodeService.getStringContainingCharacterRange(0, 1,
 				new AsyncCallback<String>() {
 
 					@Override
@@ -148,26 +201,25 @@ public class SPAWebTest implements EntryPoint {
 				});
 		// TestSetValidator.isValidComplexCyclicGraph(TSFAccessor
 		// .createComplexCyclicGraph());
-		coreJavaService.echoMathContext(
-				new MathContext(5, RoundingMode.CEILING),
-				new AsyncCallback<MathContext>() {
+		this.coreJavaService.echoMathContext(new MathContext(5,
+				RoundingMode.CEILING), new AsyncCallback<MathContext>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				throw new RuntimeException(caught);
+			}
 
-					@Override
-					public void onSuccess(MathContext result) {
+			@Override
+			public void onSuccess(MathContext result) {
 
-					}
+			}
 
-				});
-		collectionsService.echo(TestSetFactory.createArrayList(),
+		});
+		this.collectionsService.echo(TestSetFactory.createArrayList(),
 				new AsyncCallback<ArrayList<MarkerTypeArrayList>>() {
 					@Override
 					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
+						throw new RuntimeException(caught);
 					}
 
 					@Override
@@ -175,6 +227,64 @@ public class SPAWebTest implements EntryPoint {
 
 					}
 				});
+		final EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> expected = TestSetFactory
+				.createEmptyEnumMap();
+		this.collectionsService
+				.echoEmptyEnumMap(
+						expected,
+						new AsyncCallback<EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue>>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								throw new RuntimeException(caught);
+							}
+
+							@Override
+							public void onSuccess(
+									EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> result) {
+
+							}
+						});
+		((ServiceDefTarget) this.finalFieldSerService).setServiceEntryPoint(GWT
+				.getModuleBaseURL() + "finalfields");
+		this.finalFieldSerService.transferObject(
+				new FinalFieldsNode(4, "C", 9),
+				new AsyncCallback<FinalFieldsTestService.FinalFieldsNode>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// /throw new RuntimeException(caught);
+					}
+
+					@Override
+					public void onSuccess(FinalFieldsNode result) {
+					}
+				});
+		ServiceDefTarget target = (ServiceDefTarget) this.enumTestService;
+		target.setServiceEntryPoint(GWT.getModuleBaseURL() + "enums");
+		this.enumTestService.echo(Basic.A,
+				new AsyncCallback<EnumsTestService.Basic>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+
+			@Override
+			public void onSuccess(Basic result) {
+			}
+		});
+
+		this.loggingRPCService.echoLogRecord(createLogRecord(),
+				new AsyncCallback<LogRecord>() {
+			@Override
+			public void onFailure(Throwable caught) {
+
+			}
+
+			@Override
+			public void onSuccess(LogRecord result) {
+
+			}
+		});
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
@@ -285,31 +395,65 @@ public class SPAWebTest implements EntryPoint {
 				// closeButton.setFocus(true);
 				// }
 				// });
+
 				// Greet Server for ArrayList<String>
-				greetingService.greetServerArr(textToServer,
-						new AsyncCallback<ArrayList<String>>() {
+				// SPAWebTest.this.greetingService.greetServerArr(textToServer,
+				// new AsyncCallback<ArrayList<String>>() {
+				// @Override
+				// public void onFailure(Throwable caught) {
+				// // Show the RPC error message to the user
+				// dialogBox
+				// .setText("Remote Procedure Call - Failure");
+				// serverResponseLabel
+				// .addStyleName("serverResponseLabelError");
+				// serverResponseLabel.setHTML(SERVER_ERROR);
+				// dialogBox.center();
+				// closeButton.setFocus(true);
+				// }
+				//
+				// @Override
+				// public void onSuccess(ArrayList<String> result) {
+				// dialogBox.setText("Remote Procedure Call");
+				// serverResponseLabel
+				// .removeStyleName("serverResponseLabelError");
+				// serverResponseLabel.setHTML(result.get(0));
+				// dialogBox.center();
+				// closeButton.setFocus(true);
+				// }
+				// });
+				// Cookies.setCookie("Test", "Value");
+				// SPAWebTest.this.cookieService
+				// .testCookie(new AsyncCallback<ArrayList<String>>() {
+				//
+				// @Override
+				// public void onFailure(Throwable caught) {
+				// throw new RuntimeException(caught);
+				// }
+				//
+				// @Override
+				// public void onSuccess(ArrayList<String> result) {
+				// dialogBox.setText("Cookie Test RPC");
+				// serverResponseLabel.setHTML(result.toString());
+				// dialogBox.center();
+				// }
+				// });
+				SPAWebTest.this.cookieService
+						.generateCookiesOnServer(new AsyncCallback<Void>() {
+
 							@Override
 							public void onFailure(Throwable caught) {
-								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
+								throw new RuntimeException(caught);
 							}
 
 							@Override
-							public void onSuccess(ArrayList<String> result) {
-								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(result.get(0));
+							public void onSuccess(Void result) {
+								dialogBox.setText("Cookie RPC");
+								serverResponseLabel.setHTML(Cookies
+										.getCookieNames().toString());
 								dialogBox.center();
-								closeButton.setFocus(true);
 							}
 						});
+
 			}
 		}
 

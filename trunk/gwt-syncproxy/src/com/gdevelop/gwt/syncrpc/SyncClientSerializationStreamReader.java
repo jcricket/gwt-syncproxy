@@ -1,12 +1,12 @@
 /*
  * Copyright www.gdevelop.com.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,8 +15,6 @@
  */
 package com.gdevelop.gwt.syncrpc;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -28,6 +26,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -43,12 +42,12 @@ import com.google.gwt.user.server.rpc.impl.SerializedInstanceReference;
  * @see com.google.gwt.user.server.rpc.impl.ServerSerializationStreamReader
  */
 public class SyncClientSerializationStreamReader extends
-		AbstractSerializationStreamReader {
+AbstractSerializationStreamReader {
 	/**
 	 * Used to accumulate elements while deserializing array types. The generic
 	 * type of the BoundedList will vary from the component type of the array it
 	 * is intended to create when the array is of a primitive type.
-	 * 
+	 *
 	 * @param <T>
 	 *            The type of object used to hold the data in the buffer
 	 */
@@ -70,11 +69,11 @@ public class SyncClientSerializationStreamReader extends
 		}
 
 		public Class<?> getComponentType() {
-			return componentType;
+			return this.componentType;
 		}
 
 		public int getExpectedSize() {
-			return expectedSize;
+			return this.expectedSize;
 		}
 	}
 
@@ -165,7 +164,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readBoolean();
 			}
 
@@ -178,7 +177,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readByte();
 			}
 
@@ -191,7 +190,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readChar();
 			}
 
@@ -204,7 +203,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readDouble();
 			}
 
@@ -217,7 +216,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readFloat();
 			}
 
@@ -230,7 +229,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readInt();
 			}
 
@@ -243,7 +242,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readLong();
 			}
 
@@ -256,7 +255,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readObject();
 			}
 
@@ -269,7 +268,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readShort();
 			}
 
@@ -282,7 +281,7 @@ public class SyncClientSerializationStreamReader extends
 			@Override
 			protected Object readSingleValue(
 					SyncClientSerializationStreamReader stream)
-					throws SerializationException {
+							throws SerializationException {
 				return stream.readString();
 			}
 
@@ -292,9 +291,18 @@ public class SyncClientSerializationStreamReader extends
 			}
 		};
 
+		Object read(SyncClientSerializationStreamReader stream,
+				BoundedList<Object> instance) throws SerializationException {
+			for (int i = 0, n = instance.getExpectedSize(); i < n; ++i) {
+				instance.add(readSingleValue(stream));
+			}
+
+			return toArray(instance.getComponentType(), instance);
+		}
+
 		protected abstract Object readSingleValue(
 				SyncClientSerializationStreamReader stream)
-				throws SerializationException;
+						throws SerializationException;
 
 		protected abstract void setSingleValue(Object array, int index,
 				Object value);
@@ -320,15 +328,6 @@ public class SyncClientSerializationStreamReader extends
 
 			return arr;
 		}
-
-		Object read(SyncClientSerializationStreamReader stream,
-				BoundedList<Object> instance) throws SerializationException {
-			for (int i = 0, n = instance.getExpectedSize(); i < n; ++i) {
-				instance.add(readSingleValue(stream));
-			}
-
-			return toArray(instance.getComponentType(), instance);
-		}
 	}
 
 	private static final char JS_ESCAPE_CHAR = '\\';
@@ -345,8 +344,8 @@ public class SyncClientSerializationStreamReader extends
 
 	{
 		CLASS_TO_VECTOR_READER
-				.put(boolean[].class,
-						SyncClientSerializationStreamReader.VectorReader.BOOLEAN_VECTOR);
+		.put(boolean[].class,
+				SyncClientSerializationStreamReader.VectorReader.BOOLEAN_VECTOR);
 		CLASS_TO_VECTOR_READER.put(byte[].class,
 				SyncClientSerializationStreamReader.VectorReader.BYTE_VECTOR);
 		CLASS_TO_VECTOR_READER.put(char[].class,
@@ -387,8 +386,8 @@ public class SyncClientSerializationStreamReader extends
 		CLASS_TO_VALUE_READER.put(String.class,
 				SyncClientSerializationStreamReader.ValueReader.STRING);
 	}
-
 	private final List<String> results = new ArrayList<String>();
+
 	private int index;
 
 	private final List<String> stringTable = new ArrayList<String>();
@@ -401,112 +400,16 @@ public class SyncClientSerializationStreamReader extends
 
 	private static final String POSTLUDE = "])";
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"C:/temp/large.txt"));
-		String encoded = reader.readLine();
-		SyncClientSerializationStreamReader s = new SyncClientSerializationStreamReader(
-				new RemoteServiceSyncProxy.DummySerializationPolicy());
-		s.prepareToRead(encoded);
-	}
+	Logger logger = Logger.getLogger(SyncClientSerializationStreamReader.class
+			.getName());
 
 	public SyncClientSerializationStreamReader(
 			SerializationPolicy serializationPolicy) {
 		this.serializationPolicy = serializationPolicy;
 	}
 
-	public Object deserializeValue(Class<?> type) throws SerializationException {
-		ValueReader valueReader = CLASS_TO_VALUE_READER.get(type);
-		if (valueReader != null) {
-			return valueReader.readValue(this);
-		} else {
-			// Arrays of primitive or reference types need to go through
-			// readObject.
-			return SyncClientSerializationStreamReader.ValueReader.OBJECT
-					.readValue(this);
-		}
-	}
-
-	@Override
-	public void prepareToRead(String encoded) throws SerializationException {
-		encoded = deconcat(encoded);
-		parse(encoded);
-		index = results.size();
-		super.prepareToRead(encoded);
-
-		if ((getVersion() < SERIALIZATION_STREAM_MIN_VERSION)
-				|| (getVersion() > SERIALIZATION_STREAM_VERSION)) {
-			throw new IncompatibleRemoteServiceException(
-					"Expecting version between "
-							+ SERIALIZATION_STREAM_MIN_VERSION + " and "
-							+ SERIALIZATION_STREAM_VERSION
-							+ " from server, got " + getVersion() + ".");
-		}
-
-		buildStringTable();
-	}
-
-	@Override
-	public boolean readBoolean() {
-		return !results.get(--index).equals("0");
-	}
-
-	@Override
-	public byte readByte() {
-		return Byte.parseByte(results.get(--index));
-	}
-
-	@Override
-	public char readChar() {
-		return (char) Integer.parseInt(results.get(--index));
-	}
-
-	@Override
-	public double readDouble() {
-		return Double.parseDouble(results.get(--index));
-	}
-
-	@Override
-	public float readFloat() {
-		return Float.parseFloat(results.get(--index));
-	}
-
-	@Override
-	public int readInt() {
-		try {
-			Integer val = Integer.parseInt(results.get(--index));
-			return val;
-		} catch (NumberFormatException nfe) {
-			return 0;
-		}
-	}
-
-	@Override
-	public long readLong() {
-		if (getVersion() == SERIALIZATION_STREAM_MIN_VERSION) {
-			return (long) readDouble() + (long) readDouble();
-		} else {
-			String s = results.get(--index);
-			// remove quotes
-			if (s.length() > 1) {
-				s = s.substring(1, s.length() - 1);
-			}
-			return Utils.longFromBase64(s);
-		}
-	}
-
-	@Override
-	public short readShort() {
-		return Short.parseShort(results.get(--index));
-	}
-
-	@Override
-	public String readString() {
-		return getString(readInt());
-	}
-
 	private void buildStringTable() {
-		String raw = results.get(--index);
+		String raw = this.results.get(--this.index);
 		byte b1;
 		byte b2;
 		byte b3;
@@ -578,6 +481,7 @@ public class SyncClientSerializationStreamReader extends
 				default:
 					// TODO:
 					System.out.println("???");
+					throw new RuntimeException("Unhandled JS Escape Char Type");
 				}
 			} else {
 				buffer.append(ch);
@@ -613,178 +517,6 @@ public class SyncClientSerializationStreamReader extends
 		return encoded;
 	}
 
-	/**
-	 * Deserialize an instance that is an array. Will default to deserializing
-	 * as an Object vector if the instance is not a primitive vector.
-	 * 
-	 * @param instanceClass
-	 * @param instance
-	 * @throws SerializationException
-	 */
-	@SuppressWarnings("unchecked")
-	private Object deserializeArray(Class<?> instanceClass, Object instance)
-			throws SerializationException {
-		assert (instanceClass.isArray());
-
-		BoundedList<Object> buffer = (BoundedList<Object>) instance;
-		VectorReader instanceReader = CLASS_TO_VECTOR_READER.get(instanceClass);
-		if (instanceReader != null) {
-			return instanceReader.read(this, buffer);
-		} else {
-			return SyncClientSerializationStreamReader.VectorReader.OBJECT_VECTOR
-					.read(this, buffer);
-		}
-	}
-
-	private void deserializeClass(Class<?> instanceClass, Object instance)
-			throws SerializationException, IllegalAccessException,
-			NoSuchMethodException, InvocationTargetException,
-			ClassNotFoundException {
-		Field[] serializableFields = SerializabilityUtil
-				.applyFieldSerializationPolicy(instanceClass);
-
-		for (Field declField : serializableFields) {
-			assert (declField != null);
-
-			Object value = deserializeValue(declField.getType());
-
-			boolean isAccessible = declField.isAccessible();
-			boolean needsAccessOverride = !isAccessible
-					&& !Modifier.isPublic(declField.getModifiers());
-			if (needsAccessOverride) {
-				// Override access restrictions
-				declField.setAccessible(true);
-			}
-
-			declField.set(instance, value);
-		}
-
-		Class<?> superClass = instanceClass.getSuperclass();
-		if (serializationPolicy.shouldDeserializeFields(superClass)) {
-			deserializeImpl(
-					SerializabilityUtil.hasCustomFieldSerializer(superClass),
-					superClass, instance);
-		}
-	}
-
-	private Object deserializeImpl(Class<?> customSerializer,
-			Class<?> instanceClass, Object instance)
-			throws NoSuchMethodException, IllegalArgumentException,
-			IllegalAccessException, InvocationTargetException,
-			SerializationException, ClassNotFoundException {
-
-		if (customSerializer != null) {
-			deserializeWithCustomFieldDeserializer(customSerializer,
-					instanceClass, instance);
-		} else if (instanceClass.isArray()) {
-			instance = deserializeArray(instanceClass, instance);
-		} else if (instanceClass.isEnum()) {
-			// Enums are deserialized when they are instantiated
-		} else {
-			deserializeClass(instanceClass, instance);
-		}
-
-		return instance;
-	}
-
-	private void deserializeWithCustomFieldDeserializer(
-			Class<?> customSerializer, Class<?> instanceClass, Object instance)
-			throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException {
-		assert (!instanceClass.isArray());
-
-		for (Method method : customSerializer.getMethods()) {
-			if ("deserialize".equals(method.getName())) {
-				method.invoke(null, this, instance);
-				return;
-			}
-		}
-		throw new NoSuchMethodException("deserialize");
-	}
-
-	private byte hex2byte(char ch) {
-		if ((ch >= '0') && (ch <= '9')) {
-			return (byte) (ch - '0');
-		}
-		if ((ch >= 'A') && (ch <= 'F')) {
-			return (byte) (ch - 'A' + 10);
-		}
-		if ((ch >= 'a') && (ch <= 'f')) {
-			return (byte) (ch - 'a' + 10);
-		}
-
-		return -1;
-	}
-
-	private Object instantiate(Class<?> customSerializer, Class<?> instanceClass)
-			throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SerializationException {
-		if (customSerializer != null) {
-			for (Method method : customSerializer.getMethods()) {
-				if ("instantiate".equals(method.getName())) {
-					return method.invoke(null, this);
-				}
-			}
-			// Ok to not have one.
-		}
-
-		if (instanceClass.isArray()) {
-			int length = readInt();
-			// We don't pre-allocate the array; this prevents an allocation
-			// attack
-			return new BoundedList<Object>(instanceClass.getComponentType(),
-					length);
-		} else if (instanceClass.isEnum()) {
-			Enum<?>[] enumConstants = (Enum[]) instanceClass.getEnumConstants();
-			int ordinal = readInt();
-			assert (ordinal >= 0 && ordinal < enumConstants.length);
-			return enumConstants[ordinal];
-		} else {
-			Constructor<?> constructor = instanceClass.getDeclaredConstructor();
-			constructor.setAccessible(true);
-			return constructor.newInstance();
-		}
-	}
-
-	/**
-	 * Parse response from GWT RPC example:
-	 * [3,23456,0,2,0,0,0,1,1,["dab.rpp.client.Person/1455343364"
-	 * ,"My dad name","GWT User"],0,5]
-	 * 
-	 * @param encoded
-	 */
-	private void parse(String encoded) {
-		// encoded = encoded.substring(1, encoded.length()-1);
-		if (encoded.endsWith("]")) {
-			encoded = encoded.substring(1, encoded.length() - 1);
-		} else {
-			encoded = encoded.substring(1);
-		}
-		StringBuffer token = new StringBuffer();
-		for (int i = 0; i < encoded.length(); i++) {
-			char ch = encoded.charAt(i);
-			if (ch == ',') {
-				results.add(token.toString());
-				token = new StringBuffer();
-				continue;
-			}
-			if (ch == '[') {
-				int pos = encoded.lastIndexOf(']');
-				if (pos < 0) {
-					// TODO: throw exeption
-				}
-				results.add(encoded.substring(i + 1, pos));
-				i = pos + 1;
-				continue;
-			}
-			token.append(ch);
-		}
-		if (token.length() > 0) {
-			results.add(token.toString());
-		}
-	}
-
 	@Override
 	protected Object deserialize(String typeSignature)
 			throws SerializationException {
@@ -798,12 +530,12 @@ public class SyncClientSerializationStreamReader extends
 			// false, null);
 			Class<?> instanceClass = Class.forName(serializedInstRef.getName());
 
-			assert (serializationPolicy != null);
+			assert this.serializationPolicy != null;
 
 			try {
-				serializationPolicy.validateDeserialize(instanceClass);
+				this.serializationPolicy.validateDeserialize(instanceClass);
 			} catch (SerializationException e) {
-				System.err.println("WARN: " + e.getMessage());
+				this.logger.warning(e.getMessage());
 			}
 
 			// TODO validateTypeVersions(instanceClass, serializedInstRef);
@@ -850,16 +582,290 @@ public class SyncClientSerializationStreamReader extends
 		}
 	}
 
+	/**
+	 * Deserialize an instance that is an array. Will default to deserializing
+	 * as an Object vector if the instance is not a primitive vector.
+	 *
+	 * @param instanceClass
+	 * @param instance
+	 * @throws SerializationException
+	 */
+	@SuppressWarnings("unchecked")
+	private Object deserializeArray(Class<?> instanceClass, Object instance)
+			throws SerializationException {
+		assert instanceClass.isArray();
+
+		BoundedList<Object> buffer = (BoundedList<Object>) instance;
+		VectorReader instanceReader = CLASS_TO_VECTOR_READER.get(instanceClass);
+		if (instanceReader != null) {
+			return instanceReader.read(this, buffer);
+		} else {
+			return SyncClientSerializationStreamReader.VectorReader.OBJECT_VECTOR
+					.read(this, buffer);
+		}
+	}
+
+	private void deserializeClass(Class<?> instanceClass, Object instance)
+			throws SerializationException, IllegalAccessException,
+			NoSuchMethodException, InvocationTargetException,
+			ClassNotFoundException {
+		// Patch for Issue 36
+		// if there are server fields ignore them
+		if (this.serializationPolicy
+				.getClientFieldNamesForEnhancedClass(instanceClass) != null) {
+			int encodedPosition = readInt();
+			this.logger.info("Encoded server field found for class:"
+					+ instanceClass + " with value: "
+					+ getString(encodedPosition));
+		}
+		Field[] serializableFields = SerializabilityUtil
+				.applyFieldSerializationPolicy(instanceClass,
+						this.serializationPolicy);
+		for (Field declField : serializableFields) {
+			assert declField != null;
+
+			Object value = deserializeValue(declField.getType());
+
+			boolean isAccessible = declField.isAccessible();
+			boolean needsAccessOverride = !isAccessible
+					&& !Modifier.isPublic(declField.getModifiers());
+			if (needsAccessOverride) {
+				// Override access restrictions
+				declField.setAccessible(true);
+			}
+
+			declField.set(instance, value);
+		}
+
+		Class<?> superClass = instanceClass.getSuperclass();
+		if (this.serializationPolicy.shouldDeserializeFields(superClass)) {
+			deserializeImpl(
+					SerializabilityUtil.hasCustomFieldSerializer(superClass),
+					superClass, instance);
+		}
+	}
+
+	private Object deserializeImpl(Class<?> customSerializer,
+			Class<?> instanceClass, Object instance)
+					throws NoSuchMethodException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException,
+					SerializationException, ClassNotFoundException {
+
+		if (customSerializer != null) {
+			deserializeWithCustomFieldDeserializer(customSerializer,
+					instanceClass, instance);
+		} else if (instanceClass.isArray()) {
+			instance = deserializeArray(instanceClass, instance);
+		} else if (instanceClass.isEnum()) {
+			// Enums are deserialized when they are instantiated
+		} else {
+			deserializeClass(instanceClass, instance);
+		}
+
+		return instance;
+	}
+
+	public Object deserializeValue(Class<?> type) throws SerializationException {
+		ValueReader valueReader = CLASS_TO_VALUE_READER.get(type);
+		if (valueReader != null) {
+			return valueReader.readValue(this);
+		} else {
+			// Arrays of primitive or reference types need to go through
+			// readObject.
+			return SyncClientSerializationStreamReader.ValueReader.OBJECT
+					.readValue(this);
+		}
+	}
+
+	private void deserializeWithCustomFieldDeserializer(
+			Class<?> customSerializer, Class<?> instanceClass, Object instance)
+					throws NoSuchMethodException, IllegalAccessException,
+					InvocationTargetException {
+		assert !instanceClass.isArray();
+
+		for (Method method : customSerializer.getMethods()) {
+			if ("deserialize".equals(method.getName())) {
+				method.invoke(null, this, instance);
+				return;
+			}
+		}
+		throw new NoSuchMethodException("deserialize");
+	}
+
 	@Override
 	protected String getString(int index) {
 		if (index == 0) {
 			return null;
 		}
 		// index is 1-based
-		assert (index > 0);
-		assert (index <= stringTable.size());
+		assert index > 0;
+		assert index <= this.stringTable.size();
 
 		// index is 1-based
 		return this.stringTable.get(index - 1);
+	}
+
+	private byte hex2byte(char ch) {
+		if (ch >= '0' && ch <= '9') {
+			return (byte) (ch - '0');
+		}
+		if (ch >= 'A' && ch <= 'F') {
+			return (byte) (ch - 'A' + 10);
+		}
+		if (ch >= 'a' && ch <= 'f') {
+			return (byte) (ch - 'a' + 10);
+		}
+
+		return -1;
+	}
+
+	private Object instantiate(Class<?> customSerializer, Class<?> instanceClass)
+			throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SerializationException {
+		if (customSerializer != null) {
+			for (Method method : customSerializer.getMethods()) {
+				if ("instantiate".equals(method.getName())) {
+					return method.invoke(null, this);
+				}
+			}
+			// Ok to not have one.
+		}
+
+		if (instanceClass.isArray()) {
+			int length = readInt();
+			// We don't pre-allocate the array; this prevents an allocation
+			// attack
+			return new BoundedList<Object>(instanceClass.getComponentType(),
+					length);
+		} else if (instanceClass.isEnum()) {
+			Enum<?>[] enumConstants = (Enum[]) instanceClass.getEnumConstants();
+			int ordinal = readInt();
+			assert ordinal >= 0 && ordinal < enumConstants.length;
+			return enumConstants[ordinal];
+		} else {
+			Constructor<?> constructor = instanceClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			return constructor.newInstance();
+		}
+	}
+
+	/**
+	 * Parse response from GWT RPC example:
+	 * [3,23456,0,2,0,0,0,1,1,["dab.rpp.client.Person/1455343364"
+	 * ,"My dad name","GWT User"],0,5]
+	 *
+	 * @param encoded
+	 */
+	private void parse(String encoded) {
+		// encoded = encoded.substring(1, encoded.length()-1);
+		if (encoded.endsWith("]")) {
+			encoded = encoded.substring(1, encoded.length() - 1);
+		} else {
+			encoded = encoded.substring(1);
+		}
+		StringBuffer token = new StringBuffer();
+		for (int i = 0; i < encoded.length(); i++) {
+			char ch = encoded.charAt(i);
+			if (ch == ',') {
+				this.results.add(token.toString());
+				token = new StringBuffer();
+				continue;
+			}
+			if (ch == '[') {
+				int pos = encoded.lastIndexOf(']');
+				if (pos < 0) {
+					// TODO: throw exeption
+					throw new RuntimeException(
+							"Unhandled mismatch in encoded response: "
+									+ encoded);
+				}
+				this.results.add(encoded.substring(i + 1, pos));
+				i = pos + 1;
+				continue;
+			}
+			token.append(ch);
+		}
+		if (token.length() > 0) {
+			this.results.add(token.toString());
+		}
+	}
+
+	@Override
+	public void prepareToRead(String encoded) throws SerializationException {
+		encoded = deconcat(encoded);
+		parse(encoded);
+		this.index = this.results.size();
+		super.prepareToRead(encoded);
+
+		if (getVersion() < SERIALIZATION_STREAM_MIN_VERSION
+				|| getVersion() > SERIALIZATION_STREAM_VERSION) {
+			throw new IncompatibleRemoteServiceException(
+					"Expecting version between "
+							+ SERIALIZATION_STREAM_MIN_VERSION + " and "
+							+ SERIALIZATION_STREAM_VERSION
+							+ " from server, got " + getVersion() + ".");
+		}
+
+		buildStringTable();
+	}
+
+	@Override
+	public boolean readBoolean() {
+		return !this.results.get(--this.index).equals("0");
+	}
+
+	@Override
+	public byte readByte() {
+		return Byte.parseByte(this.results.get(--this.index));
+	}
+
+	@Override
+	public char readChar() {
+		return (char) Integer.parseInt(this.results.get(--this.index));
+	}
+
+	@Override
+	public double readDouble() {
+		return Double.parseDouble(this.results.get(--this.index));
+	}
+
+	@Override
+	public float readFloat() {
+		return Float.parseFloat(this.results.get(--this.index));
+	}
+
+	@Override
+	public int readInt() {
+		try {
+			Integer val = Integer.parseInt(this.results.get(--this.index));
+			return val;
+		} catch (NumberFormatException nfe) {
+			return 0;
+		}
+	}
+
+	@Override
+	public long readLong() {
+		if (getVersion() == SERIALIZATION_STREAM_MIN_VERSION) {
+			return (long) readDouble() + (long) readDouble();
+		} else {
+			String s = this.results.get(--this.index);
+			// remove quotes
+			if (s.length() > 1) {
+				s = s.substring(1, s.length() - 1);
+			}
+			return Utils.longFromBase64(s);
+		}
+	}
+
+	@Override
+	public short readShort() {
+		return Short.parseShort(this.results.get(--this.index));
+	}
+
+	@Override
+	public String readString() {
+		return getString(readInt());
 	}
 }

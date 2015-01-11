@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  */
 package com.gdevelop.gwt.syncrpc.spawebtest.client;
 
@@ -23,15 +23,18 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 
 /**
  * @author Preethum
- * @since
- * 
+ * @since 0.4
+ *
  */
 public class StandardTests extends GWTTestSuite {
 	public static Test suite() {
 		GWTTestSuite suite = new GWTTestSuite("All Standard Tests");
-		suite.addTest(GwtTests.suite());
 		suite.addTestSuite(GreetingServiceTest.class);
 		suite.addTestSuite(LargePayloadTest.class);
+		suite.addTest(GwtTests.suite());
+		// TODO Will implement proper profile testing after conversion to 0.5
+		// (Google Apis)
+		// suite.addTestSuite(ProfileServiceTest.class);
 		return suite;
 	}
 }

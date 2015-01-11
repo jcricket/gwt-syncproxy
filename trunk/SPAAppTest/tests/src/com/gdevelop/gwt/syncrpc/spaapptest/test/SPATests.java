@@ -22,17 +22,19 @@ import com.gdevelop.gwt.syncrpc.spaapptest.test.gwttests.SPAGWTTests;
 
 /**
  * @author Preethum
- * @since
- * 
+ * @since 0.5
+ *
  */
 public class SPATests extends TestSuite {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("SyncProxy Android App Tests");
-		suite.addTestSuite(LargePayloadServiceTest.class);
 		suite.addTest(SPAGWTTests.suite());
+		suite.addTest(AndroidCustomServiceTests.suite());
 		return suite;
 	}
-	
+
+	public static int WAIT_TIME_SERVICE_INIT = 50;
+	public static int WAIT_TIME_DEBUG = 300;
 	public static int WAIT_TIME_SHORT = 2;
 	public static int WAIT_TIME_MEDIUM = 20;
 	public static int WAIT_TIME_LONG = 120;

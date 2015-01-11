@@ -12,20 +12,21 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  */
 package com.gdevelop.gwt.syncrpc.spawebtest.shared;
 
 import java.io.Serializable;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
 /**
+ *
+ * Random serializable object
+ *
  * @author Preethum
- * 
+ *
  */
 // @Entity
-public class T1 implements Serializable, IsSerializable {
+public class T1 implements Serializable {
 
 	private static final long serialVersionUID = -781246538651881133L;
 	// @Id
@@ -37,14 +38,14 @@ public class T1 implements Serializable, IsSerializable {
 	 * @return the count
 	 */
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
 	/**
 	 * @return the text
 	 */
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
 	/**

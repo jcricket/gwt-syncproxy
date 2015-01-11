@@ -12,19 +12,25 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
- * This is a modified file of the RpcTokenTest from the Google Web Toolkit project
- * that eliminates a few unneeded dependencies. - Preethum
  */
 package com.google.gwt.user.client.rpc;
 
+import java.util.concurrent.CountDownLatch;
+
+import android.os.AsyncTask;
+
+import com.gdevelop.gwt.syncrpc.SyncProxy;
+import com.gdevelop.gwt.syncrpc.spaapptest.MainActivity;
+import com.gdevelop.gwt.syncrpc.spaapptest.test.AndroidGWTTestCase;
 import com.google.gwt.core.client.GWT;
 
 /**
  * Tests RpcToken functionality.
+ *
+ * Modified by P.Prith in 0.4.4 to utilize Local App Engine server for service
+ * through SyncProxy against Test in GWT 2.7.0
  */
-public class RpcTokenTest extends RpcTestBase {
-
+public class RpcTokenTest extends AndroidGWTTestCase<RpcTokenTestServiceAsync> {
 	/**
 	 * Second RpcToken implementation.
 	 */
@@ -40,25 +46,47 @@ public class RpcTokenTest extends RpcTestBase {
 	}
 
 	protected static AnnotatedRpcTokenTestServiceAsync getAnnotatedAsyncService() {
-		AnnotatedRpcTokenTestServiceAsync service = (AnnotatedRpcTokenTestServiceAsync) GWT
-				.create(AnnotatedRpcTokenTestService.class);
 
-		// ((ServiceDefTarget)
-		// service).setServiceEntryPoint(GWT.getModuleBaseURL()
-		// + "rpctokentest-annotation");
-
-		return service;
+		return annotatedRpcTestService;
 	}
 
 	protected static RpcTokenTestServiceAsync getAsyncService() {
-		RpcTokenTestServiceAsync service = (RpcTokenTestServiceAsync) GWT
-				.create(RpcTokenTestService.class);
 
-		// ((ServiceDefTarget)
-		// service).setServiceEntryPoint(GWT.getModuleBaseURL()
-		// + "rpctokentest");
+		return rpcTestService;
+	}
 
-		return service;
+	protected static RpcTokenTestServiceAsync rpcTestService;
+
+	protected static AnnotatedRpcTokenTestServiceAsync annotatedRpcTestService;
+
+	public RpcTokenTest() throws InterruptedException {
+		super(MainActivity.class);
+
+		setServiceInitTask(new AsyncTask<CountDownLatch, Void, Void>() {
+			@Override
+			protected Void doInBackground(CountDownLatch... arg0) {
+				rpcTestService = SyncProxy.create(RpcTokenTestService.class);
+				((ServiceDefTarget) rpcTestService)
+						.setServiceEntryPoint(getModuleBaseURL()
+								+ "rpctokentest");
+				annotatedRpcTestService = SyncProxy
+						.create(AnnotatedRpcTokenTestService.class);
+				((ServiceDefTarget) annotatedRpcTestService)
+						.setServiceEntryPoint(getModuleBaseURL()
+								+ "rpctokentest-annotation");
+				arg0[0].countDown();
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * @see com.google.gwt.user.client.rpc.RpcTestBase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		SyncProxy.suppressRelativePathWarning(true);
+		super.setUp();
 	}
 
 	public void testRpcTokenAnnotation() {
@@ -100,58 +128,75 @@ public class RpcTokenTest extends RpcTestBase {
 		}
 	}
 
+	/**
+	 * Modified by P.Prith to remove dependence on
+	 * {@link GWT#getModuleBaseURL()}
+	 */
 	public void testRpcTokenExceptionHandler() {
-		RpcTokenTestServiceAsync service = getAsyncService();
-		// ((ServiceDefTarget)
-		// service).setServiceEntryPoint(GWT.getModuleBaseURL()
-		// + "rpctokentest?throw=true");
+		final RpcTokenTestServiceAsync service = getAsyncService();
+		((ServiceDefTarget) service).setServiceEntryPoint(getModuleBaseURL()
+				+ "rpctokentest?throw=true");
 		((HasRpcToken) service)
-				.setRpcTokenExceptionHandler(new RpcTokenExceptionHandler() {
-					@Override
-					public void onRpcTokenException(RpcTokenException exception) {
-						assertNotNull(exception);
-						finishTest();
-					}
-				});
+		.setRpcTokenExceptionHandler(new RpcTokenExceptionHandler() {
+			@Override
+			public void onRpcTokenException(RpcTokenException exception) {
+				assertNotNull(exception);
+				finishTest();
+			}
+		});
 
 		delayTestFinishForRpc();
 
-		service.getRpcTokenFromRequest(new AsyncCallback<RpcToken>() {
+		setTask(new AsyncTask<Void, Void, Void>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
-				TestSetValidator.rethrowException(caught);
-			}
+			protected Void doInBackground(Void... arg0) {
+				service.getRpcTokenFromRequest(new AsyncCallback<RpcToken>() {
 
-			@Override
-			public void onSuccess(RpcToken rpcToken) {
-				fail("Should've called RpcTokenExceptionHandler");
+					@Override
+					public void onFailure(Throwable caught) {
+						TestSetValidator.rethrowException(caught);
+					}
+
+					@Override
+					public void onSuccess(RpcToken rpcToken) {
+						fail("Should've called RpcTokenExceptionHandler");
+					}
+				});
+				return null;
 			}
 		});
 	}
 
 	public void testRpcTokenMissing() {
-		RpcTokenTestServiceAsync service = getAsyncService();
+		final RpcTokenTestServiceAsync service = getAsyncService();
 
 		delayTestFinishForRpc();
 
-		service.getRpcTokenFromRequest(new AsyncCallback<RpcToken>() {
+		setTask(new AsyncTask<Void, Void, Void>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
-				TestSetValidator.rethrowException(caught);
-			}
+			protected Void doInBackground(Void... arg0) {
+				service.getRpcTokenFromRequest(new AsyncCallback<RpcToken>() {
 
-			@Override
-			public void onSuccess(RpcToken token) {
-				assertNull(token);
-				finishTest();
+					@Override
+					public void onFailure(Throwable caught) {
+						TestSetValidator.rethrowException(caught);
+					}
+
+					@Override
+					public void onSuccess(RpcToken token) {
+						assertNull(token);
+						finishTest();
+					}
+				});
+				return null;
 			}
 		});
 	}
 
 	public void testRpcTokenPresent() {
-		RpcTokenTestServiceAsync service = getAsyncService();
+		final RpcTokenTestServiceAsync service = getAsyncService();
 
 		final TestRpcToken token = new TestRpcToken();
 		token.tokenValue = "Drink kumys!";
@@ -159,20 +204,27 @@ public class RpcTokenTest extends RpcTestBase {
 
 		delayTestFinishForRpc();
 
-		service.getRpcTokenFromRequest(new AsyncCallback<RpcToken>() {
+		setTask(new AsyncTask<Void, Void, Void>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
-				TestSetValidator.rethrowException(caught);
-			}
+			protected Void doInBackground(Void... arg0) {
+				service.getRpcTokenFromRequest(new AsyncCallback<RpcToken>() {
 
-			@Override
-			public void onSuccess(RpcToken rpcToken) {
-				assertNotNull(rpcToken);
-				assertTrue(rpcToken instanceof TestRpcToken);
-				assertEquals(token.tokenValue,
-						((TestRpcToken) rpcToken).tokenValue);
-				finishTest();
+					@Override
+					public void onFailure(Throwable caught) {
+						TestSetValidator.rethrowException(caught);
+					}
+
+					@Override
+					public void onSuccess(RpcToken rpcToken) {
+						assertNotNull(rpcToken);
+						assertTrue(rpcToken instanceof TestRpcToken);
+						assertEquals(token.tokenValue,
+								((TestRpcToken) rpcToken).tokenValue);
+						finishTest();
+					}
+				});
+				return null;
 			}
 		});
 	}

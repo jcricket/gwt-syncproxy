@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
- *  See Android wiki (https://code.google.com/p/gwt-syncproxy/wiki/Android) for 
+ *
+ *  See Android wiki (https://code.google.com/p/gwt-syncproxy/wiki/Android) for
  *  coding details. This android interface was created from reviewing and integrating
  *  ideas found from: http://blog.notdot.net/2010/05/Authenticating-against-App-Engine-from-an-Android-app.
  */
@@ -64,7 +64,7 @@ public class GetCookieRunnable implements Runnable {
 	public void run() {
 		HttpURLConnection connection = null;
 		try {
-			connection = (HttpURLConnection) loginUrl.openConnection();
+			connection = (HttpURLConnection) this.loginUrl.openConnection();
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.setInstanceFollowRedirects(false);
@@ -72,13 +72,12 @@ public class GetCookieRunnable implements Runnable {
 			connection.setRequestProperty("Content-Type",
 					"application/x-www-form-urlencoded");
 			connection.setRequestProperty("Content-Length",
-					"" + request.length());
+					"" + this.request.length());
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (connection != null) {
 				connection.disconnect();
 			}
-			return;
+			throw new RuntimeException(e);
 		}
 
 		CookieHandler oldCookieHandler = CookieHandler.getDefault();
@@ -88,33 +87,34 @@ public class GetCookieRunnable implements Runnable {
 		try {
 			OutputStreamWriter writer = new OutputStreamWriter(
 					connection.getOutputStream());
-			writer.write(request);
+			writer.write(this.request);
 			writer.flush();
 			writer.close();
 
 			int statusCode = connection.getResponseCode();
-			if ((statusCode != HttpURLConnection.HTTP_OK)
-					&& (statusCode != HttpURLConnection.HTTP_MOVED_TEMP)) {
+			if (statusCode != HttpURLConnection.HTTP_OK
+					&& statusCode != HttpURLConnection.HTTP_MOVED_TEMP) {
 				String responseText = Utils.getResposeText(connection);
 				throw new StatusCodeException(statusCode, responseText);
 			}
 			if (connection.getHeaderField("Set-Cookie").length() == 0) {
-				parent.runOnUiThread(new Runnable() {
+				this.parent.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						listener.onAuthFailure();
+						GetCookieRunnable.this.listener.onAuthFailure();
 					}
 				});
 			} else {
-				if (parent != null) {
-					parent.runOnUiThread(new Runnable() {
+				if (this.parent != null) {
+					this.parent.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							listener.onCMAvailable(cookieManager);
+							GetCookieRunnable.this.listener
+									.onCMAvailable(cookieManager);
 						}
 					});
 				} else {
-					listener.onCMAvailable(cookieManager);
+					this.listener.onCMAvailable(cookieManager);
 				}
 			}
 		} catch (Exception e) {

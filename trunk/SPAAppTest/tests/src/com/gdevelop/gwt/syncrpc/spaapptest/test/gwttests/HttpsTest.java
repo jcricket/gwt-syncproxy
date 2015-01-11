@@ -21,7 +21,7 @@ public class HttpsTest extends ActivityInstrumentationTestCase2<MainActivity> {
 		final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... arg0) {
-				service = (ValueTypesTestServiceAsync) SyncProxy
+				service = SyncProxy
 						.newProxyInstance(ValueTypesTestServiceAsync.class,
 								"https://10.0.2.2:8888/spawebtest/",
 								"valuetypes", true);
@@ -45,7 +45,7 @@ public class HttpsTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
+						throw new RuntimeException(caught);
 					}
 
 					@Override
@@ -64,6 +64,7 @@ public class HttpsTest extends ActivityInstrumentationTestCase2<MainActivity> {
 				myTask.execute();
 			}
 		});
-		assertTrue("Failed to Complete", signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
+		assertTrue("Failed to Complete",
+				signal.await(SPATests.WAIT_TIME_SHORT, TimeUnit.SECONDS));
 	}
 }

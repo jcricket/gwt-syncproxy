@@ -2,5 +2,7 @@
 <resources>
 
     <string name="app_name">SPAAppTesterTest</string>
-
+    <!-- Use this url for tests on an emulator. Accesses the Loopback interface -->
+	<!-- <string name="test_server_url">http://10.0.2.2:8888/spawebtest/</string> -->
+	<string name="test_server_url">http://192.168.1.125:8888/spawebtest/</string>
 </resources>

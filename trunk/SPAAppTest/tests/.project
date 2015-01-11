@@ -33,6 +33,16 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>G-SP-T</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/gwt-syncproxy/test</locationURI>
+		</link>
+		<link>
+			<name>GWT_USER_SRC</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/src</locationURI>
+		</link>
+		<link>
 			<name>GWT_USER_TESTS</name>
 			<type>2</type>
 			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/test</locationURI>

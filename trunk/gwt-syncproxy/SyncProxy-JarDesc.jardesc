@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="SyncProxy-0.4.jar"/>
+    <jar path="SyncProxy-0.5.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/gwt-syncproxy/SyncProxy-JarDesc.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -11,7 +11,7 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <javaElement handleIdentifier="=gwt-syncproxy/src"/>
         <file path="/gwt-syncproxy/LICENSE"/>
-        <javaElement handleIdentifier="=gwt-syncproxy/src&lt;com.gdevelop.gwt.syncrpc"/>
     </selectedElements>
 </jardesc>
