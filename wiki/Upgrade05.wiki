@@ -8,7 +8,7 @@ for testability, readability, and accuracy. As such, introduction of some of the
 calls to fail. Please submit issue reports for any unexpected failures. You may need to support better exception handling as a result of these changes.
 Cookies have been tested as part of the library, so cookies and multiple session support are again available.
 
-== GWT#create style Service Creation
+== GWT#create style Service Creation ==
 
 Starting in 0.5, the old `SyncProxy#newProxyInstance` methods have been deprecated in favor of the more GWT-like `SyncProxy#create` methods. The old
 newProxyInstance methods have been appropriately upgraded with JavaGenerics and should continue to function, but it is highly recommended
