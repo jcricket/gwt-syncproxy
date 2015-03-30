@@ -26,7 +26,7 @@ public class SyncProxyException extends InvocationException {
 		 */
 		REMOTE_SERVICE_RELATIVE_PATH(
 				"Check RemoteServiceRelativePath annotation on service"), MODULE_BASE_URL(
-						"Set SyncProxy Base Url"), POLICY_NAME_POPULATION(
+				"Set SyncProxy Base Url"), POLICY_NAME_POPULATION(
 				"Unable to populate policy names, see below exception."), POLICY_NAME_MISSING(
 				"Unable to locate policy name. See FAQ"),
 		/**
@@ -36,17 +36,17 @@ public class SyncProxyException extends InvocationException {
 		SERVICE_BASE("Make sure your service classes are on the classpath"),
 
 		/**
-										 * Used to indicate the use of the
-										 * {@link ServiceDefTarget#setServiceEntryPoint(String)} where the
-										 * moduleBaseUrl is different. This occurs because with a different base
-										 * url, we have no good way of separating the provided EntryPoint into
-										 * moduleBase and remoteServiceRelativePath. The moduleBase is needed
-										 * separately in
-										 * {@link RemoteServiceSyncProxy#doInvoke(com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter.ResponseReader, String)}
-										 *
-										 */
-										SERVICE_BASE_DELTA(
-												"Unable to determine new module base url from provided service entry point.");
+		 * Used to indicate the use of the
+		 * {@link ServiceDefTarget#setServiceEntryPoint(String)} where the
+		 * moduleBaseUrl is different. This occurs because with a different base
+		 * url, we have no good way of separating the provided EntryPoint into
+		 * moduleBase and remoteServiceRelativePath. The moduleBase is needed
+		 * separately in
+		 * {@link RemoteServiceSyncProxy#doInvoke(com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter.ResponseReader, String)}
+		 *
+		 */
+		SERVICE_BASE_DELTA(
+				"Unable to determine new module base url from provided service entry point.");
 		String help;
 
 		InfoType(String help) {

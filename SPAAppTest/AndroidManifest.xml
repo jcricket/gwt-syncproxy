@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="20" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -17,18 +17,22 @@
         android:label="@string/spa_app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
-            android:name="com.gdevelop.gwt.syncrpc.spaapptest.MainActivity"
-            android:label="@string/spa_app_name" >
+            android:name="com.gdevelop.gwt.syncrpc.android.AccountList"
+            android:label="@string/spa_account_list_title" />
+        <activity
+            android:name=".GSPAMain"
+            android:label="@string/title_activity_gspamain" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.gdevelop.gwt.syncrpc.android.AccountList"
-            android:label="@string/spa_account_list_title" />
     </application>
 
 </manifest>

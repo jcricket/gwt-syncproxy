@@ -114,10 +114,10 @@ public class SyncProxy {
 		defaultUnsetSettings(serviceIntf, settings);
 		return (ServiceIntf) Proxy.newProxyInstance(
 				SyncProxy.class.getClassLoader(), new Class[] { serviceIntf,
-					ServiceDefTarget.class, HasRpcToken.class,
-					SerializationStreamFactory.class,
-						HasProxySettings.class },
-				new RemoteServiceInvocationHandler(settings));
+						ServiceDefTarget.class, HasRpcToken.class,
+						SerializationStreamFactory.class,
+					HasProxySettings.class },
+					new RemoteServiceInvocationHandler(settings));
 	}
 
 	/**
@@ -492,11 +492,11 @@ public class SyncProxy {
 		}
 		ServiceIntf i = (ServiceIntf) Proxy.newProxyInstance(SyncProxy.class
 				.getClassLoader(), new Class[] { serviceIntf,
-				ServiceDefTarget.class, HasRpcToken.class,
-				SerializationStreamFactory.class },
-				new RemoteServiceInvocationHandler(serverBaseUrl,
-						remoteServiceRelativePath, policyName, cookieManager,
-						waitForInvocation));
+			ServiceDefTarget.class, HasRpcToken.class,
+			SerializationStreamFactory.class },
+			new RemoteServiceInvocationHandler(serverBaseUrl,
+					remoteServiceRelativePath, policyName, cookieManager,
+					waitForInvocation));
 		return i;
 	}
 
@@ -517,6 +517,33 @@ public class SyncProxy {
 	}
 
 	/**
+	 * @since 0.5.5
+	 * @param override
+	 *            indicates if the request to set the base URL should forcably
+	 *            make the network call even if the data has already been set
+	 *            before
+	 */
+	public static void setBaseURL(String baseUrl, boolean override)
+			throws SyncProxyException {
+		if (!override && moduleBaseURL != null && moduleBaseURL.equals(baseUrl)) {
+			// Don't need to make another network call unless specifically told
+			// to override, moduledBase has not yet been set, and specified base
+			// is not different from already set base
+			return;
+		}
+		moduleBaseURL = baseUrl;
+		if (moduleBaseURL != null) {
+			populatePolicyMap();
+		} else {
+			POLICY_MAP.clear();
+			POLICY_MAP.putAll(RpcPolicyFinder.searchPolicyFileInClassPath());
+		}
+	}
+
+	/**
+	 *
+	 * Calls {@link #setBaseURL(String, boolean)} with an override of false
+	 *
 	 * @since 0.5
 	 * @param baseUrl
 	 *            if null, existing {@link #POLICY_MAP} is cleared and
@@ -527,13 +554,7 @@ public class SyncProxy {
 	 *             if occurs during {@link #populatePolicyMap()}
 	 */
 	public static void setBaseURL(String baseUrl) throws SyncProxyException {
-		moduleBaseURL = baseUrl;
-		if (moduleBaseURL != null) {
-			populatePolicyMap();
-		} else {
-			POLICY_MAP.clear();
-			POLICY_MAP.putAll(RpcPolicyFinder.searchPolicyFileInClassPath());
-		}
+		setBaseURL(baseUrl, false);
 	}
 
 	/**
@@ -588,10 +609,10 @@ public class SyncProxy {
 	 * @since 0.5
 	 */
 	protected static Class<?>[] spClazzes = { SyncProxy.class,
-		RpcPolicyFinder.class, RemoteServiceInvocationHandler.class,
-			RemoteServiceSyncProxy.class,
-		SyncClientSerializationStreamReader.class,
-		SyncClientSerializationStreamWriter.class };
+			RpcPolicyFinder.class, RemoteServiceInvocationHandler.class,
+		RemoteServiceSyncProxy.class,
+			SyncClientSerializationStreamReader.class,
+			SyncClientSerializationStreamWriter.class };
 	/**
 	 * @since 0.5
 	 */

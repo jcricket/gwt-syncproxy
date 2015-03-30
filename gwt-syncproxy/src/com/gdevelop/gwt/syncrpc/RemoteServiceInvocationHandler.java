@@ -136,7 +136,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 	 * this method may be deprecated in a future release
 	 *
 	 * Uses waitForInvocation default as false.
-	 * 
+	 *
 	 * @deprecated since 0.5, preference to use
 	 *             {@link #RemoteServiceInvocationHandler(HasProxySettings)}
 	 */
@@ -224,7 +224,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 				// Replace $ in class name in order to handle inner classes
 				if (rti != null
 						&& !args[0].getClass().getName().replace("$", ".")
-								.equals(rti.value())) {
+						.equals(rti.value())) {
 					throw new RpcTokenException("Incorrect Token Class. Got "
 							+ args[0].getClass().getName() + " but expected: "
 							+ rti.value());
@@ -267,8 +267,8 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 			if (this.serviceEntryPoint.contains(this.settings
 					.getModuleBaseUrl())) {
 				this.settings
-						.setRemoteServiceRelativePath(this.serviceEntryPoint
-								.split(this.settings.getModuleBaseUrl())[1]);
+				.setRemoteServiceRelativePath(this.serviceEntryPoint
+						.split(this.settings.getModuleBaseUrl())[1]);
 			} else {
 				this.logger.warning("Unable to determine base (orig: "
 						+ this.settings.getModuleBaseUrl() + ") against: "
@@ -306,7 +306,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 		if (ServiceDefTarget.class.getName().equals(
 				method.getDeclaringClass().getName())) {
 			this.logger
-					.info("Handling invocation of ServiceDefTarget Interface");
+			.info("Handling invocation of ServiceDefTarget Interface");
 			return handleServiceDefTarget(proxy, method, args);
 		} else if (HasRpcToken.class.getName().equals(
 				method.getDeclaringClass().getName())) {
@@ -315,20 +315,16 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 		} else if (HasProxySettings.class.getName().equals(
 				method.getDeclaringClass().getName())) {
 			this.logger
-			.info("Handling invocation of HasProxySettings Interface");
+					.info("Handling invocation of HasProxySettings Interface");
 			return handleHasProxySettings(proxy, method, args);
 		}
-		RemoteServiceSyncProxy syncProxy = new RemoteServiceSyncProxy(
-				this.settings.getModuleBaseUrl(),
-				this.settings.getRemoteServiceRelativePath(),
-				this.settings.getPolicyName(),
-				this.settings.getCookieManager(), this.token,
-				this.rpcTokenExceptionHandler);
+		RemoteServiceSyncProxy syncProxy = new RemoteServiceSyncProxy(settings,
+				this.token, this.rpcTokenExceptionHandler);
 		// Handle delegation of calls to the RemoteServiceProxy hierarchy
 		if (SerializationStreamFactory.class.getName().equals(
 				method.getDeclaringClass().getName())) {
 			this.logger
-					.info("Handling invocation of SerializationStreamFactory Interface");
+			.info("Handling invocation of SerializationStreamFactory Interface");
 			return method.invoke(syncProxy, args);
 		}
 
@@ -364,7 +360,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 				} catch (ClassNotFoundException e) {
 					throw new InvocationException(
 							"There is no sync version of " + serviceIntfName
-									+ "Async");
+							+ "Async");
 				}
 				Method syncMethod = null;
 				try {
@@ -470,7 +466,7 @@ public class RemoteServiceInvocationHandler implements InvocationHandler {
 
 	private void writeParam(SerializationStreamWriter streamWriter,
 			Class<?> paramType, Object paramValue)
-			throws SerializationException {
+					throws SerializationException {
 		if (paramType == boolean.class) {
 			streamWriter.writeBoolean((Boolean) paramValue);
 			// } else if (paramType == Boolean.class){

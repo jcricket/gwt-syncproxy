@@ -126,4 +126,18 @@ public class ProxySettings implements HasProxySettings {
 		this.waitForInvocation = waitForInvocation;
 		return this;
 	}
+
+	String oAuth2IdToken;
+
+	@Override
+	public HasProxySettings setOAuth2IdToken(String token) {
+		this.oAuth2IdToken = token;
+		return this;
+	}
+
+	@Override
+	public String getOAuth2IdToken() {
+		return oAuth2IdToken;
+	}
+
 }

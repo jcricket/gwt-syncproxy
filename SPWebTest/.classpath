@@ -4,9 +4,31 @@
 	<classpathentry including="**/client/impl/GWTRunnerProxy.java|**/junit/JUnitShell.java|**/junit/client/GWTTestCase.java|**/junit/client/impl/MissingTestPlaceHolder.java|**/rebind/GWTRunnerProxyGenerator.java|**/server/JUnitHostImpl.java" kind="src" path="GWT_USER_ASSIST"/>
 	<classpathentry kind="src" output="test-classes" path="test"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_05"/>
 	<classpathentry excluding="**/client/rpc/*WithTypeObfuscation*" including="**/client/rpc/*.java|**/i18n/client/CustomPluralsTest.java|**/junit/client/*ExceptionAsserter.java|**/junit/client/ExpectedFailure.java|**/junit/client/GWTTestCaseStackTraceTest.java|**/junit/client/GWTTestCaseTest*.java|**/resources/client/CSSResourceTest.java|**/resources/client/Custom*Resource.java|**/resources/client/NestedBundleTest.java|**/resources/client/gss/ImportResource.java|**/resources/client/impl/*.java|**/resources/rg/Custom*ResourceGenerator.java|**/safehtml/shared/GwtSafeHtmlBuilderTest.java|**/safehtml/shared/GwtSafeHtmlStringTest.java|**/server/rpc/*ServerCustomFieldSerializer.java|**/server/rpc/*ServiceImpl.java|**/server/rpc/*TestServiceImpl*.java|**/server/rpc/LogFilterServletContext.java|**/server/rpc/RpcTokenAwareRemoteService.java|**/validation/client/ValidationClientGwtTestCase.java|**/validation/client/constraints/PatternValidatorGwtTest.java" kind="src" path="GWT_USER_TESTS"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AppEngineTesting"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-appengine-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-servlet-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-appengine-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-servlet-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-2.1.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-asl-1.9.11.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsr305-1.3.9.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/protobuf-java-2.4.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/transaction-api-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/httpclient-4.0.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/httpcore-4.0.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-appengine-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-jackson-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-jackson2-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-gson-1.20.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-gson-1.20.0.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

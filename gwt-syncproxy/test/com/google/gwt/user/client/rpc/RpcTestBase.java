@@ -72,7 +72,11 @@ public class RpcTestBase extends TestCase {
 	}
 
 	public String getModuleBaseURL() {
-		return "http://127.0.0.1:8888/spawebtest/";
+		return getBaseURL() + "spawebtest/";
+	}
+
+	public String getBaseURL() {
+		return "http://127.0.0.1:8888/";
 	}
 
 	public String getModuleName() {

@@ -85,6 +85,8 @@ public class RpcPolicyFinder {
 					// The first one is the permutation name
 					continue;
 				}
+				logger.fine("Retrieving Policy File: " + moduleBaseURL
+						+ policyName + GWT_PRC_POLICY_FILE_EXT);
 				responseText = getResposeText(moduleBaseURL + policyName
 						+ GWT_PRC_POLICY_FILE_EXT);
 				result.putAll(parsePolicyName(policyName,
@@ -109,7 +111,8 @@ public class RpcPolicyFinder {
 		String[] urlparts = moduleBaseURL.split("/");
 		// get last word of url appended with .nocache.js
 		String moduleNoCacheJs = urlparts[urlparts.length - 1] + ".nocache.js";
-		logger.config("Fetching Serialization Policys from: " + moduleNoCacheJs);
+		logger.config("Fetching Serialization Policys from: " + moduleBaseURL
+				+ moduleNoCacheJs);
 		String responseText = "";
 		responseText = getResposeText(moduleBaseURL + moduleNoCacheJs);
 		// parse the .nocache.js for list of Permutation name
@@ -192,6 +195,7 @@ public class RpcPolicyFinder {
 	private static String getResposeText(String myurl) throws IOException {
 		URL url = new URL(myurl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
 		connection.setDoInput(true);
 		connection.setDoOutput(true);
 		connection.setInstanceFollowRedirects(true); // follow redirect

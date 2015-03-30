@@ -119,8 +119,10 @@ public class SPAWebTest implements EntryPoint {
 	 * Create a remote service proxy to talk to the server-side Greeting
 	 * service.
 	 */
-	private final GreetingServiceAsync greetingService = GWT
+	public final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
+	public final ProfileServiceAsync profileService = GWT
+			.create(ProfileService.class);
 	private final CookieServiceAsync cookieService = GWT
 			.create(CookieService.class);
 	public final LargePayloadServiceAsync payloadService = GWT
@@ -188,17 +190,17 @@ public class SPAWebTest implements EntryPoint {
 		this.unicodeService.getStringContainingCharacterRange(0, 1,
 				new AsyncCallback<String>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
+			@Override
+			public void onFailure(Throwable caught) {
 
-					}
+			}
 
-					@Override
-					public void onSuccess(String result) {
+			@Override
+			public void onSuccess(String result) {
 
-					}
+			}
 
-				});
+		});
 		// TestSetValidator.isValidComplexCyclicGraph(TSFAccessor
 		// .createComplexCyclicGraph());
 		this.coreJavaService.echoMathContext(new MathContext(5,
@@ -217,33 +219,33 @@ public class SPAWebTest implements EntryPoint {
 		});
 		this.collectionsService.echo(TestSetFactory.createArrayList(),
 				new AsyncCallback<ArrayList<MarkerTypeArrayList>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				throw new RuntimeException(caught);
+			}
+
+			@Override
+			public void onSuccess(ArrayList<MarkerTypeArrayList> result) {
+
+			}
+		});
+		final EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> expected = TestSetFactory
+				.createEmptyEnumMap();
+		this.collectionsService
+		.echoEmptyEnumMap(
+				expected,
+				new AsyncCallback<EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue>>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						throw new RuntimeException(caught);
 					}
 
 					@Override
-					public void onSuccess(ArrayList<MarkerTypeArrayList> result) {
+					public void onSuccess(
+							EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> result) {
 
 					}
 				});
-		final EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> expected = TestSetFactory
-				.createEmptyEnumMap();
-		this.collectionsService
-				.echoEmptyEnumMap(
-						expected,
-						new AsyncCallback<EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue>>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								throw new RuntimeException(caught);
-							}
-
-							@Override
-							public void onSuccess(
-									EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> result) {
-
-							}
-						});
 		((ServiceDefTarget) this.finalFieldSerService).setServiceEntryPoint(GWT
 				.getModuleBaseURL() + "finalfields");
 		this.finalFieldSerService.transferObject(
@@ -264,27 +266,27 @@ public class SPAWebTest implements EntryPoint {
 		this.enumTestService.echo(Basic.A,
 				new AsyncCallback<EnumsTestService.Basic>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+					}
 
-			@Override
-			public void onSuccess(Basic result) {
-			}
-		});
+					@Override
+					public void onSuccess(Basic result) {
+					}
+				});
 
 		this.loggingRPCService.echoLogRecord(createLogRecord(),
 				new AsyncCallback<LogRecord>() {
-			@Override
-			public void onFailure(Throwable caught) {
+					@Override
+					public void onFailure(Throwable caught) {
 
-			}
+					}
 
-			@Override
-			public void onSuccess(LogRecord result) {
+					@Override
+					public void onSuccess(LogRecord result) {
 
-			}
-		});
+					}
+				});
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
@@ -438,21 +440,21 @@ public class SPAWebTest implements EntryPoint {
 				// }
 				// });
 				SPAWebTest.this.cookieService
-						.generateCookiesOnServer(new AsyncCallback<Void>() {
+				.generateCookiesOnServer(new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								throw new RuntimeException(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						throw new RuntimeException(caught);
+					}
 
-							@Override
-							public void onSuccess(Void result) {
-								dialogBox.setText("Cookie RPC");
-								serverResponseLabel.setHTML(Cookies
-										.getCookieNames().toString());
-								dialogBox.center();
-							}
-						});
+					@Override
+					public void onSuccess(Void result) {
+						dialogBox.setText("Cookie RPC");
+						serverResponseLabel.setHTML(Cookies
+								.getCookieNames().toString());
+						dialogBox.center();
+					}
+				});
 
 			}
 		}

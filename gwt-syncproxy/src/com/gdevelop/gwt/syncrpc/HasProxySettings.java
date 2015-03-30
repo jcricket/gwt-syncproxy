@@ -7,11 +7,16 @@ package com.gdevelop.gwt.syncrpc;
 import java.net.CookieManager;
 
 /**
+ * Interface to specify an object that will provide for requested Proxy
+ * Settings. Custom ProxySettings objects may be utilized as of version 0.6 to
+ * create reusable settings objects that are customized
+ *
  * @author Preethum
  * @since 0.5
- *
+ * @version 0.5.5
  */
 public interface HasProxySettings {
+
 	/**
 	 * @return the cookieManager
 	 */
@@ -48,6 +53,10 @@ public interface HasProxySettings {
 	 *            the policyName to set
 	 */
 	public HasProxySettings setPolicyName(String policyName);
+
+	public HasProxySettings setOAuth2IdToken(String token);
+
+	public String getOAuth2IdToken();
 
 	/**
 	 * @param remoteServiceRelativePath

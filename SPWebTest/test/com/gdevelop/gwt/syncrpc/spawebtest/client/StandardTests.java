@@ -34,7 +34,7 @@ public class StandardTests extends GWTTestSuite {
 		suite.addTest(GwtTests.suite());
 		// TODO Will implement proper profile testing after conversion to 0.5
 		// (Google Apis)
-		// suite.addTestSuite(ProfileServiceTest.class);
+		suite.addTestSuite(ProfileServiceTest.class);
 		return suite;
 	}
 }

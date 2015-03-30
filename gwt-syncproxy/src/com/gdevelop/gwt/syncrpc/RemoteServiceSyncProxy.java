@@ -46,6 +46,8 @@ import com.google.gwt.user.server.rpc.SerializationPolicy;
 
 /**
  * Base on {@link com.google.gwt.user.client.rpc.impl.RemoteServiceProxy}
+ *
+ * @version 0.6
  */
 public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 	public static class DummySerializationPolicy extends SerializationPolicy {
@@ -92,22 +94,36 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 	boolean ignoreResponse = false;
 	static Logger logger = Logger.getLogger(RemoteServiceSyncProxy.class
 			.getName());
+	HasProxySettings settings;
 
-	public RemoteServiceSyncProxy(String moduleBaseURL,
-			String remoteServiceRelativePath, String serializationPolicyName,
-			CookieManager cookieManager, RpcToken rpcToken,
-			RpcTokenExceptionHandler rpcTokenExceptionHandler) {
-		this.moduleBaseURL = moduleBaseURL;
-		this.remoteServiceURL = moduleBaseURL + remoteServiceRelativePath;
-		this.serializationPolicyName = serializationPolicyName;
-		this.cookieManager = cookieManager;
+	/**
+	 * Constructor to utilized provided Proxy Settings
+	 *
+	 * @since 0.6
+	 */
+	public RemoteServiceSyncProxy(HasProxySettings settings, RpcToken rpcToken,
+			RpcTokenExceptionHandler rpcTokenExceptionhandler) {
+		this.settings = settings;
+		this.moduleBaseURL = settings.getModuleBaseUrl();
+		this.remoteServiceURL = moduleBaseURL
+				+ settings.getRemoteServiceRelativePath();
+		this.serializationPolicyName = settings.getPolicyName();
+		this.cookieManager = settings.getCookieManager();
 		this.rpcToken = rpcToken;
-		this.rpcTokenExceptionHandler = rpcTokenExceptionHandler;
+		this.rpcTokenExceptionHandler = rpcTokenExceptionhandler;
 		if (serializationPolicyName == null) {
 			this.serializationPolicy = new DummySerializationPolicy();
 		} else {
+			// It appears this section attempts to find the specified policy
+			// files within the included classpath before actually checking
+			// against cached live files retrieve by the RpcPolicyFinder...This
+			// should be reviewed it may make more sense to get a live version
+			// first, and if not available then look to a locally available
+			// version
 			String policyFileName = SerializationPolicyLoader
 					.getSerializationPolicyFileName(serializationPolicyName);
+			logger.config("Retrieving Policy File: " + policyFileName
+					+ " for SerializationPolicy: " + serializationPolicyName);
 			InputStream is = getClass().getResourceAsStream(
 					"/" + policyFileName);
 			try {
@@ -139,6 +155,23 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 		}
 	}
 
+	/**
+	 *
+	 * @deprecated as of 0.6, use
+	 *             {@link #RemoteServiceSyncProxy(HasProxySettings, RpcToken, RpcTokenExceptionHandler)}
+	 */
+	@Deprecated
+	public RemoteServiceSyncProxy(String moduleBaseURL,
+			String remoteServiceRelativePath, String serializationPolicyName,
+			CookieManager cookieManager, RpcToken rpcToken,
+			RpcTokenExceptionHandler rpcTokenExceptionHandler) {
+		this(new ProxySettings().setModuleBaseUrl(moduleBaseURL)
+				.setRemoteServiceRelativePath(remoteServiceRelativePath)
+				.setPolicyName(serializationPolicyName)
+				.setCookieManager(cookieManager), rpcToken,
+				rpcTokenExceptionHandler);
+	}
+
 	@Override
 	public SyncClientSerializationStreamReader createStreamReader(String encoded)
 			throws SerializationException {
@@ -160,6 +193,8 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 		return streamWriter;
 	}
 
+	public final static String OAUTH_HEADER = "X-GSP-OAUTH-ID";
+
 	public Object doInvoke(
 			RequestCallbackAdapter.ResponseReader responseReader,
 			String requestData) throws Throwable {
@@ -179,6 +214,7 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 					+ this.remoteServiceURL);
 			URL url = new URL(this.remoteServiceURL);
 			connection = (HttpURLConnection) url.openConnection();
+
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
@@ -188,6 +224,14 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 					this.moduleBaseURL);
 			connection.setRequestProperty("Content-Type",
 					"text/x-gwt-rpc; charset=utf-8");
+			if (settings.getOAuth2IdToken() != null) {
+				if (!url.getProtocol().equalsIgnoreCase("https")) {
+					throw new RuntimeException(
+							"Cannot send OAUTH Id Token over a non-secured protocol. Please use HTTPS");
+				}
+				connection.setRequestProperty(OAUTH_HEADER,
+						settings.getOAuth2IdToken());
+			}
 			connection.setRequestProperty("Content-Length",
 					"" + requestData.getBytes("UTF-8").length);
 			// Patch for Issue 21 - Modified to only send cookies for

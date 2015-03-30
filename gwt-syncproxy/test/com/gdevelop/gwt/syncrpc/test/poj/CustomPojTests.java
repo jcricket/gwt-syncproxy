@@ -20,7 +20,7 @@ public class CustomPojTests extends TestSuite {
 		suite.addTestSuite(LargePayloadTest.class);
 		suite.addTestSuite(CookieServiceTest.class);
 		// suite.addTestSuite(HttpsTest.class);
-		// suite.addTestSuite(ProfileServiceTest.class);
+		suite.addTestSuite(ProfileServiceTest.class);
 		// suite.addTestSuite(SessionTest.class);
 		suite.addTestSuite(SyncedServicesTest.class);
 		return suite;

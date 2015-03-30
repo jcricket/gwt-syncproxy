@@ -16,11 +16,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>GData</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/gdata</locationURI>
-		</link>
-		<link>
 			<name>GWT_USER_TESTS</name>
 			<type>2</type>
 			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/test</locationURI>

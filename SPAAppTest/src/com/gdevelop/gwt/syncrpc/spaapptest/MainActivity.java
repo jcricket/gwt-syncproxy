@@ -160,7 +160,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		// setContentView(R.layout.activity_main);
 		Button activate = (Button) this.findViewById(R.id.activate);
 		activate.setEnabled(false);
 		activate.setOnClickListener(new OnClickListener() {
