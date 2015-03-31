@@ -461,8 +461,8 @@ containing a value of this type.
         public static final int server=0x7f040000;
     }
     public static final class string {
-        public static final int action_settings=0x7f070027;
-        public static final int activate=0x7f070022;
+        public static final int action_settings=0x7f070028;
+        public static final int activate=0x7f070023;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -553,17 +553,18 @@ containing a value of this type.
          */
         public static final int common_signin_button_text_long=0x7f070018;
         public static final int gae_client_id=0x7f07001f;
-        public static final int hello_world=0x7f070020;
-        public static final int menu_settings=0x7f070021;
+        public static final int gsp_base=0x7f070020;
+        public static final int hello_world=0x7f070021;
+        public static final int menu_settings=0x7f070022;
         public static final int spa_account_list_title=0x7f07001b;
         public static final int spa_add_account_menu=0x7f07001e;
         public static final int spa_add_custom_menu=0x7f07001d;
         public static final int spa_app_name=0x7f07001a;
         public static final int spa_non_dev_toast=0x7f07001c;
-        public static final int title_activity_gspamain=0x7f070023;
-        public static final int title_section1=0x7f070024;
-        public static final int title_section2=0x7f070025;
-        public static final int title_section3=0x7f070026;
+        public static final int title_activity_gspamain=0x7f070024;
+        public static final int title_section1=0x7f070025;
+        public static final int title_section2=0x7f070026;
+        public static final int title_section3=0x7f070027;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */

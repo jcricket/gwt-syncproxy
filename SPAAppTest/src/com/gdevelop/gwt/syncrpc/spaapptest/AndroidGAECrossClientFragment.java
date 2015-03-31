@@ -48,14 +48,14 @@ public class AndroidGAECrossClientFragment extends Fragment {
 		authenticator = new AndroidGAECrossClientAuthenticator(getActivity(),
 				this, manager, new ServiceAuthenticationListener() {
 
-					@Override
-					public void onAuthenticatorPrepared(String accountName) {
-						EditText selected = (EditText) getActivity()
-								.findViewById(R.id.choosen_account);
-						selected.setText(accountName);
-						verify.setEnabled(true);
-					}
-				});
+			@Override
+			public void onAuthenticatorPrepared(String accountName) {
+				EditText selected = (EditText) getActivity()
+						.findViewById(R.id.choosen_account);
+				selected.setText(accountName);
+				verify.setEnabled(true);
+			}
+		});
 
 	};
 
@@ -75,7 +75,7 @@ public class AndroidGAECrossClientFragment extends Fragment {
 	 * certificate-with-a-java-httpsurlconnection
 	 */
 	private void verify() {
-		// ******************************
+		/***************************************************************************/
 		// This section is strictly to handle the stunnel local dev mode for GAE
 		SSLSocketFactory sslFactory = null;
 		try {
@@ -103,9 +103,10 @@ public class AndroidGAECrossClientFragment extends Fragment {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		// ***************************
+		/***************************************************************************/
 		ServiceAsyncTask<ProfileServiceAsync, UserInfo> serviceTask = new ServiceAsyncTask<ProfileServiceAsync, UserInfo>(
-				ProfileService.class, new AsyncCallback<UserInfo>() {
+				ProfileService.class, R.string.gsp_base, authenticator,
+				new AsyncCallback<UserInfo>() {
 
 					@Override
 					public void onSuccess(UserInfo arg0) {
@@ -121,7 +122,7 @@ public class AndroidGAECrossClientFragment extends Fragment {
 						returned.setText("Exception: " + arg0.getMessage());
 						throw new RuntimeException(arg0);
 					}
-				}, authenticator) {
+				}) {
 
 			@Override
 			public void serviceCall() {
@@ -130,7 +131,7 @@ public class AndroidGAECrossClientFragment extends Fragment {
 			}
 
 		};
-		serviceTask.execute();
+		serviceTask.execute(getActivity());
 	}
 
 	AndroidGAECrossClientAuthenticator authenticator;

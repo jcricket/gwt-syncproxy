@@ -38,11 +38,12 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
  * https://developers.google.com/console/help/new/#apikeybestpractices
  *
  * @author Preethum
+ * @since 0.6
  *
  */
 public class AndroidGAECrossClientAuthenticator extends
-		AsyncTask<Void, Void, String> implements ServiceAuthenticator,
-		HasOAuthIDToken {
+AsyncTask<Void, Void, String> implements ServiceAuthenticator,
+HasOAuthIDToken {
 	public static final String OAUTH_ID_SCOPE_PREFIX = "audience:server:client_id:";
 
 	public final static int RC_RECOVER_PLAY_SERVICES_ERROR = 3030;
@@ -50,13 +51,25 @@ public class AndroidGAECrossClientAuthenticator extends
 	public final static int RC_ACCOUNT_CHOOSER_REQUEST = 3032;
 
 	Context context;
-	// Account account;
 	GoogleOAuthIdManager idManager;
 	Activity activity;
 	String accountName;
 
 	private Fragment actResultDelegate;
 
+	/**
+	 * Use case non-Activity, non-Fragment authentication preparation for the
+	 * specified account
+	 *
+	 * @param account
+	 *            to gain authentication details about
+	 * @param idManager
+	 *            containing the server's client id to retrieve and Id Token
+	 *            instead of other credentials
+	 * @param listener
+	 *            to be called once this authenticator is prepared with the
+	 *            details necessary to apply to any target service
+	 */
 	public AndroidGAECrossClientAuthenticator(Context context, Account account,
 			GoogleOAuthIdManager idManager,
 			ServiceAuthenticationListener listener) {
@@ -66,16 +79,11 @@ public class AndroidGAECrossClientAuthenticator extends
 		this.listener = listener;
 	}
 
-	public AndroidGAECrossClientAuthenticator(Activity activity,
-			Account account, GoogleOAuthIdManager idManager,
-			ServiceAuthenticationListener listener) {
-		this.context = activity;
-		this.activity = activity;
-		this.accountName = account.name;
-		this.idManager = idManager;
-		this.listener = listener;
-	}
-
+	/**
+	 * Use case for authentication and this sub-system will query for the user's
+	 * selected account. The listener will be called when authentication has
+	 * been prepared regarding which account was chosen.
+	 */
 	public AndroidGAECrossClientAuthenticator(Activity activity,
 			GoogleOAuthIdManager idManager,
 			ServiceAuthenticationListener listener) {
@@ -85,16 +93,24 @@ public class AndroidGAECrossClientAuthenticator extends
 		this.listener = listener;
 	}
 
+	/**
+	 * Use case for performing authentication within a {@link Fragment}, which
+	 * expects to handle the {@link #onActivityResult(int, int, Intent)}
+	 */
 	public AndroidGAECrossClientAuthenticator(Activity activity,
 			Fragment actResultDelegate, GoogleOAuthIdManager idManager,
 			ServiceAuthenticationListener listener) {
-		this.context = activity;
-		this.activity = activity;
+		this(activity, idManager, listener);
 		this.actResultDelegate = actResultDelegate;
-		this.idManager = idManager;
-		this.listener = listener;
 	}
 
+	/**
+	 * Handles activity results relating to the {@link GoogleAuthUtil} service.
+	 *
+	 * @return true if this class was able to handle the result
+	 * @throws IOException
+	 * @throws GoogleAuthException
+	 */
 	public boolean onActivityResult(int requestCode, int resultCode, Intent data)
 			throws IOException, GoogleAuthException {
 		if ((requestCode == RC_RECOVER_PLAY_SERVICES_ERROR || requestCode == RC_RECOVER_AUTH_ERROR)
@@ -118,7 +134,10 @@ public class AndroidGAECrossClientAuthenticator extends
 	private ServiceAuthenticationListener listener;
 
 	/**
-	 * Returns an ID token to be sent to the server
+	 * Makes sure details necessary for authentication are available before
+	 * undergoing preparation measures. Specifically, an account name must be
+	 * specified, and if not an activity must be available to query the user for
+	 * which account to utilize
 	 *
 	 * TODO Check network connectivity to handle IOException errors
 	 *
@@ -131,7 +150,7 @@ public class AndroidGAECrossClientAuthenticator extends
 	 *             auto-handle these errors
 	 */
 	protected void prepareAuthenticationL() throws IOException,
-			GoogleAuthException {
+	GoogleAuthException {
 		if (actionComplete) {
 			listener.onAuthenticatorPrepared(accountName);
 			return;
@@ -190,6 +209,8 @@ public class AndroidGAECrossClientAuthenticator extends
 			if (pendingException != null) {
 				throw new RuntimeException(pendingException);
 			}
+			// If no pendingException, then system was able to recover
+			// automatically to gain further information
 			return;
 		}
 		actionComplete = true;
@@ -205,6 +226,12 @@ public class AndroidGAECrossClientAuthenticator extends
 
 	Exception pendingException;
 
+	/**
+	 * Performs the preparation measures, specifically retrieving the
+	 * server-usable OAuth 2.0 Id Token which must be sent to the server
+	 * 
+	 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+	 */
 	@Override
 	protected String doInBackground(Void... params) {
 		try {
@@ -212,7 +239,7 @@ public class AndroidGAECrossClientAuthenticator extends
 					context,
 					accountName,
 					OAUTH_ID_SCOPE_PREFIX
-							+ idManager.getServerClientId(context));
+					+ idManager.getServerClientId(context));
 			return idToken;
 		} catch (GooglePlayServicesAvailabilityException gpsae) {
 			// The Google Play services APK is old, disabled, or not present.
