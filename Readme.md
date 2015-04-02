@@ -1,4 +1,8 @@
-# GWT-SyncProxy
+## Updates
+
+Work is currently in progress to support Android to GAE login support using OAuth2 Credentials, specifically the Cross Client Identification. See the (in progress) [OAuth 2.0 App Engine Authentication](https://github.com/jcricket/gwt-syncproxy/wiki/OAuth-2.0-App-Engine-Authentication) wiki for details.
+
+# GWT-SyncProxy (GSP)
 
 [Google-Web-Toolkit (GWT)](http://www.gwtproject.org/) uses asynchronous RPC's between client (e.g Browser) and RemoteService servlet. Written in Java, the client-side code is converted to JS when compiled. The client side uses dynamically created Proxy's to handle method calls and serialization back and forth with the server. As such, there is no library within the GWT project to make these method calls from Java that is not translated. GWT-SyncProxy fills that gap.
 
