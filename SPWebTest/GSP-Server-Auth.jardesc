@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="GSP-Server-Auth-0.5.1-alpha.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/SPWebTest/GSP-Server-Auth.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/gwt-syncproxy/Manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=SPWebTest/src&lt;com.gdevelop.gwt.syncrpc.server.auth.gae"/>
+        <javaElement handleIdentifier="=SPWebTest/src&lt;com.gdevelop.gwt.syncrpc.server.auth"/>
+        <file path="/SPWebTest/LICENSE"/>
+        <javaElement handleIdentifier="=SPWebTest/src&lt;com.gdevelop.gwt.syncrpc.spawebtest"/>
+        <file path="/SPWebTest/src/log4j.properties"/>
+    </selectedElements>
+</jardesc>

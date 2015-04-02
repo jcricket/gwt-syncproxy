@@ -2,6 +2,7 @@ package com.gdevelop.gwt.syncrpc.spawebtest.server;
 
 import java.util.logging.Logger;
 
+import com.gdevelop.gwt.syncrpc.server.auth.gae.CrossClientAuthRSS;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileService;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.UnauthenticateException;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.UserInfo;

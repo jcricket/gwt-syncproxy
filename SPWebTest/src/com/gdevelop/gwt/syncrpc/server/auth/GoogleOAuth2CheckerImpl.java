@@ -1,11 +1,9 @@
-package com.gdevelop.gwt.syncrpc.spawebtest.server;
+package com.gdevelop.gwt.syncrpc.server.auth;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
@@ -20,47 +18,39 @@ import com.google.api.client.json.gson.GsonFactory;
  * from-android.html
  *
  */
-public class Checker {
-	public enum ClientId {
-		GAE("gsp.clientid.gae"), ANDROID("gsp.clientid.android");
-		String propName;
-
-		private ClientId(String propName) {
-			this.propName = propName;
-		}
-
-		public String getPropName() {
-			return propName;
-		}
-
-	}
+public class GoogleOAuth2CheckerImpl implements GoogleOAuth2Checker {
 
 	private final List<String> mClientIDs;
 	private final String mAudience;
-	private final GoogleIdTokenVerifier mVerifier;
-	private final JsonFactory mJFactory;
+	private GoogleIdTokenVerifier mVerifier;
+	private JsonFactory mJFactory;
 	private String mProblem = "Verification failed. (Time-out?)";
 
-	public Checker(String[] clientIDs, String audience) {
-		mClientIDs = Arrays.asList(clientIDs);
-		mAudience = audience;
+	public GoogleOAuth2CheckerImpl(ServletContext context) {
+		ClientIdManager manager = new ClientIdManagerImpl(context);
+		mClientIDs = Arrays.asList(manager.getAllClients());
+		mAudience = manager.getServerAudience();
+		init();
+	}
+
+	public GoogleOAuth2CheckerImpl(ServletContext context,
+			ClientIdManager manager) {
+		this(manager.getAllClients(), manager.getServerAudience());
+	}
+
+	protected void init() {
 		NetHttpTransport transport = new NetHttpTransport();
 		mJFactory = new GsonFactory();
 		mVerifier = new GoogleIdTokenVerifier(transport, mJFactory);
 	}
 
-	public static String getClientId(ClientId idType, ServletContext context) {
-		InputStream is = context
-				.getResourceAsStream("/WEB-INF/client_ids.properties");
-		Properties props = new Properties();
-		try {
-			props.load(is);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return props.getProperty(idType.getPropName()).trim();
+	public GoogleOAuth2CheckerImpl(String[] clientIDs, String audience) {
+		mClientIDs = Arrays.asList(clientIDs);
+		mAudience = audience;
+		init();
 	}
 
+	@Override
 	public GoogleIdToken.Payload check(String tokenString) {
 		GoogleIdToken.Payload payload = null;
 		try {

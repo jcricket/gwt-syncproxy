@@ -27,6 +27,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 /**
  * Uses OAuth 2 Data from a provided Android account to attach ID Tokens to a
  * Google App Engine GWT RPC endpoint services.
+ *
  * https://developers.google.com/accounts/docs/CrossClientAuth
  *
  * https://developers.google.com/identity-toolkit/quickstart/android - getting
@@ -42,13 +43,29 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
  *
  */
 public class AndroidGAECrossClientAuthenticator extends
-AsyncTask<Void, Void, String> implements ServiceAuthenticator,
-HasOAuthIDToken {
+		AsyncTask<Void, Void, String> implements ServiceAuthenticator,
+		HasOAuthIDToken {
 	public static final String OAUTH_ID_SCOPE_PREFIX = "audience:server:client_id:";
 
 	public final static int RC_RECOVER_PLAY_SERVICES_ERROR = 3030;
 	public final static int RC_RECOVER_AUTH_ERROR = 3031;
 	public final static int RC_ACCOUNT_CHOOSER_REQUEST = 3032;
+
+	public void setRcRecoverPlayServices(int rcRecoverPlayServices) {
+		this.rcRecoverPlayServices = rcRecoverPlayServices;
+	}
+
+	public void setRcRecoverAuth(int rcRecoverAuth) {
+		this.rcRecoverAuth = rcRecoverAuth;
+	}
+
+	public void setRcAccountChooser(int rcAccountChooser) {
+		this.rcAccountChooser = rcAccountChooser;
+	}
+
+	private int rcRecoverPlayServices = RC_RECOVER_PLAY_SERVICES_ERROR;
+	private int rcRecoverAuth = RC_RECOVER_AUTH_ERROR;
+	private int rcAccountChooser = RC_ACCOUNT_CHOOSER_REQUEST;
 
 	Context context;
 	GoogleOAuthIdManager idManager;
@@ -113,13 +130,13 @@ HasOAuthIDToken {
 	 */
 	public boolean onActivityResult(int requestCode, int resultCode, Intent data)
 			throws IOException, GoogleAuthException {
-		if ((requestCode == RC_RECOVER_PLAY_SERVICES_ERROR || requestCode == RC_RECOVER_AUTH_ERROR)
+		if ((requestCode == rcRecoverPlayServices || requestCode == rcRecoverAuth)
 				&& resultCode == Activity.RESULT_OK) {
 			// Receiving a result that follows a GoogleAuthException, try auth
 			// again
 			prepareAuthenticationL();
 			return true;
-		} else if (requestCode == RC_ACCOUNT_CHOOSER_REQUEST
+		} else if (requestCode == rcAccountChooser
 				&& resultCode == Activity.RESULT_OK) {
 			accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			prepareAuthenticationL();
@@ -150,7 +167,7 @@ HasOAuthIDToken {
 	 *             auto-handle these errors
 	 */
 	protected void prepareAuthenticationL() throws IOException,
-	GoogleAuthException {
+			GoogleAuthException {
 		if (actionComplete) {
 			listener.onAuthenticatorPrepared(accountName);
 			return;
@@ -162,10 +179,9 @@ HasOAuthIDToken {
 					true, null, null, null, null);
 			if (actResultDelegate != null) {
 				actResultDelegate.startActivityForResult(googlePicker,
-						RC_ACCOUNT_CHOOSER_REQUEST);
+						rcAccountChooser);
 			} else {
-				activity.startActivityForResult(googlePicker,
-						RC_ACCOUNT_CHOOSER_REQUEST);
+				activity.startActivityForResult(googlePicker, rcAccountChooser);
 			}
 			return;
 		} else if (accountName == null) {
@@ -229,7 +245,7 @@ HasOAuthIDToken {
 	/**
 	 * Performs the preparation measures, specifically retrieving the
 	 * server-usable OAuth 2.0 Id Token which must be sent to the server
-	 * 
+	 *
 	 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 	 */
 	@Override
@@ -239,7 +255,7 @@ HasOAuthIDToken {
 					context,
 					accountName,
 					OAUTH_ID_SCOPE_PREFIX
-					+ idManager.getServerClientId(context));
+							+ idManager.getServerClientId(context));
 			return idToken;
 		} catch (GooglePlayServicesAvailabilityException gpsae) {
 			// The Google Play services APK is old, disabled, or not present.
@@ -248,7 +264,7 @@ HasOAuthIDToken {
 			if (activity != null) {
 				int statusCode = gpsae.getConnectionStatusCode();
 				Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
-						statusCode, activity, RC_RECOVER_PLAY_SERVICES_ERROR);
+						statusCode, activity, rcRecoverPlayServices);
 				dialog.show();
 				return null;
 			}
@@ -257,10 +273,10 @@ HasOAuthIDToken {
 			if (activity != null) {
 				if (actResultDelegate != null) {
 					actResultDelegate.startActivityForResult(urae.getIntent(),
-							RC_RECOVER_AUTH_ERROR);
+							rcRecoverAuth);
 				} else {
 					activity.startActivityForResult(urae.getIntent(),
-							RC_RECOVER_AUTH_ERROR);
+							rcRecoverAuth);
 				}
 				return null;
 			}
