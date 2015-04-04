@@ -1,6 +1,6 @@
 ## Updates
 
-Work is currently in progress to support Android to GAE login support using OAuth2 Credentials, specifically the Cross Client Identification. See the (in progress) [OAuth 2.0 App Engine Authentication](https://github.com/jcricket/gwt-syncproxy/wiki/OAuth-2.0-App-Engine-Authentication) wiki for details.
+Work is currently in progress to support Android to GAE login support using OAuth2 Credentials, specifically the Cross Client Identification. See the (in progress) [OAuth 2.0 App Engine Authentication](https://github.com/jcricket/gwt-syncproxy/wiki/OAuth-2.0-App-Engine-Authentication) wiki for details. This work should resolve potential issues that may occur with the upcoming Google service shutdown of ClientLogin, which is utilized by GSP.
 
 # GWT-SyncProxy (GSP)
 
@@ -16,7 +16,7 @@ Both libraries also provide Utility methods for providing and using login creden
 
 This project is currently (0.5) working with GWT 2.7.0 as a base, and has some support back to GWT 2.2 with previous versions of SyncProxy.
 
-This project is under new management (effective Feb 2014). If you would like to contribute to this project, please open a new issue (Contrib-Request) to get added on to this project.
+The primary repository is available at https://github.com/jcricket/gwt-syncproxy. This project is under new management (effective Feb 2014) and transferred from Google Code to GitHub effective Mar 2015. If you would like to contribute to this project, please open a new issue with label **Join Project** to get added on to this project or fork it.
 
 ## Usage Example
 
@@ -40,8 +40,8 @@ String value = greetingService.greet("Hello");
 
 ## Developers
 
-Are you using SyncProxy in your Project? Let us know so we can generate a list of projects utilizing the SyncProxy Project. Let us know which Library (Java/Android) and a website if you have it!
+Are you using SyncProxy in your Project? Let us know so we can generate a list of projects utilizing the SyncProxy Project. Let us know which Library (Java/Android) you are using and a website if you have it!
 
 ## Changes
 
-The latest ReleaseNOtes are available up to version 0.4. The Roadmap is a work in progress and currently targeting version 0.6. Check the CommonIssues wiki for a list of problems that may occur and how to resolve them before submitting a ticket. You may also post up to StackOverflow with the 'gwt-syncproxy' tag and we'll help you there.
+The latest [Release Notes](https://github.com/jcricket/gwt-syncproxy/wiki/Release-Notes) are available up to version 0.5. The Roadmap is a work in progress and currently targeting version 0.6. Check the [Common Issues](https://github.com/jcricket/gwt-syncproxy/wiki/Common-Issues) wiki for a list of problems that may occur and how to resolve them before submitting a ticket. You may also post up to StackOverflow with the 'gwt-syncproxy' tag and we'll help you there.
