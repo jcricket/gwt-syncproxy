@@ -194,10 +194,21 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 	}
 
 	public final static String OAUTH_HEADER = "X-GSP-OAUTH-ID";
+	public static final String OAUTH_BEARER_HEADER = "Authorization";
 
 	public Object doInvoke(
 			RequestCallbackAdapter.ResponseReader responseReader,
 			String requestData) throws Throwable {
+		// Auto apply authenticator if available. Makes it
+		// possible that if the authenticator's values change (such as access
+		// tokens that are refreshed), the client will not need to re-apply the
+		// authenticator to the service. The RemoteServiceInvocationHandler will
+		// pass on the stored settings (including authenticator) each time to
+		// this Proxy, which will re-apply the appropriate settings data
+		if (settings.getServiceAuthenticator() != null) {
+			settings.getServiceAuthenticator().applyAuthenticationToService(
+					settings);
+		}
 		// Workaround for unknown reset of the logger
 		logger.setLevel(SyncProxy.getLoggingLevel());
 		HttpURLConnection connection = null;
@@ -231,6 +242,14 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 				}
 				connection.setRequestProperty(OAUTH_HEADER,
 						settings.getOAuth2IdToken());
+			}
+			if (settings.getOAuthBearerToken() != null) {
+				if (!url.getProtocol().equalsIgnoreCase("https")) {
+					throw new RuntimeException(
+							"Cannot send OAUTH Bearer Token over a non-secured protocol. Please use HTTPS");
+				}
+				connection.setRequestProperty(OAUTH_BEARER_HEADER, "Bearer "
+						+ settings.getOAuthBearerToken());
 			}
 			connection.setRequestProperty("Content-Length",
 					"" + requestData.getBytes("UTF-8").length);

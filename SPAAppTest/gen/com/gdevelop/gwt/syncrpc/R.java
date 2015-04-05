@@ -121,8 +121,8 @@ public final class R {
 		public static final int sandbox = 0x7f0b0008;
 		public static final int satellite = 0x7f0b0003;
 		public static final int selectionDetails = 0x7f0b000b;
-		public static final int spa_add_account = 0x7f0b0021;
-		public static final int spa_add_custom = 0x7f0b0020;
+		public static final int spa_add_account = 0x7f0b0023;
+		public static final int spa_add_custom = 0x7f0b0022;
 		public static final int strict_sandbox = 0x7f0b0009;
 		public static final int terrain = 0x7f0b0004;
 		public static final int wrap_content = 0x7f0b000d;

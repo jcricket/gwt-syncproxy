@@ -1,4 +1,4 @@
-package com.gdevelop.gwt.syncrpc.android.auth;
+package com.gdevelop.gwt.syncrpc.auth;
 
 /**
  * Helper to be notified when a {@link ServiceAuthenticator} has been prepared

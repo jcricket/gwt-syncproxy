@@ -1,4 +1,6 @@
-package com.gdevelop.gwt.syncrpc.android.auth;
+package com.gdevelop.gwt.syncrpc.auth;
+
+import com.gdevelop.gwt.syncrpc.exception.TokenNotAvailableException;
 
 /**
  * Indicates that when prepared, an OAuth 2.0 ID Token is available for use

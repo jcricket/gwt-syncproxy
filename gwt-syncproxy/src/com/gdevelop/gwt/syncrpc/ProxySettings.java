@@ -6,6 +6,8 @@ package com.gdevelop.gwt.syncrpc;
 
 import java.net.CookieManager;
 
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
+
 /**
  * Handles settings utilized by the SyncProxy creation. Set methods return the
  * Settings object for chaining.
@@ -19,7 +21,9 @@ public class ProxySettings implements HasProxySettings {
 	String remoteServiceRelativePath;
 	String policyName;
 	CookieManager cookieManager;
+	ServiceAuthenticator serviceAuthenticator;
 	boolean waitForInvocation = false;
+	String bearerToken;
 
 	public ProxySettings() {
 
@@ -138,6 +142,26 @@ public class ProxySettings implements HasProxySettings {
 	@Override
 	public String getOAuth2IdToken() {
 		return oAuth2IdToken;
+	}
+
+	@Override
+	public ServiceAuthenticator getServiceAuthenticator() {
+		return serviceAuthenticator;
+	}
+
+	@Override
+	public void setServiceAuthenticator(ServiceAuthenticator authenticator) {
+		serviceAuthenticator = authenticator;
+	}
+
+	@Override
+	public String getOAuthBearerToken() {
+		return bearerToken;
+	}
+
+	@Override
+	public void setOAuthBearerToken(String bearerToken) {
+		this.bearerToken = bearerToken;
 	}
 
 }

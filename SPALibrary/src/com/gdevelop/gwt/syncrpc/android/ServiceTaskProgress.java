@@ -10,6 +10,10 @@ import com.gdevelop.gwt.syncrpc.SyncProxy;
  */
 public enum ServiceTaskProgress {
 	/**
+	 * Indicates task has been created and initialized, pending execution
+	 */
+	INIT,
+	/**
 	 * Indicates {@link SyncProxy#setBaseURL(String)} has completed
 	 */
 	BASE_SET,
@@ -17,10 +21,6 @@ public enum ServiceTaskProgress {
 	 * Indicates the service has been created
 	 */
 	SERVICE_CREATED,
-	/**
-	 * Indicates authentication existed and was applied
-	 */
-	AUTH_APPLIED,
 	/**
 	 * Indicates the service RPC, as defined by
 	 * {@link ServiceAsyncTask#serviceCall()}, has been initiated
@@ -33,5 +33,10 @@ public enum ServiceTaskProgress {
 	/**
 	 * Indicates the service RPC has returned, with either failure or success
 	 */
-	RPC_COMPLETE
+	RPC_COMPLETE,
+	/**
+	 * Indicates the task has ended and the appropriate AsyncCallback methods
+	 * have been called
+	 */
+	TASK_COMPLETE
 }

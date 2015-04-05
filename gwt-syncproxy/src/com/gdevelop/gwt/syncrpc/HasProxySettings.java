@@ -6,9 +6,11 @@ package com.gdevelop.gwt.syncrpc;
 
 import java.net.CookieManager;
 
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
+
 /**
  * Interface to specify an object that will provide for requested Proxy
- * Settings. Custom ProxySettings objects may be utilized as of version 0.6 to
+ * Settings. Custom ProxySettings objects may be utilized as of version 0.5 to
  * create reusable settings objects that are customized
  *
  * @author Preethum
@@ -16,6 +18,13 @@ import java.net.CookieManager;
  * @version 0.5.5
  */
 public interface HasProxySettings {
+	String getOAuthBearerToken();
+
+	void setOAuthBearerToken(String bearerToken);
+
+	public ServiceAuthenticator getServiceAuthenticator();
+
+	public void setServiceAuthenticator(ServiceAuthenticator authenticator);
 
 	/**
 	 * @return the cookieManager

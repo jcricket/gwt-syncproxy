@@ -1,4 +1,4 @@
-package com.gdevelop.gwt.syncrpc.android.auth;
+package com.gdevelop.gwt.syncrpc.auth;
 
 import com.gdevelop.gwt.syncrpc.HasProxySettings;
 

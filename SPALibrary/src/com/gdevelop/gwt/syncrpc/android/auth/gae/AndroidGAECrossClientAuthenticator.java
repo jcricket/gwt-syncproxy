@@ -13,10 +13,10 @@ import android.support.v4.app.Fragment;
 
 import com.gdevelop.gwt.syncrpc.HasProxySettings;
 import com.gdevelop.gwt.syncrpc.android.auth.GoogleOAuthIdManager;
-import com.gdevelop.gwt.syncrpc.android.auth.HasOAuthIDToken;
-import com.gdevelop.gwt.syncrpc.android.auth.ServiceAuthenticationListener;
-import com.gdevelop.gwt.syncrpc.android.auth.ServiceAuthenticator;
-import com.gdevelop.gwt.syncrpc.android.auth.TokenNotAvailableException;
+import com.gdevelop.gwt.syncrpc.auth.HasOAuthIDToken;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticationListener;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
+import com.gdevelop.gwt.syncrpc.exception.TokenNotAvailableException;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;

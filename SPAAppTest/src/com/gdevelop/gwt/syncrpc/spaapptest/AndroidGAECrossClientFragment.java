@@ -20,11 +20,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gdevelop.gwt.syncrpc.android.ServiceAsyncTask;
+import com.gdevelop.gwt.syncrpc.android.ServiceTaskProgress;
 import com.gdevelop.gwt.syncrpc.android.auth.GoogleOAuthIdManager;
-import com.gdevelop.gwt.syncrpc.android.auth.ServiceAuthenticationListener;
 import com.gdevelop.gwt.syncrpc.android.auth.gae.AndroidGAECrossClientAuthenticator;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticationListener;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileService;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileServiceAsync;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.UserInfo;
@@ -37,10 +39,12 @@ public class AndroidGAECrossClientFragment extends Fragment {
 		View root = inflater.inflate(R.layout.fragment_gspagaecc, null);
 		verify = (Button) root.findViewById(R.id.verify_button);
 		prepare = (Button) root.findViewById(R.id.prepare_auth);
+		serviceProgress = (TextView) root.findViewById(R.id.serviceProgerss);
 		return root;
 	}
 
 	Button prepare;
+	TextView serviceProgress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,10 @@ public class AndroidGAECrossClientFragment extends Fragment {
 	 * certificate-with-a-java-httpsurlconnection
 	 */
 	private void verify() {
+		EditText returned = (EditText) getActivity().findViewById(
+				R.id.returned_account);
+		returned.setText("");
+		serviceProgress.setText("");
 		/***************************************************************************/
 		// This section is strictly to handle the stunnel local dev mode for GAE
 		SSLSocketFactory sslFactory = null;
@@ -130,6 +138,15 @@ public class AndroidGAECrossClientFragment extends Fragment {
 
 			}
 
+			/**
+			 * Not typically required, but useful to get status from the service
+			 * task
+			 */
+			@Override
+			protected void onProgressUpdate(ServiceTaskProgress... values) {
+				super.onProgressUpdate(values);
+				serviceProgress.setText(values[0].toString());
+			}
 		};
 		serviceTask.execute(getActivity());
 	}

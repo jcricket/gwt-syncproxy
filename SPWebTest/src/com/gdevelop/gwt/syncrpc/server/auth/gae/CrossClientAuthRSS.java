@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 import com.gdevelop.gwt.syncrpc.server.auth.GoogleOAuth2Checker;
 import com.gdevelop.gwt.syncrpc.server.auth.GoogleOAuth2CheckerImpl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.oauth.OAuthService;
+import com.google.appengine.api.oauth.OAuthServiceFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -33,6 +36,11 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		 */
 		USER_SERVICE,
 		/**
+		 * Will preferentially return the GAE OAuth User Service User if it
+		 * exists
+		 */
+		OAUTH_USER_SERVICE,
+		/**
 		 * Default: Will thrown an exception if both an OAuth2 user and User
 		 * Service user exist and are not the same
 		 */
@@ -59,30 +67,84 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		user = new User(payload.getEmail(), "gmail.com", payload.getSubject());
 	}
 
+	private User getUserByPriority(User oUser, User usUser, User ccUser) {
+		UserConflictMode[] modesOrder = usersPriority();
+		for (UserConflictMode element : modesOrder) {
+			switch (element) {
+			case OAUTH2:
+				if (user != null) {
+					return user;
+				}
+				break;
+			case USER_SERVICE:
+				if (usUser != null) {
+					return usUser;
+				}
+				break;
+			case OAUTH_USER_SERVICE:
+				if (oUser != null) {
+					return oUser;
+				}
+				break;
+			default:
+				throw new RuntimeException("Handled mode type: " + element);
+			}
+		}
+		return null;
+	}
+
 	protected User getCurrentUser() {
 		UserService service = UserServiceFactory.getUserService();
-		if (service.isUserLoggedIn()) {
-			User usUser = service.getCurrentUser();
-			if (mode == UserConflictMode.EXCEPTION && user != null
-					&& usUser != null) {
-				if (user.getUserId().equals(usUser.getUserId())) {
-					return usUser;
-				}
-				throw new RuntimeException("User Id's Conflict: OAuth - "
-						+ user.getEmail() + " and GAE UserService - "
-						+ usUser.getEmail());
-			}
-			if (user != null && usUser != null) {
-				switch (mode) {
-				case OAUTH2:
-					return user;
-				case USER_SERVICE:
-					return usUser;
-				}
-			}
-			return usUser;
+		OAuthService oService = OAuthServiceFactory.getOAuthService();
+		User usUser = null;
+		User oUser = null;
+		try {
+			oUser = oService.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			throw new RuntimeException(e);
 		}
-		return user;
+		if (service.isUserLoggedIn()) {
+			usUser = service.getCurrentUser();
+		}
+
+		if (mode == UserConflictMode.EXCEPTION
+				&& !userConflicts(oUser, usUser, user)) {
+			return getUserByPriority(oUser, usUser, user);
+
+		} else if (mode == UserConflictMode.EXCEPTION) {
+			throw new RuntimeException("User Id's Conflict: OAuth - "
+					+ (user != null ? user.getEmail() : "()")
+					+ " and GAE UserService - "
+					+ (usUser != null ? usUser.getEmail() : "()")
+					+ " and GAE OAuthUserService - "
+					+ (oUser != null ? oUser.getEmail() : "()"));
+		}
+		return getUserByPriority(oUser, usUser, user);
+	}
+
+	private static boolean equalUsers(User userA, User userB) {
+		if (userA != null && userB != null
+				&& !userA.getUserId().equals(userB.getUserId())) {
+			return false;
+		}
+		return true;
+	}
+
+	private static boolean userConflicts(User oServiceUser, User usUser,
+			User ccUser) {
+		// TODO Removed checks against oServiceUser because on Development side,
+		// it always return example@example.com regardless of the actually
+		// correct user email
+		return
+		// equalUsers(oServiceUser, usUser) &&
+		equalUsers(usUser, ccUser)
+		// && equalUsers(oServiceUser, ccUser)
+		;
+	}
+
+	protected UserConflictMode[] usersPriority() {
+		return new UserConflictMode[] { UserConflictMode.USER_SERVICE,
+				UserConflictMode.OAUTH2 };
 	}
 
 	/**

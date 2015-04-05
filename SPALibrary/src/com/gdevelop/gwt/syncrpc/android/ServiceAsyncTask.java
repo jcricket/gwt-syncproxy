@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.gdevelop.gwt.syncrpc.HasProxySettings;
 import com.gdevelop.gwt.syncrpc.SyncProxy;
-import com.gdevelop.gwt.syncrpc.android.auth.ServiceAuthenticator;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -22,13 +22,13 @@ import com.google.gwt.user.client.rpc.RemoteService;
  *
  * To use this class, provide the specified parameters in the constructor and
  * override the {@link #serviceCall()} method. Specifically, your override
- * should follow the pattern below, where [Params] is the parameters to send to
- * the RPC. The {@link #getAsyncService()} and {@link #getCallback()} are
+ * should follow the pattern below, where [Params ...] is the parameters to send
+ * to the RPC. The {@link #getAsyncService()} and {@link #getCallback()} are
  * critical to the described functionality.
  *
  * <pre>
  * {@code
- * getAsyncService().rpcMethodCall([Params], getCallback());
+ * getAsyncService().rpcMethodCall([Params ...,] getCallback());
  * }
  * </pre>
  *
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
  *            the type expected to be returned from the RPC
  */
 public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends
-AsyncTask<Context, ServiceTaskProgress, Void> {
+		AsyncTask<Context, ServiceTaskProgress, Void> {
 	private AsyncCallback<ReturnType> primaryCallback;
 	private ServiceAuthenticator authenticator;
 	private int rpcBaseRes = -1;
@@ -81,6 +81,7 @@ AsyncTask<Context, ServiceTaskProgress, Void> {
 		this.serviceClass = (Class<RemoteService>) clazz;
 		this.rpcBaseRes = rpcBaseRes;
 		this.primaryCallback = primaryCallback;
+		onProgressUpdate(ServiceTaskProgress.INIT);
 	}
 
 	private Class<RemoteService> serviceClass;
@@ -93,6 +94,8 @@ AsyncTask<Context, ServiceTaskProgress, Void> {
 	protected AsyncService getAsyncService() {
 		if (asyncService == null) {
 			asyncService = SyncProxy.create(serviceClass);
+			((HasProxySettings) asyncService)
+					.setServiceAuthenticator(authenticator);
 		}
 		return asyncService;
 	}
@@ -135,11 +138,6 @@ AsyncTask<Context, ServiceTaskProgress, Void> {
 		// Initiate creation of the service
 		getAsyncService();
 		publishProgress(ServiceTaskProgress.SERVICE_CREATED);
-		if (authenticator != null) {
-			authenticator
-			.applyAuthenticationToService((HasProxySettings) asyncService);
-			publishProgress(ServiceTaskProgress.AUTH_APPLIED);
-		}
 		serviceCall();
 		publishProgress(ServiceTaskProgress.SERVICE_CALLED);
 		// Wait for the service call to complete before passing results back to
@@ -163,9 +161,9 @@ AsyncTask<Context, ServiceTaskProgress, Void> {
 		if (callback.wasSuccessful()) {
 			primaryCallback.onSuccess(callback.getResult());
 		} else {
-			// callback.getCaught().printStackTrace();
 			primaryCallback.onFailure(callback.getCaught());
 		}
+		onProgressUpdate(ServiceTaskProgress.TASK_COMPLETE);
 	}
 
 	/**
