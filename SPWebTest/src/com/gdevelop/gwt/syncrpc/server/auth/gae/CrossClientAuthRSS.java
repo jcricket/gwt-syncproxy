@@ -126,6 +126,8 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		if (userA != null && userB != null
 				&& !userA.getUserId().equals(userB.getUserId())) {
 			return false;
+		} else if (userA == null && userB == null) {
+			return false;
 		}
 		return true;
 	}
@@ -144,7 +146,7 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 
 	protected UserConflictMode[] usersPriority() {
 		return new UserConflictMode[] { UserConflictMode.USER_SERVICE,
-				UserConflictMode.OAUTH2 };
+				UserConflictMode.OAUTH_USER_SERVICE, UserConflictMode.OAUTH2 };
 	}
 
 	/**

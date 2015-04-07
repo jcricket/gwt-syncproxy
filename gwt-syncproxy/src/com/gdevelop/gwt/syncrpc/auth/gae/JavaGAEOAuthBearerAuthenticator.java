@@ -27,7 +27,8 @@ import com.google.gson.Gson;
  * available, make sure scope is at least "openid email", then refresh the
  * token. The response should include an id_token field.
  *
- *
+ * https://developers.google.com/accounts/docs/OAuth2ForDevices used a base for
+ * code outlines
  *
  * @author Preethum
  * @since 0.5.1
@@ -43,6 +44,14 @@ HasOAuthBearerToken, HasOAuthTokens {
 	public static final String OAUTH_TOKEN_GRANT_TYPE_DEVICE = "http://oauth.net/grant_type/device/1.0";
 	public static final String OAUTH_TOKEN_GRANT_TYPE_REFRESH = "refresh_token";
 	public static final String OAUTH_SCOPE = "email profile";
+
+	public JavaGAEOAuthBearerAuthenticator(
+			GoogleOAuthClientIdManager idManager,
+			DeviceServiceAuthenticationListener listener) {
+		this.idManager = idManager;
+		this.listener = listener;
+	}
+
 	/**
 	 * Amount of time before access code expires that this class will attempt to
 	 * get a new access code
@@ -86,10 +95,12 @@ HasOAuthBearerToken, HasOAuthTokens {
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type",
 					"application/x-www-form-urlencoded");
-			String requestBody = String.format("client_id=%s&scope=%s",
-					idManager.getClientId(), OAUTH_SCOPE);
-			requestBody = URLEncoder.encode(requestBody, "UTF-8").replace("+",
-					"%20");
+			String requestBody = String
+					.format("client_id=%s&scope=%s",
+							idManager.getClientId(),
+							URLEncoder.encode(OAUTH_SCOPE, "UTF-8").replace(
+									"+", "%20"));
+			logger.config("Request Body: " + requestBody);
 			OutputStreamWriter writer = new OutputStreamWriter(
 					connection.getOutputStream());
 			writer.write(requestBody);
@@ -97,6 +108,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 			writer.close();
 
 			int statusCode = connection.getResponseCode();
+			logger.config("Response code: " + statusCode);
 			InputStream is = connection.getInputStream();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
@@ -105,16 +117,16 @@ HasOAuthBearerToken, HasOAuthTokens {
 				baos.write(buffer, 0, len);
 			}
 			String encodedResponse = baos.toString("UTF8");
-			logger.config("Response code: " + statusCode);
 			logger.fine("Response payload: " + encodedResponse);
 
 			// Map<String, Object> retMap = new Gson().fromJson(encodedResponse,
 			// new TypeToken<HashMap<String, Object>>() {}.getType());
 			deviceCodeResponse = new Gson().fromJson(encodedResponse,
 					OAuth2DeviceCodeResponse.class);
-			listener.onUserCodeAvailable(deviceCodeResponse.getDeviceCode(),
+			listener.onUserCodeAvailable(deviceCodeResponse.getUser_code(),
 					deviceCodeResponse.getVerification_url());
 			if (autoStartPolling) {
+				logger.config("Auto-initiating polling");
 				initiatePolling();
 			}
 		} catch (MalformedURLException e) {
@@ -126,13 +138,14 @@ HasOAuthBearerToken, HasOAuthTokens {
 	}
 
 	OAuth2DeviceCodeResponse deviceCodeResponse;
-	Logger logger = Logger.getLogger(JavaGAEOAuthBearerAuthenticator.class
-			.getName());
+	static Logger logger = Logger
+			.getLogger(JavaGAEOAuthBearerAuthenticator.class.getName());
 
 	/**
 	 * Initiates polling for the authorization for this app to access.
 	 */
 	public void initiatePolling() {
+		logger.info("Initializing Polling");
 		continuePolling = true;
 		scheduler.schedule(pollingTask, deviceCodeResponse.getInterval(),
 				TimeUnit.SECONDS);
@@ -140,6 +153,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 
 			@Override
 			public void run() {
+				logger.info("Discontinuing polling due to timeout");
 				continuePolling = false;
 			}
 		}, deviceCodeResponse.getExpires_in(), TimeUnit.SECONDS);
@@ -151,6 +165,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 
 		@Override
 		public void run() {
+			logger.fine("Task to Call poller");
 			pollOAuthService();
 		}
 	};
@@ -158,6 +173,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 
 		@Override
 		public void run() {
+			logger.fine("Task to call refresh token");
 			refreshAccessToken();
 		}
 	};
@@ -165,7 +181,9 @@ HasOAuthBearerToken, HasOAuthTokens {
 	boolean continuePolling = false;
 
 	protected void pollOAuthService() {
+		logger.info("Polling auth service");
 		if (!continuePolling) {
+			logger.fine("Breaking out of polling cycle");
 			// Break out of polling cycle if device code expired
 			return;
 		}
@@ -181,9 +199,9 @@ HasOAuthBearerToken, HasOAuthTokens {
 			String requestBody = String.format(
 					"client_id=%s&client_secret=%s&code=%s&grant_type=%s",
 					idManager.getClientId(), idManager.getClientSecret(),
-					deviceCodeResponse.getDeviceCode(),
+					deviceCodeResponse.getDevice_code(),
 					OAUTH_TOKEN_GRANT_TYPE_DEVICE);
-
+			logger.fine("Polling Request Body: " + requestBody);
 			OutputStreamWriter writer = new OutputStreamWriter(
 					connection.getOutputStream());
 			writer.write(requestBody);
@@ -191,31 +209,58 @@ HasOAuthBearerToken, HasOAuthTokens {
 			writer.close();
 
 			int statusCode = connection.getResponseCode();
-			InputStream is = connection.getInputStream();
+			logger.config("Response code: " + statusCode);
+			// TODO if bad response code use #getErrorStream for response Body
+			if (statusCode != 200 && statusCode != 400) {
+				InputStream es = connection.getErrorStream();
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = es.read(buffer)) > 0) {
+					baos.write(buffer, 0, len);
+				}
+				String encodedResponse = baos.toString("UTF8");
+				logger.fine("Error payload: " + encodedResponse);
+				return;
+			}
+
+			String encodedResponse = null;
+			InputStream is = null;
+			if (statusCode == 200) {
+				is = connection.getInputStream();
+			} else if (statusCode == 400) {
+				is = connection.getErrorStream();
+			}
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
 			int len;
 			while ((len = is.read(buffer)) > 0) {
 				baos.write(buffer, 0, len);
 			}
-			String encodedResponse = baos.toString("UTF8");
-			logger.config("Response code: " + statusCode);
+			encodedResponse = baos.toString("UTF8");
+
 			logger.fine("Response payload: " + encodedResponse);
 			tokenResponse = new Gson().fromJson(encodedResponse,
 					OAuth2TokenResponse.class);
 			if (tokenResponse.hasError()) {
+				logger.warning("Token Response error");
 				if (tokenResponse.getError().equals(
 						OAuth2TokenResponse.ERROR_AUTH_PENDING)) {
+					logger.warning("Token Authorization Pending, re-scheduling polling task: "
+							+ deviceCodeResponse.getInterval());
 					scheduler.schedule(pollingTask,
 							deviceCodeResponse.getInterval(), TimeUnit.SECONDS);
 					return;
 				} else if (tokenResponse.getError().equals(
 						OAuth2TokenResponse.ERROR_SLOW_DOWN)) {
+					logger.warning("Rapid Polling, adjusting poll rate");
 					// As a slow down request, just double the future polling
 					// intervals
 					// TODO Catch if interval becomes too large and advise
 					// client
 					deviceCodeResponse.interval = deviceCodeResponse.interval * 2;
+					logger.warning("Re-scheduling polling task: "
+							+ deviceCodeResponse.interval);
 					scheduler.schedule(pollingTask,
 							deviceCodeResponse.getInterval(), TimeUnit.SECONDS);
 					return;
@@ -227,6 +272,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 				}
 			} else {
 				continuePolling = false;
+				logger.info("Polling authorized");
 				if (!tokenResponse.getToken_type().equals("Bearer")) {
 					throw new RuntimeException("Unexpected token type: "
 							+ tokenResponse.getToken_type());
@@ -235,11 +281,14 @@ HasOAuthBearerToken, HasOAuthTokens {
 				// Schedule the ability to automatically refresh the access
 				// token so that updated bearer codes will be applied to service
 				// calls automatically
+				logger.info("scheduling refresh handler: "
+						+ (tokenResponse.getExpires_in() - refreshLeadTime));
 				refreshHandle = scheduler.schedule(refreshTask,
 						tokenResponse.getExpires_in() - refreshLeadTime,
 						TimeUnit.SECONDS);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
@@ -249,6 +298,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 			return;
 		}
 		try {
+			logger.info("Refreshing access token");
 			URL url = new URL(OAUTH_TOKEN_URL);
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
@@ -271,6 +321,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 			writer.close();
 
 			int statusCode = connection.getResponseCode();
+			logger.config("Response code: " + statusCode);
 			InputStream is = connection.getInputStream();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
@@ -279,10 +330,11 @@ HasOAuthBearerToken, HasOAuthTokens {
 				baos.write(buffer, 0, len);
 			}
 			String encodedResponse = baos.toString("UTF8");
-			logger.config("Response code: " + statusCode);
+
 			logger.fine("Response payload: " + encodedResponse);
 			tokenResponse = new Gson().fromJson(encodedResponse,
 					OAuth2TokenResponse.class);
+
 			if (tokenResponse.hasError()) {
 				throw new RuntimeException("Unexpected token refresh error: "
 						+ tokenResponse.getError());
@@ -290,10 +342,13 @@ HasOAuthBearerToken, HasOAuthTokens {
 			// Schedule the ability to automatically refresh the access
 			// token so that updated bearer codes will be applied to service
 			// calls automatically
+			logger.info("Scheduling refresh handler: "
+					+ (tokenResponse.getExpires_in() - refreshLeadTime));
 			refreshHandle = scheduler.schedule(refreshTask,
 					tokenResponse.getExpires_in() - refreshLeadTime,
 					TimeUnit.SECONDS);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
@@ -301,6 +356,7 @@ HasOAuthBearerToken, HasOAuthTokens {
 	boolean refreshEnabled = true;
 
 	public void disableRefresh() {
+		logger.info("Disabling auto-refresh");
 		refreshEnabled = false;
 		refreshHandle.cancel(true);
 	}
@@ -313,6 +369,8 @@ HasOAuthBearerToken, HasOAuthTokens {
 	 */
 	@Override
 	public void applyAuthenticationToService(HasProxySettings service) {
+		logger.info("Applying Bearer token to service: "
+				+ service.getClass().getName());
 		service.setOAuthBearerToken(tokenResponse.getAccess_token());
 	}
 

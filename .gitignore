@@ -20,3 +20,7 @@
 /SPWebTest/.gwt
 /SPAAppTest/tests/bin
 /SPAAppTest/res/raw/server
+/gwt-syncproxy/client_ids.properties
+/gwt-syncproxy/server
+/gwt-syncproxy/store.jks
+/gwt-syncproxy/certs.jks

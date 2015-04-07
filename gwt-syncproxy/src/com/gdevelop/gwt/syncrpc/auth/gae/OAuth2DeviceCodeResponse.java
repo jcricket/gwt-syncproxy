@@ -1,14 +1,14 @@
 package com.gdevelop.gwt.syncrpc.auth.gae;
 
 public class OAuth2DeviceCodeResponse {
-	String deviceCode;
+	String device_code;
 	String user_code;
 	String verification_url;
 	int expires_in;
 	int interval;
 
-	public String getDeviceCode() {
-		return deviceCode;
+	public String getDevice_code() {
+		return device_code;
 	}
 
 	public String getUser_code() {

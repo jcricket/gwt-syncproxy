@@ -52,14 +52,14 @@ public class AndroidGAECrossClientFragment extends Fragment {
 		authenticator = new AndroidGAECrossClientAuthenticator(getActivity(),
 				this, manager, new ServiceAuthenticationListener() {
 
-			@Override
-			public void onAuthenticatorPrepared(String accountName) {
-				EditText selected = (EditText) getActivity()
-						.findViewById(R.id.choosen_account);
-				selected.setText(accountName);
-				verify.setEnabled(true);
-			}
-		});
+					@Override
+					public void onAuthenticatorPrepared(String accountName) {
+						EditText selected = (EditText) getActivity()
+								.findViewById(R.id.choosen_account);
+						selected.setText(accountName);
+						verify.setEnabled(true);
+					}
+				});
 
 	};
 
@@ -97,16 +97,15 @@ public class AndroidGAECrossClientFragment extends Fragment {
 			SSLContext ctx = SSLContext.getInstance("TLS");
 			ctx.init(null, tmf.getTrustManagers(), null);
 			sslFactory = ctx.getSocketFactory();
-			HttpsURLConnection.setDefaultHostnameVerifier(// TODO Temporary
-					new HostnameVerifier() {
+			HttpsURLConnection
+					.setDefaultHostnameVerifier(new HostnameVerifier() {
 
-						@Override
-						public boolean verify(String hostname,
-								SSLSession session) {
-							// TODO Auto-generated method stub
-							return true;
-						}
-					});
+				@Override
+				public boolean verify(String hostname,
+						SSLSession session) {
+					return true;
+				}
+			});
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslFactory);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
