@@ -349,7 +349,7 @@ public class SyncProxy {
 			String remoteServiceRelativePath, boolean waitForInvocation) {
 		try {
 			POLICY_MAP.putAll(RpcPolicyFinder
-					.fetchSerializationPolicyName(moduleBaseURL));
+					.fetchSerializationPolicyName(moduleBaseURL,DEFAULT_COOKIE_MANAGER));
 			// policyName = POLICY_MAP.get(serviceIntf.getName());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -484,7 +484,7 @@ public class SyncProxy {
 		if (policyName == null) {
 			try {
 				POLICY_MAP.putAll(RpcPolicyFinder
-						.fetchSerializationPolicyName(moduleBaseURL));
+						.fetchSerializationPolicyName(moduleBaseURL, cookieManager));
 				policyName = POLICY_MAP.get(serviceIntf.getName());
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -501,16 +501,18 @@ public class SyncProxy {
 	}
 
 	/**
-	 * @since 0.5
+	 * @since 0.6
+	 * @param cookieManager
+	 * 				in case of the server side checking cookie information to determine if valid request
 	 * @throws SyncProxyException
 	 *             if occurs during
 	 *             {@link RpcPolicyFinder#fetchSerializationPolicyName(String)}
 	 */
-	protected static void populatePolicyMap() throws SyncProxyException {
+	protected static void populatePolicyMap(CookieManager cookieManager) throws SyncProxyException {
 		logger.info("Populating Policy Map");
 		try {
 			POLICY_MAP.putAll(RpcPolicyFinder
-					.fetchSerializationPolicyName(moduleBaseURL));
+					.fetchSerializationPolicyName(moduleBaseURL,cookieManager));
 		} catch (Exception e) {
 			throw new SyncProxyException(InfoType.POLICY_NAME_POPULATION, e);
 		}
@@ -527,9 +529,31 @@ public class SyncProxy {
 	 *             if occurs during {@link #populatePolicyMap()}
 	 */
 	public static void setBaseURL(String baseUrl) throws SyncProxyException {
+		moduleBaseURL = baseUrl;		
+		if (moduleBaseURL != null) {
+			populatePolicyMap(DEFAULT_COOKIE_MANAGER);
+		} else {
+			POLICY_MAP.clear();
+			POLICY_MAP.putAll(RpcPolicyFinder.searchPolicyFileInClassPath());
+		}
+	}
+	
+	/**
+	 * @since 0.6
+	 * @param baseUrl
+	 *            if null, existing {@link #POLICY_MAP} is cleared and
+	 *            repopulated from ClassPath (
+	 *            {@link RpcPolicyFinder#searchPolicyFileInClassPath()}). If
+	 *            Non-Null, {@link #POLICY_MAP} is appended with new population
+	 * @param cookiemanager
+	 *            This parameter is store the cookie information, for example using return of {@link LoginUtils#loginFormBasedJ2EE()}      
+	 * @throws SyncProxyException
+	 *             if occurs during {@link #populatePolicyMap()}
+	 */
+	public static void setBaseURL(String baseUrl, CookieManager cookiemanager) throws SyncProxyException {
 		moduleBaseURL = baseUrl;
 		if (moduleBaseURL != null) {
-			populatePolicyMap();
+			populatePolicyMap(cookiemanager);
 		} else {
 			POLICY_MAP.clear();
 			POLICY_MAP.putAll(RpcPolicyFinder.searchPolicyFileInClassPath());
