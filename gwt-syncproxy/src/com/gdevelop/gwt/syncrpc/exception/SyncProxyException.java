@@ -1,6 +1,16 @@
 /**
- * Dec 29, 2014 Copyright Blue Esoteric Web Development, LLC
- * Contact: P.Prith@BlueEsoteric.com
+ * Copyright 2014 Blue Esoteric Web Development, LLC
+ * <http://www.blueesoteric.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at <http://www.apache.org/licenses/LICENSE-2.0>
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.gdevelop.gwt.syncrpc.exception;
 
@@ -24,8 +34,7 @@ public class SyncProxyException extends InvocationException {
 		 * Synchronous interface's annotation value of
 		 * {@link RemoteServiceRelativePath}
 		 */
-		REMOTE_SERVICE_RELATIVE_PATH(
-				"Check RemoteServiceRelativePath annotation on service"), MODULE_BASE_URL(
+		REMOTE_SERVICE_RELATIVE_PATH("Check RemoteServiceRelativePath annotation on service"), MODULE_BASE_URL(
 				"Set SyncProxy Base Url"), POLICY_NAME_POPULATION(
 				"Unable to populate policy names, see below exception."), POLICY_NAME_MISSING(
 				"Unable to locate policy name. See FAQ"),
@@ -34,7 +43,6 @@ public class SyncProxyException extends InvocationException {
 		 * interface based on a provided Asynchronous service interface failed.
 		 */
 		SERVICE_BASE("Make sure your service classes are on the classpath"),
-
 		/**
 		 * Used to indicate the use of the
 		 * {@link ServiceDefTarget#setServiceEntryPoint(String)} where the
@@ -45,8 +53,7 @@ public class SyncProxyException extends InvocationException {
 		 * {@link RemoteServiceSyncProxy#doInvoke(com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter.ResponseReader, String)}
 		 *
 		 */
-		SERVICE_BASE_DELTA(
-				"Unable to determine new module base url from provided service entry point.");
+		SERVICE_BASE_DELTA("Unable to determine new module base url from provided service entry point.");
 		String help;
 
 		InfoType(String help) {
@@ -58,14 +65,12 @@ public class SyncProxyException extends InvocationException {
 	InfoType type;
 
 	public SyncProxyException(Class<?> service, InfoType type) {
-		super("Missing " + type + " for service " + service.getName() + ". "
-				+ type.help);
+		super("Missing " + type + " for service " + service.getName() + ". " + type.help);
 		this.type = type;
 	}
 
 	public SyncProxyException(Class<?> service, InfoType type, Exception e) {
-		super("Missing " + type + " for service " + service.getName() + ". "
-				+ type.help, e);
+		super("Missing " + type + " for service " + service.getName() + ". " + type.help, e);
 		this.type = type;
 	}
 

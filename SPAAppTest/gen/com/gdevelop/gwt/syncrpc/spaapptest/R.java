@@ -326,6 +326,9 @@ containing a value of this type.
          */
         public static final int zOrderOnTop=0x7f010010;
     }
+    public static final class bool {
+        public static final int gsp_dry_run=0x7f090000;
+    }
     public static final class color {
         public static final int common_action_bar_splitter=0x7f060009;
         /**  Sign-in Button Colors 
@@ -370,8 +373,8 @@ containing a value of this type.
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
          */
-        public static final int activity_horizontal_margin=0x7f090000;
-        public static final int activity_vertical_margin=0x7f090001;
+        public static final int activity_horizontal_margin=0x7f0a0000;
+        public static final int activity_vertical_margin=0x7f0a0001;
     }
     public static final class drawable {
         public static final int common_signin_btn_icon_dark=0x7f020000;
@@ -407,44 +410,44 @@ containing a value of this type.
         public static final int powered_by_google_light=0x7f02001e;
     }
     public static final class id {
-        public static final int acc_choose=0x7f0b0021;
-        public static final int action_settings=0x7f0b0025;
-        public static final int activate=0x7f0b001f;
-        public static final int book_now=0x7f0b000e;
-        public static final int buyButton=0x7f0b000a;
-        public static final int buy_now=0x7f0b000f;
-        public static final int buy_with_google=0x7f0b0010;
-        public static final int choosen_account=0x7f0b0019;
-        public static final int classic=0x7f0b0011;
-        public static final int grayscale=0x7f0b0012;
-        public static final int holo_dark=0x7f0b0005;
-        public static final int holo_light=0x7f0b0006;
-        public static final int hybrid=0x7f0b0000;
-        public static final int input=0x7f0b0020;
-        public static final int match_parent=0x7f0b000c;
-        public static final int menu_settings=0x7f0b0024;
-        public static final int monochrome=0x7f0b0013;
-        public static final int none=0x7f0b0001;
-        public static final int normal=0x7f0b0002;
-        public static final int pager=0x7f0b0014;
-        public static final int pager_title_strip=0x7f0b0015;
-        public static final int prepare_auth=0x7f0b0016;
-        public static final int production=0x7f0b0007;
-        public static final int result=0x7f0b001e;
-        public static final int returned_account=0x7f0b001a;
-        public static final int sandbox=0x7f0b0008;
-        public static final int satellite=0x7f0b0003;
-        public static final int selectionDetails=0x7f0b000b;
-        public static final int serviceProgerss=0x7f0b001d;
-        public static final int spa_add_account=0x7f0b0023;
-        public static final int spa_add_custom=0x7f0b0022;
-        public static final int strict_sandbox=0x7f0b0009;
-        public static final int terrain=0x7f0b0004;
-        public static final int textView1=0x7f0b0017;
-        public static final int textView2=0x7f0b0018;
-        public static final int textView3=0x7f0b001c;
-        public static final int verify_button=0x7f0b001b;
-        public static final int wrap_content=0x7f0b000d;
+        public static final int acc_choose=0x7f0c0021;
+        public static final int action_settings=0x7f0c0025;
+        public static final int activate=0x7f0c001f;
+        public static final int book_now=0x7f0c000e;
+        public static final int buyButton=0x7f0c000a;
+        public static final int buy_now=0x7f0c000f;
+        public static final int buy_with_google=0x7f0c0010;
+        public static final int choosen_account=0x7f0c0019;
+        public static final int classic=0x7f0c0011;
+        public static final int grayscale=0x7f0c0012;
+        public static final int holo_dark=0x7f0c0005;
+        public static final int holo_light=0x7f0c0006;
+        public static final int hybrid=0x7f0c0000;
+        public static final int input=0x7f0c0020;
+        public static final int match_parent=0x7f0c000c;
+        public static final int menu_settings=0x7f0c0024;
+        public static final int monochrome=0x7f0c0013;
+        public static final int none=0x7f0c0001;
+        public static final int normal=0x7f0c0002;
+        public static final int pager=0x7f0c0014;
+        public static final int pager_title_strip=0x7f0c0015;
+        public static final int prepare_auth=0x7f0c0016;
+        public static final int production=0x7f0c0007;
+        public static final int result=0x7f0c001e;
+        public static final int returned_account=0x7f0c001a;
+        public static final int sandbox=0x7f0c0008;
+        public static final int satellite=0x7f0c0003;
+        public static final int selectionDetails=0x7f0c000b;
+        public static final int serviceProgerss=0x7f0c001d;
+        public static final int spa_add_account=0x7f0c0023;
+        public static final int spa_add_custom=0x7f0c0022;
+        public static final int strict_sandbox=0x7f0c0009;
+        public static final int terrain=0x7f0c0004;
+        public static final int textView1=0x7f0c0017;
+        public static final int textView2=0x7f0c0018;
+        public static final int textView3=0x7f0c001c;
+        public static final int verify_button=0x7f0c001b;
+        public static final int wrap_content=0x7f0c000d;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f080000;
@@ -455,9 +458,9 @@ containing a value of this type.
         public static final int fragment_gspgreet=0x7f030002;
     }
     public static final class menu {
-        public static final int account_list_menu=0x7f0a0000;
-        public static final int activity_main=0x7f0a0001;
-        public static final int gspamain=0x7f0a0002;
+        public static final int account_list_menu=0x7f0b0000;
+        public static final int activity_main=0x7f0b0001;
+        public static final int gspamain=0x7f0b0002;
     }
     public static final class raw {
         public static final int server=0x7f040000;

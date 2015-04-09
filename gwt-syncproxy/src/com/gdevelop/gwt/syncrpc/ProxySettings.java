@@ -1,10 +1,22 @@
 /**
- * Jan 10, 2015 Copyright Blue Esoteric Web Development, LLC
- * Contact: P.Prith@BlueEsoteric.com
+ * Copyright 2015 Blue Esoteric Web Development, LLC
+ * <http://www.blueesoteric.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at <http://www.apache.org/licenses/LICENSE-2.0>
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.gdevelop.gwt.syncrpc;
 
 import java.net.CookieManager;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
 
@@ -14,23 +26,24 @@ import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
  *
  * @author Preethum
  * @since 0.5
- *
+ * @version 0.6
  */
 public class ProxySettings implements HasProxySettings {
-	String moduleBaseUrl;
-	String remoteServiceRelativePath;
-	String policyName;
+	String bearerToken;
 	CookieManager cookieManager;
+	Map<String, String> headers;
+	String moduleBaseUrl;
+	String oAuth2IdToken;
+	String policyName;
+	String remoteServiceRelativePath;
 	ServiceAuthenticator serviceAuthenticator;
 	boolean waitForInvocation = false;
-	String bearerToken;
 
 	public ProxySettings() {
 
 	}
 
-	public ProxySettings(String moduleBaseUrl,
-			String remoteServiceRelativePath, String policyName,
+	public ProxySettings(String moduleBaseUrl, String remoteServiceRelativePath, String policyName,
 			CookieManager cookieManager, boolean waitForInvocation) {
 		super();
 		this.moduleBaseUrl = moduleBaseUrl;
@@ -40,103 +53,22 @@ public class ProxySettings implements HasProxySettings {
 		this.waitForInvocation = waitForInvocation;
 	}
 
-	/**
-	 * @return the cookieManager
-	 */
 	@Override
 	public CookieManager getCookieManager() {
 		return this.cookieManager;
 	}
 
-	/**
-	 * @return the policyName
-	 */
 	@Override
-	public String getPolicyName() {
-		return this.policyName;
+	public Map<String, String> getCustomHeaders() {
+		if (headers == null) {
+			headers = new HashMap<>();
+		}
+		return headers;
 	}
 
-	/**
-	 * @return the remoteServiceRelativePath
-	 */
-	@Override
-	public String getRemoteServiceRelativePath() {
-		return this.remoteServiceRelativePath;
-	}
-
-	/**
-	 * @return the serverBaseUrl
-	 */
 	@Override
 	public String getModuleBaseUrl() {
 		return this.moduleBaseUrl;
-	}
-
-	/**
-	 * @return the waitForInvocation
-	 */
-	@Override
-	public boolean isWaitForInvocation() {
-		return this.waitForInvocation;
-	}
-
-	/**
-	 * @param cookieManager
-	 *            the cookieManager to set
-	 */
-	@Override
-	public ProxySettings setCookieManager(CookieManager cookieManager) {
-		this.cookieManager = cookieManager;
-		return this;
-	}
-
-	/**
-	 * @param policyName
-	 *            the policyName to set
-	 */
-	@Override
-	public ProxySettings setPolicyName(String policyName) {
-		this.policyName = policyName;
-		return this;
-	}
-
-	/**
-	 * @param remoteServiceRelativePath
-	 *            the remoteServiceRelativePath to set
-	 */
-	@Override
-	public ProxySettings setRemoteServiceRelativePath(
-			String remoteServiceRelativePath) {
-		this.remoteServiceRelativePath = remoteServiceRelativePath;
-		return this;
-	}
-
-	/**
-	 * @param moduleBaseUrl
-	 *            the serverBaseUrl to set
-	 */
-	@Override
-	public ProxySettings setModuleBaseUrl(String moduleBaseUrl) {
-		this.moduleBaseUrl = moduleBaseUrl;
-		return this;
-	}
-
-	/**
-	 * @param waitForInvocation
-	 *            the waitForInvocation to set
-	 */
-	@Override
-	public ProxySettings setWaitForInvocation(boolean waitForInvocation) {
-		this.waitForInvocation = waitForInvocation;
-		return this;
-	}
-
-	String oAuth2IdToken;
-
-	@Override
-	public HasProxySettings setOAuth2IdToken(String token) {
-		this.oAuth2IdToken = token;
-		return this;
 	}
 
 	@Override
@@ -145,23 +77,82 @@ public class ProxySettings implements HasProxySettings {
 	}
 
 	@Override
-	public ServiceAuthenticator getServiceAuthenticator() {
-		return serviceAuthenticator;
-	}
-
-	@Override
-	public void setServiceAuthenticator(ServiceAuthenticator authenticator) {
-		serviceAuthenticator = authenticator;
-	}
-
-	@Override
 	public String getOAuthBearerToken() {
 		return bearerToken;
 	}
 
 	@Override
-	public void setOAuthBearerToken(String bearerToken) {
+	public String getPolicyName() {
+		return this.policyName;
+	}
+
+	@Override
+	public String getRemoteServiceRelativePath() {
+		return this.remoteServiceRelativePath;
+	}
+
+	@Override
+	public ServiceAuthenticator getServiceAuthenticator() {
+		return serviceAuthenticator;
+	}
+
+	@Override
+	public boolean isWaitForInvocation() {
+		return this.waitForInvocation;
+	}
+
+	@Override
+	public ProxySettings setCookieManager(CookieManager cookieManager) {
+		this.cookieManager = cookieManager;
+		return this;
+	}
+
+	@Override
+	public HasProxySettings setCustomHeaders(Map<String, String> headers) {
+		this.headers = headers;
+		return this;
+	}
+
+	@Override
+	public ProxySettings setModuleBaseUrl(String moduleBaseUrl) {
+		this.moduleBaseUrl = moduleBaseUrl;
+		return this;
+	}
+
+	@Override
+	public HasProxySettings setOAuth2IdToken(String token) {
+		this.oAuth2IdToken = token;
+		return this;
+	}
+
+	@Override
+	public HasProxySettings setOAuthBearerToken(String bearerToken) {
 		this.bearerToken = bearerToken;
+		return this;
+	}
+
+	@Override
+	public ProxySettings setPolicyName(String policyName) {
+		this.policyName = policyName;
+		return this;
+	}
+
+	@Override
+	public ProxySettings setRemoteServiceRelativePath(String remoteServiceRelativePath) {
+		this.remoteServiceRelativePath = remoteServiceRelativePath;
+		return this;
+	}
+
+	@Override
+	public HasProxySettings setServiceAuthenticator(ServiceAuthenticator authenticator) {
+		serviceAuthenticator = authenticator;
+		return this;
+	}
+
+	@Override
+	public ProxySettings setWaitForInvocation(boolean waitForInvocation) {
+		this.waitForInvocation = waitForInvocation;
+		return this;
 	}
 
 }

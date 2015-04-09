@@ -41,8 +41,9 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		 */
 		OAUTH_USER_SERVICE,
 		/**
-		 * Default: Will thrown an exception if both an OAuth2 user and User
-		 * Service user exist and are not the same
+		 * Default: Will thrown an exception if the possible users ,OAuth2 by Id
+		 * Token, OAuth 2 by Bearer Token, and User Service user exist and are
+		 * not the same
 		 */
 		EXCEPTION;
 	}
@@ -138,10 +139,10 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		// it always return example@example.com regardless of the actually
 		// correct user email
 		return
-		// equalUsers(oServiceUser, usUser) &&
-		equalUsers(usUser, ccUser)
-		// && equalUsers(oServiceUser, ccUser)
-		;
+				// equalUsers(oServiceUser, usUser) &&
+				equalUsers(usUser, ccUser)
+				// && equalUsers(oServiceUser, ccUser)
+				;
 	}
 
 	protected UserConflictMode[] usersPriority() {

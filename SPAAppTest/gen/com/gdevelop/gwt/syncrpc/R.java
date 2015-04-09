@@ -41,6 +41,9 @@ public final class R {
 		public static final int useViewLifecycle = 0x7f01000f;
 		public static final int zOrderOnTop = 0x7f010010;
 	}
+	public static final class bool {
+		public static final int gsp_dry_run = 0x7f090000;
+	}
 	public static final class color {
 		public static final int common_action_bar_splitter = 0x7f060009;
 		public static final int common_signin_btn_dark_text_default = 0x7f060000;
@@ -104,34 +107,34 @@ public final class R {
 		public static final int powered_by_google_light = 0x7f02001e;
 	}
 	public static final class id {
-		public static final int book_now = 0x7f0b000e;
-		public static final int buyButton = 0x7f0b000a;
-		public static final int buy_now = 0x7f0b000f;
-		public static final int buy_with_google = 0x7f0b0010;
-		public static final int classic = 0x7f0b0011;
-		public static final int grayscale = 0x7f0b0012;
-		public static final int holo_dark = 0x7f0b0005;
-		public static final int holo_light = 0x7f0b0006;
-		public static final int hybrid = 0x7f0b0000;
-		public static final int match_parent = 0x7f0b000c;
-		public static final int monochrome = 0x7f0b0013;
-		public static final int none = 0x7f0b0001;
-		public static final int normal = 0x7f0b0002;
-		public static final int production = 0x7f0b0007;
-		public static final int sandbox = 0x7f0b0008;
-		public static final int satellite = 0x7f0b0003;
-		public static final int selectionDetails = 0x7f0b000b;
-		public static final int spa_add_account = 0x7f0b0023;
-		public static final int spa_add_custom = 0x7f0b0022;
-		public static final int strict_sandbox = 0x7f0b0009;
-		public static final int terrain = 0x7f0b0004;
-		public static final int wrap_content = 0x7f0b000d;
+		public static final int book_now = 0x7f0c000e;
+		public static final int buyButton = 0x7f0c000a;
+		public static final int buy_now = 0x7f0c000f;
+		public static final int buy_with_google = 0x7f0c0010;
+		public static final int classic = 0x7f0c0011;
+		public static final int grayscale = 0x7f0c0012;
+		public static final int holo_dark = 0x7f0c0005;
+		public static final int holo_light = 0x7f0c0006;
+		public static final int hybrid = 0x7f0c0000;
+		public static final int match_parent = 0x7f0c000c;
+		public static final int monochrome = 0x7f0c0013;
+		public static final int none = 0x7f0c0001;
+		public static final int normal = 0x7f0c0002;
+		public static final int production = 0x7f0c0007;
+		public static final int sandbox = 0x7f0c0008;
+		public static final int satellite = 0x7f0c0003;
+		public static final int selectionDetails = 0x7f0c000b;
+		public static final int spa_add_account = 0x7f0c0023;
+		public static final int spa_add_custom = 0x7f0c0022;
+		public static final int strict_sandbox = 0x7f0c0009;
+		public static final int terrain = 0x7f0c0004;
+		public static final int wrap_content = 0x7f0c000d;
 	}
 	public static final class integer {
 		public static final int google_play_services_version = 0x7f080000;
 	}
 	public static final class menu {
-		public static final int account_list_menu = 0x7f0a0000;
+		public static final int account_list_menu = 0x7f0b0000;
 	}
 	public static final class string {
 		public static final int common_google_play_services_enable_button = 0x7f07000b;

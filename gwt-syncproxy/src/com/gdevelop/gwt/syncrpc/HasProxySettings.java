@@ -1,88 +1,85 @@
 /**
- * Jan 10, 2015 Copyright Blue Esoteric Web Development, LLC
- * Contact: P.Prith@BlueEsoteric.com
+ * Copyright 2015 Blue Esoteric Web Development, LLC
+ * <http://www.blueesoteric.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at <http://www.apache.org/licenses/LICENSE-2.0>
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.gdevelop.gwt.syncrpc;
 
 import java.net.CookieManager;
+import java.util.Map;
 
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
 
 /**
  * Interface to specify an object that will provide for requested Proxy
  * Settings. Custom ProxySettings objects may be utilized as of version 0.5 to
- * create reusable settings objects that are customized
+ * create reusable settings objects that are customized.
  *
  * @author Preethum
  * @since 0.5
- * @version 0.5.5
+ * @version 0.6
  */
 public interface HasProxySettings {
+	CookieManager getCookieManager();
+
+	/**
+	 * @since 0.6
+	 */
+	Map<String, String> getCustomHeaders();
+
+	String getModuleBaseUrl();
+
+	/**
+	 * @since 0.6
+	 */
+	String getOAuth2IdToken();
+
+	/**
+	 * @since 0.6
+	 */
 	String getOAuthBearerToken();
 
-	void setOAuthBearerToken(String bearerToken);
+	String getPolicyName();
 
-	public ServiceAuthenticator getServiceAuthenticator();
+	String getRemoteServiceRelativePath();
 
-	public void setServiceAuthenticator(ServiceAuthenticator authenticator);
+	ServiceAuthenticator getServiceAuthenticator();
 
-	/**
-	 * @return the cookieManager
-	 */
-	public CookieManager getCookieManager();
+	boolean isWaitForInvocation();
 
-	/**
-	 * @return the policyName
-	 */
-	public String getPolicyName();
+	HasProxySettings setCookieManager(CookieManager cookieManager);
 
 	/**
-	 * @return the remoteServiceRelativePath
+	 * @since 0.6
 	 */
-	public String getRemoteServiceRelativePath();
+	HasProxySettings setCustomHeaders(Map<String, String> headers);
+
+	HasProxySettings setModuleBaseUrl(String serverBaseUrl);
 
 	/**
-	 * @return the serverBaseUrl
+	 * @since 0.6
 	 */
-	public String getModuleBaseUrl();
+	HasProxySettings setOAuth2IdToken(String token);
 
 	/**
-	 * @return the waitForInvocation
+	 * @since 0.6
 	 */
-	public boolean isWaitForInvocation();
+	HasProxySettings setOAuthBearerToken(String bearerToken);
 
-	/**
-	 * @param cookieManager
-	 *            the cookieManager to set
-	 */
-	public HasProxySettings setCookieManager(CookieManager cookieManager);
+	HasProxySettings setPolicyName(String policyName);
 
-	/**
-	 * @param policyName
-	 *            the policyName to set
-	 */
-	public HasProxySettings setPolicyName(String policyName);
+	HasProxySettings setRemoteServiceRelativePath(String remoteServiceRelativePath);
 
-	public HasProxySettings setOAuth2IdToken(String token);
+	HasProxySettings setServiceAuthenticator(ServiceAuthenticator authenticator);
 
-	public String getOAuth2IdToken();
-
-	/**
-	 * @param remoteServiceRelativePath
-	 *            the remoteServiceRelativePath to set
-	 */
-	public HasProxySettings setRemoteServiceRelativePath(
-			String remoteServiceRelativePath);
-
-	/**
-	 * @param serverBaseUrl
-	 *            the serverBaseUrl to set
-	 */
-	public HasProxySettings setModuleBaseUrl(String serverBaseUrl);
-
-	/**
-	 * @param waitForInvocation
-	 *            the waitForInvocation to set
-	 */
-	public HasProxySettings setWaitForInvocation(boolean waitForInvocation);
+	HasProxySettings setWaitForInvocation(boolean waitForInvocation);
 }

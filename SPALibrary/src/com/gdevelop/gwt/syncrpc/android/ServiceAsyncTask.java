@@ -1,3 +1,17 @@
+/**
+ * Copyright 2015 Blue Esoteric Web Development, LLC
+ * <http://www.blueesoteric.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at <http://www.apache.org/licenses/LICENSE-2.0>
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.gdevelop.gwt.syncrpc.android;
 
 import android.content.Context;
@@ -43,25 +57,16 @@ import com.google.gwt.user.client.rpc.RemoteService;
  * @param <ReturnType>
  *            the type expected to be returned from the RPC
  */
-public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends
-		AsyncTask<Context, ServiceTaskProgress, Void> {
-	private AsyncCallback<ReturnType> primaryCallback;
+public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTask<Context, ServiceTaskProgress, Void> {
+	private AsyncService asyncService;
 	private ServiceAuthenticator authenticator;
+	private BridgeCallback<ReturnType> callback;
+
+	private AsyncCallback<ReturnType> primaryCallback;
+
 	private int rpcBaseRes = -1;
 
-	/**
-	 *
-	 * @param authenticator
-	 *            the authenticator that will be applied to the service before
-	 *            the RPC
-	 */
-	public <ServiceClass extends RemoteService> ServiceAsyncTask(
-			Class<ServiceClass> clazz, int rpcBaseRes,
-			ServiceAuthenticator authenticator,
-			AsyncCallback<ReturnType> primaryCallback) {
-		this(clazz, rpcBaseRes, primaryCallback);
-		this.authenticator = authenticator;
-	}
+	private Class<RemoteService> serviceClass;
 
 	/**
 	 *
@@ -75,8 +80,7 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends
 	 *            by the RPC
 	 */
 	@SuppressWarnings("unchecked")
-	public <ServiceClass extends RemoteService> ServiceAsyncTask(
-			Class<ServiceClass> clazz, int rpcBaseRes,
+	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, int rpcBaseRes,
 			AsyncCallback<ReturnType> primaryCallback) {
 		this.serviceClass = (Class<RemoteService>) clazz;
 		this.rpcBaseRes = rpcBaseRes;
@@ -84,21 +88,28 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends
 		onProgressUpdate(ServiceTaskProgress.INIT);
 	}
 
-	private Class<RemoteService> serviceClass;
-	private AsyncService asyncService;
-	private BridgeCallback<ReturnType> callback;
+	/**
+	 *
+	 * @param authenticator
+	 *            the authenticator that will be applied to the service before
+	 *            the RPC
+	 */
+	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, int rpcBaseRes,
+			ServiceAuthenticator authenticator, AsyncCallback<ReturnType> primaryCallback) {
+		this(clazz, rpcBaseRes, primaryCallback);
+		this.authenticator = authenticator;
+	}
 
 	/**
-	 * May be overridden if you need to customize the creation of the service
+	 * Contains the service RPC to call. Typically this should have the form:
+	 *
+	 * <pre>
+	 * {@code
+	 * getAsyncService().rpcMethodCall([Params], getCallback());
+	 * }
+	 * </pre>
 	 */
-	protected AsyncService getAsyncService() {
-		if (asyncService == null) {
-			asyncService = SyncProxy.create(serviceClass);
-			((HasProxySettings) asyncService)
-					.setServiceAuthenticator(authenticator);
-		}
-		return asyncService;
-	}
+	public abstract void serviceCall();
 
 	/**
 	 * Overrides the Default timeout of the intermediary {@link AsyncCallback},
@@ -106,13 +117,6 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends
 	 */
 	public void setTimeout(int seconds) {
 		((BridgeCallback<ReturnType>) getCallback()).setTimeout(seconds);
-	}
-
-	protected AsyncCallback<ReturnType> getCallback() {
-		if (callback == null) {
-			callback = new BridgeCallback<ReturnType>();
-		}
-		return callback;
 	}
 
 	/**
@@ -153,6 +157,32 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends
 	}
 
 	/**
+	 * May be overridden if you need to customize the creation of the service.
+	 * This default method implementation creates the service and applies the
+	 * provided authenticator
+	 */
+	protected AsyncService getAsyncService() {
+		if (asyncService == null) {
+			asyncService = SyncProxy.create(serviceClass);
+			((HasProxySettings) asyncService).setServiceAuthenticator(authenticator);
+		}
+		return asyncService;
+	}
+
+	/**
+	 * @return an intermediate AsyncCallback which will hold continued
+	 *         processing until the callback has returned. This should be used
+	 *         in the {@link #serviceCall()} implementation to allow callback's
+	 *         to occur on the main thread for UI Updates
+	 */
+	protected AsyncCallback<ReturnType> getCallback() {
+		if (callback == null) {
+			callback = new BridgeCallback<ReturnType>();
+		}
+		return callback;
+	}
+
+	/**
 	 * Returns results or exceptions from RPC back to provided
 	 * {@link AsyncCallback} on the app's main thread
 	 */
@@ -165,16 +195,5 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends
 		}
 		onProgressUpdate(ServiceTaskProgress.TASK_COMPLETE);
 	}
-
-	/**
-	 * Contains the service RPC to call. Typically this should have the form:
-	 *
-	 * <pre>
-	 * {@code
-	 * getAsyncService().rpcMethodCall([Params], getCallback());
-	 * }
-	 * </pre>
-	 */
-	public abstract void serviceCall();
 
 }

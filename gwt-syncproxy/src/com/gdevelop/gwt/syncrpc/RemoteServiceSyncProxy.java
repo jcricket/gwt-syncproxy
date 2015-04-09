@@ -62,15 +62,19 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 		}
 
 		@Override
-		public void validateDeserialize(Class<?> clazz)
-				throws SerializationException {
+		public void validateDeserialize(Class<?> clazz) throws SerializationException {
 		}
 
 		@Override
-		public void validateSerialize(Class<?> clazz)
-				throws SerializationException {
+		public void validateSerialize(Class<?> clazz) throws SerializationException {
 		}
 	}
+
+	public static final String OAUTH_BEARER_HEADER = "Authorization";
+
+	public final static String OAUTH_HEADER = "X-GSP-OAUTH-ID";
+
+	static Logger logger = Logger.getLogger(RemoteServiceSyncProxy.class.getName());
 
 	public static boolean isReturnValue(String encodedResponse) {
 		return encodedResponse.startsWith("//OK");
@@ -80,20 +84,16 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 		return encodedResponse.startsWith("//EX");
 	}
 
+	private final CookieManager cookieManager;
 	private final String moduleBaseURL;
 	private final String remoteServiceURL;
-	private final String serializationPolicyName;
-	private SerializationPolicy serializationPolicy;
-
-	private final CookieManager cookieManager;
-
 	private final RpcToken rpcToken;
+	private SerializationPolicy serializationPolicy;
+	private final String serializationPolicyName;
+	boolean ignoreResponse = false;
 
 	RpcTokenExceptionHandler rpcTokenExceptionHandler;
 
-	boolean ignoreResponse = false;
-	static Logger logger = Logger.getLogger(RemoteServiceSyncProxy.class
-			.getName());
 	HasProxySettings settings;
 
 	/**
@@ -105,8 +105,7 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 			RpcTokenExceptionHandler rpcTokenExceptionhandler) {
 		this.settings = settings;
 		this.moduleBaseURL = settings.getModuleBaseUrl();
-		this.remoteServiceURL = moduleBaseURL
-				+ settings.getRemoteServiceRelativePath();
+		this.remoteServiceURL = moduleBaseURL + settings.getRemoteServiceRelativePath();
 		this.serializationPolicyName = settings.getPolicyName();
 		this.cookieManager = settings.getCookieManager();
 		this.rpcToken = rpcToken;
@@ -120,29 +119,23 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 			// should be reviewed it may make more sense to get a live version
 			// first, and if not available then look to a locally available
 			// version
-			String policyFileName = SerializationPolicyLoader
-					.getSerializationPolicyFileName(serializationPolicyName);
-			logger.config("Retrieving Policy File: " + policyFileName
-					+ " for SerializationPolicy: " + serializationPolicyName);
-			InputStream is = getClass().getResourceAsStream(
-					"/" + policyFileName);
+			String policyFileName = SerializationPolicyLoader.getSerializationPolicyFileName(serializationPolicyName);
+			logger.config("Retrieving Policy File: " + policyFileName + " for SerializationPolicy: "
+					+ serializationPolicyName);
+			InputStream is = getClass().getResourceAsStream("/" + policyFileName);
 			try {
 				if (is == null) {
-					logger.warning("Unable to get policy file from stream, attempting cache: "
-							+ policyFileName + " at base: " + moduleBaseURL);
+					logger.warning("Unable to get policy file from stream, attempting cache: " + policyFileName
+							+ " at base: " + moduleBaseURL);
 					// Try to get from cache
-					String text = RpcPolicyFinder
-							.getCachedPolicyFile(moduleBaseURL + policyFileName);
+					String text = RpcPolicyFinder.getCachedPolicyFile(moduleBaseURL + policyFileName);
 					if (text != null) {
 						is = new ByteArrayInputStream(text.getBytes("UTF8"));
 					}
 				}
-				this.serializationPolicy = SerializationPolicyLoader
-						.loadFromStream(is, null);
+				this.serializationPolicy = SerializationPolicyLoader.loadFromStream(is, null);
 			} catch (Exception e) {
-				throw new InvocationException(
-						"Error while loading serialization policy "
-								+ serializationPolicyName, e);
+				throw new InvocationException("Error while loading serialization policy " + serializationPolicyName, e);
 			} finally {
 				if (is != null) {
 					try {
@@ -161,22 +154,17 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 	 *             {@link #RemoteServiceSyncProxy(HasProxySettings, RpcToken, RpcTokenExceptionHandler)}
 	 */
 	@Deprecated
-	public RemoteServiceSyncProxy(String moduleBaseURL,
-			String remoteServiceRelativePath, String serializationPolicyName,
-			CookieManager cookieManager, RpcToken rpcToken,
+	public RemoteServiceSyncProxy(String moduleBaseURL, String remoteServiceRelativePath,
+			String serializationPolicyName, CookieManager cookieManager, RpcToken rpcToken,
 			RpcTokenExceptionHandler rpcTokenExceptionHandler) {
 		this(new ProxySettings().setModuleBaseUrl(moduleBaseURL)
-				.setRemoteServiceRelativePath(remoteServiceRelativePath)
-				.setPolicyName(serializationPolicyName)
-				.setCookieManager(cookieManager), rpcToken,
-				rpcTokenExceptionHandler);
+				.setRemoteServiceRelativePath(remoteServiceRelativePath).setPolicyName(serializationPolicyName)
+				.setCookieManager(cookieManager), rpcToken, rpcTokenExceptionHandler);
 	}
 
 	@Override
-	public SyncClientSerializationStreamReader createStreamReader(String encoded)
-			throws SerializationException {
-		SyncClientSerializationStreamReader reader = new SyncClientSerializationStreamReader(
-				this.serializationPolicy);
+	public SyncClientSerializationStreamReader createStreamReader(String encoded) throws SerializationException {
+		SyncClientSerializationStreamReader reader = new SyncClientSerializationStreamReader(this.serializationPolicy);
 		logger.finer("Preparing Stream Reader");
 		reader.prepareToRead(encoded);
 		logger.finer("Stream Reader Prepared");
@@ -185,20 +173,17 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 
 	@Override
 	public SyncClientSerializationStreamWriter createStreamWriter() {
-		SyncClientSerializationStreamWriter streamWriter = new SyncClientSerializationStreamWriter(
-				null, this.moduleBaseURL, this.serializationPolicyName,
-				this.serializationPolicy, this.rpcToken);
+		SyncClientSerializationStreamWriter streamWriter = new SyncClientSerializationStreamWriter(null,
+				this.moduleBaseURL, this.serializationPolicyName, this.serializationPolicy, this.rpcToken);
 		streamWriter.prepareToWrite();
 
 		return streamWriter;
 	}
 
-	public final static String OAUTH_HEADER = "X-GSP-OAUTH-ID";
-	public static final String OAUTH_BEARER_HEADER = "Authorization";
-
-	public Object doInvoke(
-			RequestCallbackAdapter.ResponseReader responseReader,
-			String requestData) throws Throwable {
+	/**
+	 * @version 0.6
+	 */
+	public Object doInvoke(RequestCallbackAdapter.ResponseReader responseReader, String requestData) throws Throwable {
 		// Auto apply authenticator if available. Makes it
 		// possible that if the authenticator's values change (such as access
 		// tokens that are refreshed), the client will not need to re-apply the
@@ -206,84 +191,80 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 		// pass on the stored settings (including authenticator) each time to
 		// this Proxy, which will re-apply the appropriate settings data
 		if (settings.getServiceAuthenticator() != null) {
-			settings.getServiceAuthenticator().applyAuthenticationToService(
-					settings);
+			settings.getServiceAuthenticator().applyAuthenticationToService(settings);
 		}
 		// Workaround for unknown reset of the logger
 		logger.setLevel(SyncProxy.getLoggingLevel());
+		logger.info("Send request to " + this.remoteServiceURL);
+		logger.fine("Request payload: " + requestData);
+
 		HttpURLConnection connection = null;
 		InputStream is = null;
 		int statusCode;
-		logger.info("Send request to " + this.remoteServiceURL);
-		logger.fine("Request payload: " + requestData);
 
 		// Send request
 		CookieHandler oldCookieHandler = CookieHandler.getDefault();
 		try {
 			CookieHandler.setDefault(this.cookieManager);
-			logger.config("Starting Request sending to "
-					+ this.remoteServiceURL);
+			logger.config("Starting Request sending to " + this.remoteServiceURL);
 			URL url = new URL(this.remoteServiceURL);
 			connection = (HttpURLConnection) url.openConnection();
 
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
-			connection.setRequestProperty(RpcRequestBuilder.STRONG_NAME_HEADER,
-					this.serializationPolicyName);
-			connection.setRequestProperty(RpcRequestBuilder.MODULE_BASE_HEADER,
-					this.moduleBaseURL);
-			connection.setRequestProperty("Content-Type",
-					"text/x-gwt-rpc; charset=utf-8");
+			connection.setRequestProperty(RpcRequestBuilder.STRONG_NAME_HEADER, this.serializationPolicyName);
+			connection.setRequestProperty(RpcRequestBuilder.MODULE_BASE_HEADER, this.moduleBaseURL);
+			connection.setRequestProperty("Content-Type", "text/x-gwt-rpc; charset=utf-8");
 			if (settings.getOAuth2IdToken() != null) {
 				if (!url.getProtocol().equalsIgnoreCase("https")) {
 					throw new RuntimeException(
 							"Cannot send OAUTH Id Token over a non-secured protocol. Please use HTTPS");
 				}
-				connection.setRequestProperty(OAUTH_HEADER,
-						settings.getOAuth2IdToken());
+				connection.setRequestProperty(OAUTH_HEADER, settings.getOAuth2IdToken());
 			}
 			if (settings.getOAuthBearerToken() != null) {
 				if (!url.getProtocol().equalsIgnoreCase("https")) {
 					throw new RuntimeException(
 							"Cannot send OAUTH Bearer Token over a non-secured protocol. Please use HTTPS");
 				}
-				connection.setRequestProperty(OAUTH_BEARER_HEADER, "Bearer "
-						+ settings.getOAuthBearerToken());
+				connection.setRequestProperty(OAUTH_BEARER_HEADER, "Bearer " + settings.getOAuthBearerToken());
 			}
-			connection.setRequestProperty("Content-Length",
-					"" + requestData.getBytes("UTF-8").length);
+			// Review Settings for additional HTTP Headers to install as Request
+			// Properties
+			Map<String, String> customHeaders = settings.getCustomHeaders();
+			if (customHeaders != null && customHeaders.size() > 0) {
+				for (String key : customHeaders.keySet()) {
+					connection.setRequestProperty(key, customHeaders.get(key));
+				}
+			}
+			connection.setRequestProperty("Content-Length", "" + requestData.getBytes("UTF-8").length);
 			// Patch for Issue 21 - Modified to only send cookies for
 			// moduleBaseURL host and sets the domain/path for the cookie in the
 			// event
 			// it is a user-added cookie without those values specified
 			CookieStore store = this.cookieManager.getCookieStore();
 			// Create the URI with port if specified
-			URI uri = URI.create("http://"
-					+ URI.create(this.moduleBaseURL).getHost());
+			URI uri = URI.create("http://" + URI.create(this.moduleBaseURL).getHost());
 			String domain = URI.create(this.moduleBaseURL).getHost();
 			String path = URI.create(this.remoteServiceURL).getPath();
 			logger.fine("Cookie target uri: " + uri);
-			logger.config("Setting cookies:"
-					+ this.cookieManager.getCookieStore().get(uri));
+			logger.config("Setting cookies:" + this.cookieManager.getCookieStore().get(uri));
 			for (HttpCookie cookie : store.get(uri)) {
 				// Domain must be specified on Cookie to be passed along in
 				// Android
 				if (cookie.getDomain() == null) {
-					logger.finer("Setting domain for Cookie: "
-							+ cookie.getName() + " to " + domain);
+					logger.finer("Setting domain for Cookie: " + cookie.getName() + " to " + domain);
 					cookie.setDomain(domain);
 				}
 				// Path must be specified on Cookie to be passed along in POJ
 				// and Android
 				if (cookie.getPath() == null) {
-					logger.finer("Setting path for Cookie: " + cookie.getName()
-							+ " to " + path);
+					logger.finer("Setting path for Cookie: " + cookie.getName() + " to " + path);
 					cookie.setPath(path);
 				}
 			}
-			OutputStreamWriter writer = new OutputStreamWriter(
-					connection.getOutputStream());
+			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 			writer.write(requestData);
 			writer.flush();
 			writer.close();
@@ -295,8 +276,7 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 			}
 
 		} catch (IOException e) {
-			throw new InvocationException(
-					"IOException while sending RPC request", e);
+			throw new InvocationException("IOException while sending RPC request", e);
 		} finally {
 			CookieHandler.setDefault(oldCookieHandler);
 		}
@@ -315,10 +295,8 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 			logger.config("Response code: " + statusCode);
 			logger.fine("Response payload: " + encodedResponse);
 			logger.config("Post-Response cookies:"
-					+ this.cookieManager
-							.getCookieStore()
-							.get(URI.create("http://"
-									+ URI.create(this.moduleBaseURL).getHost())));
+					+ this.cookieManager.getCookieStore().get(
+							URI.create("http://" + URI.create(this.moduleBaseURL).getHost())));
 			if (statusCode != HttpURLConnection.HTTP_OK) {
 				throw new StatusCodeException(statusCode, encodedResponse);
 			} else if (encodedResponse == null) {
@@ -331,35 +309,27 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 			} else if (isThrownException(encodedResponse)) {
 				logger.info("Handling Thrown exception");
 				encodedResponse = encodedResponse.substring(4);
-				Throwable throwable = (Throwable) createStreamReader(
-						encodedResponse).readObject();
+				Throwable throwable = (Throwable) createStreamReader(encodedResponse).readObject();
 				// Handle specific instance of RpcTokenException which may have
 				// a specified handler
-				if (throwable instanceof RpcTokenException
-						&& this.rpcTokenExceptionHandler != null) {
-					this.rpcTokenExceptionHandler
-							.onRpcTokenException((RpcTokenException) throwable);
+				if (throwable instanceof RpcTokenException && this.rpcTokenExceptionHandler != null) {
+					this.rpcTokenExceptionHandler.onRpcTokenException((RpcTokenException) throwable);
 					this.ignoreResponse = true;
 					return null;
 				}
 				throw throwable;
 			} else {
-				throw new InvocationException("Unknown response "
-						+ encodedResponse);
+				throw new InvocationException("Unknown response " + encodedResponse);
 			}
 		} catch (IOException e) {
 			// Handle Status Code 404 not found exception - Does not provide
 			// full response data
-			if (e.getCause() instanceof FileNotFoundException
-					|| e instanceof FileNotFoundException) {
-				throw new StatusCodeException(Response.SC_NOT_FOUND,
-						"Not Found", null);
+			if (e.getCause() instanceof FileNotFoundException || e instanceof FileNotFoundException) {
+				throw new StatusCodeException(Response.SC_NOT_FOUND, "Not Found", null);
 			}
-			throw new InvocationException(
-					"IOException while receiving RPC response", e);
+			throw new InvocationException("IOException while receiving RPC response", e);
 		} catch (SerializationException e) {
-			throw new InvocationException(
-					"Error while deserialization response", e);
+			throw new InvocationException("Error while deserialization response", e);
 		} finally {
 			if (is != null) {
 				try {
@@ -377,7 +347,6 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 	 * Specifically utilized if an RpcTokenException is returned and handled by
 	 * a separate handler
 	 *
-	 * @return
 	 */
 	public boolean shouldIgnoreResponse() {
 		return this.ignoreResponse;
