@@ -8,4 +8,7 @@
 
     <bool name="gsp_dry_run">false</bool>
 
+    <string-array name="gsp_no_ssl_whitelist">
+        
+    </string-array>
 </resources>

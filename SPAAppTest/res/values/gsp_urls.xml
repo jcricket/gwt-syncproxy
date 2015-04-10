@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="gsp_base">https://192.168.1.107:8080/spawebtest/</string>
-    
+
+    <string name="gsp_base_ssl">https://192.168.1.107:8080/spawebtest/</string>
+    <string name="gsp_base">http://192.168.1.107:8888/spawebtest/</string>
+
 </resources>

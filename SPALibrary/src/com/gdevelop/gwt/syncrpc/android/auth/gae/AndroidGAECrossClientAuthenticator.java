@@ -15,6 +15,7 @@
 package com.gdevelop.gwt.syncrpc.android.auth.gae;
 
 import java.io.IOException;
+import java.net.URL;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -24,12 +25,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.gdevelop.gwt.syncrpc.HasProxySettings;
+import com.gdevelop.gwt.syncrpc.R;
 import com.gdevelop.gwt.syncrpc.android.auth.GoogleOAuthIdManager;
 import com.gdevelop.gwt.syncrpc.auth.HasOAuthIDToken;
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticationListener;
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
+import com.gdevelop.gwt.syncrpc.auth.TestModeHostVerifier;
 import com.gdevelop.gwt.syncrpc.exception.TokenNotAvailableException;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -57,7 +61,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
  *
  */
 public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, String> implements ServiceAuthenticator,
-		HasOAuthIDToken {
+		HasOAuthIDToken, TestModeHostVerifier {
 	public static final String OAUTH_ID_SCOPE_PREFIX = "audience:server:client_id:";
 
 	public final static int RC_ACCOUNT_CHOOSER_REQUEST = 3032;
@@ -287,5 +291,21 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 		}
 
 		execute();
+	}
+
+	public static final String LOG_TAG = "AGAECCAuth";
+
+	@Override
+	public boolean isTestModeHost(URL serviceUrl) {
+		String[] whitelist = context.getResources().getStringArray(R.array.gsp_no_ssl_whitelist);
+		if (whitelist != null) {
+			for (String url : whitelist) {
+				if (serviceUrl.getHost().equals(url)) {
+					Log.i(LOG_TAG, "Test mode host verified: " + url);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

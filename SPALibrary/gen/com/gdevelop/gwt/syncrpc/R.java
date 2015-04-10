@@ -8,6 +8,9 @@
 package com.gdevelop.gwt.syncrpc;
 
 public final class R {
+    public static final class array {
+        public static int gsp_no_ssl_whitelist=0x7f080000;
+    }
     public static final class attr {
         /** 
     The size of the ad. It must be one of BANNER, FULL_BANNER, LEADERBOARD,
@@ -399,34 +402,34 @@ containing a value of this type.
         public static int powered_by_google_light=0x7f02001e;
     }
     public static final class id {
-        public static int book_now=0x7f09000e;
-        public static int buyButton=0x7f09000a;
-        public static int buy_now=0x7f09000f;
-        public static int buy_with_google=0x7f090010;
-        public static int classic=0x7f090011;
-        public static int grayscale=0x7f090012;
-        public static int holo_dark=0x7f090005;
-        public static int holo_light=0x7f090006;
-        public static int hybrid=0x7f090000;
-        public static int match_parent=0x7f09000c;
-        public static int monochrome=0x7f090013;
-        public static int none=0x7f090001;
-        public static int normal=0x7f090002;
-        public static int production=0x7f090007;
-        public static int sandbox=0x7f090008;
-        public static int satellite=0x7f090003;
-        public static int selectionDetails=0x7f09000b;
-        public static int spa_add_account=0x7f090015;
-        public static int spa_add_custom=0x7f090014;
-        public static int strict_sandbox=0x7f090009;
-        public static int terrain=0x7f090004;
-        public static int wrap_content=0x7f09000d;
+        public static int book_now=0x7f0a000e;
+        public static int buyButton=0x7f0a000a;
+        public static int buy_now=0x7f0a000f;
+        public static int buy_with_google=0x7f0a0010;
+        public static int classic=0x7f0a0011;
+        public static int grayscale=0x7f0a0012;
+        public static int holo_dark=0x7f0a0005;
+        public static int holo_light=0x7f0a0006;
+        public static int hybrid=0x7f0a0000;
+        public static int match_parent=0x7f0a000c;
+        public static int monochrome=0x7f0a0013;
+        public static int none=0x7f0a0001;
+        public static int normal=0x7f0a0002;
+        public static int production=0x7f0a0007;
+        public static int sandbox=0x7f0a0008;
+        public static int satellite=0x7f0a0003;
+        public static int selectionDetails=0x7f0a000b;
+        public static int spa_add_account=0x7f0a0015;
+        public static int spa_add_custom=0x7f0a0014;
+        public static int strict_sandbox=0x7f0a0009;
+        public static int terrain=0x7f0a0004;
+        public static int wrap_content=0x7f0a000d;
     }
     public static final class integer {
         public static int google_play_services_version=0x7f060000;
     }
     public static final class menu {
-        public static int account_list_menu=0x7f080000;
+        public static int account_list_menu=0x7f090000;
     }
     public static final class string {
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it

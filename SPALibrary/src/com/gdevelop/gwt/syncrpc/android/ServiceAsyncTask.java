@@ -14,6 +14,9 @@
  */
 package com.gdevelop.gwt.syncrpc.android;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -133,10 +136,10 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 	@Override
 	protected Void doInBackground(Context... params) {
 		// Activates GSP Logging on Android
-		// for (Class<?> clazz : SyncProxy.getLoggerClasses()) {
-		// FixedAndroidHandler.setupLogger(Logger.getLogger(clazz.getName()));
-		// }
-		// SyncProxy.setLoggingLevel(Level.FINE);
+		for (Class<?> clazz : SyncProxy.getLoggerClasses()) {
+			FixedAndroidHandler.setupLogger(Logger.getLogger(clazz.getName()));
+		}
+		SyncProxy.setLoggingLevel(Level.FINE);
 		SyncProxy.setBaseURL(params[0].getString(rpcBaseRes));
 		publishProgress(ServiceTaskProgress.BASE_SET);
 		// Initiate creation of the service

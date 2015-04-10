@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
+import com.gdevelop.gwt.syncrpc.auth.TestModeHostVerifier;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.RpcRequestBuilder;
@@ -180,6 +182,18 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 		return streamWriter;
 	}
 
+	private boolean requiresSecuredProtocol(URL serviceUrl) {
+		logger.config("Checking if connection requires a secured protocol");
+		ServiceAuthenticator authenticator = settings.getServiceAuthenticator();
+		if (authenticator instanceof TestModeHostVerifier) {
+			boolean whiteHost = ((TestModeHostVerifier) authenticator).isTestModeHost(serviceUrl);
+			logger.config("WhiteHost status(" + serviceUrl + "): " + whiteHost);
+			return !whiteHost;
+		}
+		logger.fine("TestModeHostVerifier not available, checking for HTTPS Protocol");
+		return !serviceUrl.getProtocol().equalsIgnoreCase("https");
+	}
+
 	/**
 	 * @version 0.6
 	 */
@@ -217,15 +231,15 @@ public class RemoteServiceSyncProxy implements SerializationStreamFactory {
 			connection.setRequestProperty(RpcRequestBuilder.MODULE_BASE_HEADER, this.moduleBaseURL);
 			connection.setRequestProperty("Content-Type", "text/x-gwt-rpc; charset=utf-8");
 			if (settings.getOAuth2IdToken() != null) {
-				if (!url.getProtocol().equalsIgnoreCase("https")) {
-					throw new RuntimeException(
+				if (requiresSecuredProtocol(url)) {
+					throw new SecurityException(
 							"Cannot send OAUTH Id Token over a non-secured protocol. Please use HTTPS");
 				}
 				connection.setRequestProperty(OAUTH_HEADER, settings.getOAuth2IdToken());
 			}
 			if (settings.getOAuthBearerToken() != null) {
-				if (!url.getProtocol().equalsIgnoreCase("https")) {
-					throw new RuntimeException(
+				if (requiresSecuredProtocol(url)) {
+					throw new SecurityException(
 							"Cannot send OAUTH Bearer Token over a non-secured protocol. Please use HTTPS");
 				}
 				connection.setRequestProperty(OAUTH_BEARER_HEADER, "Bearer " + settings.getOAuthBearerToken());

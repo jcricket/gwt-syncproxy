@@ -1,14 +1,18 @@
+/**
+ * Copyright 2015 Blue Esoteric Web Development, LLC
+ * <http://www.blueesoteric.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at <http://www.apache.org/licenses/LICENSE-2.0>
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.gdevelop.gwt.syncrpc.spaapptest;
-
-import java.io.InputStream;
-import java.security.KeyStore;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,10 +36,14 @@ import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileServiceAsync;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.UserInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+/**
+ *
+ * @author Preethum
+ * @since 0.6
+ */
 public class AndroidGAECrossClientFragment extends Fragment {
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_gspagaecc, null);
 		verify = (Button) root.findViewById(R.id.verify_button);
 		prepare = (Button) root.findViewById(R.id.prepare_auth);
@@ -49,17 +57,16 @@ public class AndroidGAECrossClientFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		authenticator = new AndroidGAECrossClientAuthenticator(getActivity(),
-				this, manager, new ServiceAuthenticationListener() {
+		authenticator = new AndroidGAECrossClientAuthenticator(getActivity(), this, manager,
+				new ServiceAuthenticationListener() {
 
-					@Override
-					public void onAuthenticatorPrepared(String accountName) {
-						EditText selected = (EditText) getActivity()
-								.findViewById(R.id.choosen_account);
-						selected.setText(accountName);
-						verify.setEnabled(true);
-					}
-				});
+			@Override
+			public void onAuthenticatorPrepared(String accountName) {
+				EditText selected = (EditText) getActivity().findViewById(R.id.choosen_account);
+				selected.setText(accountName);
+				verify.setEnabled(true);
+			}
+		});
 
 	};
 
@@ -72,60 +79,33 @@ public class AndroidGAECrossClientFragment extends Fragment {
 	};
 
 	/**
-	 * http://stackoverflow.com/questions/13917984/accept-self-signed-ssl-
-	 * certificates-where-to-set-default-trustmanager
-	 *
-	 * http://stackoverflow.com/questions/859111/how-do-i-accept-a-self-signed-
-	 * certificate-with-a-java-httpsurlconnection
 	 */
 	private void verify() {
-		EditText returned = (EditText) getActivity().findViewById(
-				R.id.returned_account);
+		EditText returned = (EditText) getActivity().findViewById(R.id.returned_account);
 		returned.setText("");
 		serviceProgress.setText("");
 		/***************************************************************************/
-		// This section is strictly to handle the stunnel local dev mode for GAE
-		SSLSocketFactory sslFactory = null;
-		try {
-			KeyStore localTrustStore = KeyStore.getInstance("BKS");
-			InputStream in = getResources().openRawResource(R.raw.server);
-			localTrustStore.load(in, "login1".toCharArray());
-			// localTrustStore.getCertificate("server").
-			TrustManagerFactory tmf = TrustManagerFactory
-					.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-			tmf.init(localTrustStore);
-			SSLContext ctx = SSLContext.getInstance("TLS");
-			ctx.init(null, tmf.getTrustManagers(), null);
-			sslFactory = ctx.getSocketFactory();
-			HttpsURLConnection
-					.setDefaultHostnameVerifier(new HostnameVerifier() {
+		// This section is strictly to handle the stunnel local dev mode for
+		// GAE. The alternative to the STunnel option is provide the whitelist
+		// server hosts in the string-array resource gsp_no_ssl_whitelist
 
-				@Override
-				public boolean verify(String hostname,
-						SSLSession session) {
-					return true;
-				}
-			});
-			HttpsURLConnection.setDefaultSSLSocketFactory(sslFactory);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		// TODO Create Proguard Config that will remove the STunnel class
+		// if (BuildConfig.DEBUG) {
+		// STunnel.reconfig(getActivity(), R.raw.server, "login1");
+		// }
 		/***************************************************************************/
 		ServiceAsyncTask<ProfileServiceAsync, UserInfo> serviceTask = new ServiceAsyncTask<ProfileServiceAsync, UserInfo>(
-				ProfileService.class, R.string.gsp_base, authenticator,
-				new AsyncCallback<UserInfo>() {
+				ProfileService.class, R.string.gsp_base, authenticator, new AsyncCallback<UserInfo>() {
 
 					@Override
 					public void onSuccess(UserInfo arg0) {
-						EditText returned = (EditText) getActivity()
-								.findViewById(R.id.returned_account);
+						EditText returned = (EditText) getActivity().findViewById(R.id.returned_account);
 						returned.setText(arg0.getEmail());
 					}
 
 					@Override
 					public void onFailure(Throwable arg0) {
-						EditText returned = (EditText) getActivity()
-								.findViewById(R.id.returned_account);
+						EditText returned = (EditText) getActivity().findViewById(R.id.returned_account);
 						returned.setText("Exception: " + arg0.getMessage());
 						throw new RuntimeException(arg0);
 					}

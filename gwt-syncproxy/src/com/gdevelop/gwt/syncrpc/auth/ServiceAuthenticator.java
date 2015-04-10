@@ -29,7 +29,7 @@ public interface ServiceAuthenticator {
 	 * Performs whatever actions are necessary to retrieve and prepare
 	 * authentication details and data prior to application to the service
 	 */
-	public void prepareAuthentication();
+	void prepareAuthentication();
 
 	/**
 	 * Applies authentication details to the provided service. Typically, this
@@ -40,5 +40,6 @@ public interface ServiceAuthenticator {
 	 *            which will be enhanced with authentication details according
 	 *            to the implementing class
 	 */
-	public void applyAuthenticationToService(HasProxySettings service);
+	void applyAuthenticationToService(HasProxySettings service);
+
 }
