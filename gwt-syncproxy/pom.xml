@@ -1,0 +1,129 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.gdevelop.gwt.syncrpc</groupId>
+	<artifactId>gwt-syncproxy</artifactId>
+	<version>0.6</version>
+	<name>GWT SyncProxy</name>
+	<description>This library provides a 'command pattern' API implementation for GWT.</description>
+
+	<properties>
+		<gwt.version>2.7.0</gwt.version>
+		<guice.version>2.0</guice.version>
+		<gin.version>1.0</gin.version>
+		<appengine.version>1.2.1</appengine.version>
+		<spring.version>2.5.6</spring.version>
+		<gwt.extraJvmArgs>-Xmx512m</gwt.extraJvmArgs>
+	</properties>
+
+	<dependencies>
+		<!-- GWT -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Guice/GIN -->
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>${guice.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.gwt.inject</groupId>
+			<artifactId>gin</artifactId>
+			<version>${gin.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Google App Engine -->
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>${appengine.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.google.gdata</groupId>
+		  <artifactId>gdata-core-1.0</artifactId>
+		  <version>1.41.5</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4</version>
+		</dependency>	
+			
+		<!-- Spring 
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		-->
+		
+		<!-- Testing Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-assert</artifactId>
+			<version>1.4</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.5</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		
+	</dependencies>
+	<build>
+		<plugins>
+				<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>build-helper-maven-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <phase>generate-sources</phase>
+			            <goals><goal>add-source</goal></goals>
+			            <configuration>
+			                <sources>
+			                    <source>src</source>
+			                    <source>test</source>
+			                </sources>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
