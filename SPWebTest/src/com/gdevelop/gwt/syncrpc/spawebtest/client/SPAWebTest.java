@@ -1,18 +1,18 @@
 /*
- * Copyright 2013 Blue Esoteric Web Development, LLC (http://www.blueesoteric.com/)
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright 2013 Blue Esoteric Web Development, LLC
+ * (http://www.blueesoteric.com/)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.gdevelop.gwt.syncrpc.spawebtest.client;
 
@@ -30,9 +30,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.junit.client.impl.JUnitHost;
-import com.google.gwt.junit.client.impl.JUnitHostAsync;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AnnotatedRpcTokenTestService;
 import com.google.gwt.user.client.rpc.AnnotatedRpcTokenTestServiceAsync;
@@ -113,58 +110,39 @@ public class SPAWebTest implements EntryPoint {
 	 * returns an error.
 	 */
 	private static final String SERVER_ERROR = "An error occurred while "
-			+ "attempting to contact the server. Please check your network "
-			+ "connection and try again.";
+			+ "attempting to contact the server. Please check your network " + "connection and try again.";
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting
 	 * service.
 	 */
-	public final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
-	public final ProfileServiceAsync profileService = GWT
-			.create(ProfileService.class);
-	private final CookieServiceAsync cookieService = GWT
-			.create(CookieService.class);
-	public final LargePayloadServiceAsync payloadService = GWT
-			.create(LargePayloadService.class);
-	public final CollectionsTestServiceAsync collectionsService = GWT
-			.create(CollectionsTestService.class);
-	public final CoreJavaTestServiceAsync coreJavaService = GWT
-			.create(CoreJavaTestService.class);
+	public final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+	public final ProfileServiceAsync profileService = GWT.create(ProfileService.class);
+	private final CookieServiceAsync cookieService = GWT.create(CookieService.class);
+	public final LargePayloadServiceAsync payloadService = GWT.create(LargePayloadService.class);
+	public final CollectionsTestServiceAsync collectionsService = GWT.create(CollectionsTestService.class);
+	public final CoreJavaTestServiceAsync coreJavaService = GWT.create(CoreJavaTestService.class);
 	public final CustomFieldSerializerTestServiceAsync customFieldSerService = GWT
 			.create(CustomFieldSerializerTestService.class);
-	public final EnumsTestServiceAsync enumTestService = GWT
-			.create(EnumsTestService.class);
-	public final ExceptionsTestServiceAsync customExceptionService = GWT
-			.create(ExceptionsTestService.class);
-	public final FinalFieldsTestServiceAsync finalFieldSerService = GWT
-			.create(FinalFieldsTestService.class);
-	public final LoggingRPCTestServiceAsync loggingRPCService = GWT
-			.create(LoggingRPCTestService.class);
-	public final InheritanceTestServiceAsync inheritanceService = GWT
-			.create(InheritanceTestService.class);
-	public final ObjectGraphTestServiceAsync objectGraphService = GWT
-			.create(ObjectGraphTestService.class);
-	public final RecursiveClassTestServiceAsync recursiveClassService = GWT
-			.create(RecursiveClassTestService.class);
+	public final EnumsTestServiceAsync enumTestService = GWT.create(EnumsTestService.class);
+	public final ExceptionsTestServiceAsync customExceptionService = GWT.create(ExceptionsTestService.class);
+	public final FinalFieldsTestServiceAsync finalFieldSerService = GWT.create(FinalFieldsTestService.class);
+	public final LoggingRPCTestServiceAsync loggingRPCService = GWT.create(LoggingRPCTestService.class);
+	public final InheritanceTestServiceAsync inheritanceService = GWT.create(InheritanceTestService.class);
+	public final ObjectGraphTestServiceAsync objectGraphService = GWT.create(ObjectGraphTestService.class);
+	public final RecursiveClassTestServiceAsync recursiveClassService = GWT.create(RecursiveClassTestService.class);
 	public final RemoteServiceServletTestServiceAsync remoteServiceServletService = GWT
 			.create(RemoteServiceServletTestService.class);
 	public final AnnotatedRpcTokenTestServiceAsync annotatedRpcTokenService = GWT
 			.create(AnnotatedRpcTokenTestService.class);
-	public final RpcTokenTestServiceAsync rpcTokenService = GWT
-			.create(RpcTokenTestService.class);
-	public final MixedSerializableEchoServiceAsync mixedEchoService = GWT
-			.create(MixedSerializableEchoService.class);
+	public final RpcTokenTestServiceAsync rpcTokenService = GWT.create(RpcTokenTestService.class);
+	public final MixedSerializableEchoServiceAsync mixedEchoService = GWT.create(MixedSerializableEchoService.class);
 	public final TypeCheckedObjectsTestServiceAsync typeCheckedService = GWT
 			.create(TypeCheckedObjectsTestService.class);
-	public final UnicodeEscapingServiceAsync unicodeService = GWT
-			.create(UnicodeEscapingService.class);
-	public final ValueTypesTestServiceAsync valuesService = GWT
-			.create(ValueTypesTestService.class);
-	public final XsrfTestServiceAsync xsrfTestService = GWT
-			.create(XsrfTestService.class);
+	public final UnicodeEscapingServiceAsync unicodeService = GWT.create(UnicodeEscapingService.class);
+	public final ValueTypesTestServiceAsync valuesService = GWT.create(ValueTypesTestService.class);
+	public final XsrfTestServiceAsync xsrfTestService = GWT.create(XsrfTestService.class);
 
-	public final JUnitHostAsync junitService = GWT.create(JUnitHost.class);
+	// public final JUnitHostAsync junitService = GWT.create(JUnitHost.class);
 
 	/**
 	 * This is the entry point method.
@@ -173,22 +151,20 @@ public class SPAWebTest implements EntryPoint {
 	public void onModuleLoad() {
 
 		try {
-			UnicodeEscapingTest.verifyStringContainingCharacterRange(0, 0,
-					new String());
+			UnicodeEscapingTest.verifyStringContainingCharacterRange(0, 0, new String());
 		} catch (InvalidCharacterException e) {
 
 		}
-		new GWTTestCase() {
-
-			@Override
-			public String getModuleName() {
-				return null;
-			}
-		};
+		// new GWTTestCase() {
+		//
+		// @Override
+		// public String getModuleName() {
+		// return null;
+		// }
+		// };
 		ServiceDefTarget serTarget = (ServiceDefTarget) this.unicodeService;
 		serTarget.setServiceEntryPoint("/spawebtest/unicodeEscape");
-		this.unicodeService.getStringContainingCharacterRange(0, 1,
-				new AsyncCallback<String>() {
+		this.unicodeService.getStringContainingCharacterRange(0, 1, new AsyncCallback<String>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -203,37 +179,34 @@ public class SPAWebTest implements EntryPoint {
 		});
 		// TestSetValidator.isValidComplexCyclicGraph(TSFAccessor
 		// .createComplexCyclicGraph());
-		this.coreJavaService.echoMathContext(new MathContext(5,
-				RoundingMode.CEILING), new AsyncCallback<MathContext>() {
+		this.coreJavaService.echoMathContext(new MathContext(5, RoundingMode.CEILING),
+				new AsyncCallback<MathContext>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				throw new RuntimeException(caught);
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+						throw new RuntimeException(caught);
+					}
 
-			@Override
-			public void onSuccess(MathContext result) {
+					@Override
+					public void onSuccess(MathContext result) {
 
-			}
+					}
 
-		});
+				});
 		this.collectionsService.echo(TestSetFactory.createArrayList(),
 				new AsyncCallback<ArrayList<MarkerTypeArrayList>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				throw new RuntimeException(caught);
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+						throw new RuntimeException(caught);
+					}
 
-			@Override
-			public void onSuccess(ArrayList<MarkerTypeArrayList> result) {
+					@Override
+					public void onSuccess(ArrayList<MarkerTypeArrayList> result) {
 
-			}
-		});
-		final EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> expected = TestSetFactory
-				.createEmptyEnumMap();
-		this.collectionsService
-		.echoEmptyEnumMap(
-				expected,
+					}
+				});
+		final EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> expected = TestSetFactory.createEmptyEnumMap();
+		this.collectionsService.echoEmptyEnumMap(expected,
 				new AsyncCallback<EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue>>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -241,15 +214,12 @@ public class SPAWebTest implements EntryPoint {
 					}
 
 					@Override
-					public void onSuccess(
-							EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> result) {
+					public void onSuccess(EnumMap<MarkerTypeEnum, MarkerTypeEnumMapValue> result) {
 
 					}
 				});
-		((ServiceDefTarget) this.finalFieldSerService).setServiceEntryPoint(GWT
-				.getModuleBaseURL() + "finalfields");
-		this.finalFieldSerService.transferObject(
-				new FinalFieldsNode(4, "C", 9),
+		((ServiceDefTarget) this.finalFieldSerService).setServiceEntryPoint(GWT.getModuleBaseURL() + "finalfields");
+		this.finalFieldSerService.transferObject(new FinalFieldsNode(4, "C", 9),
 				new AsyncCallback<FinalFieldsTestService.FinalFieldsNode>() {
 
 					@Override
@@ -263,30 +233,28 @@ public class SPAWebTest implements EntryPoint {
 				});
 		ServiceDefTarget target = (ServiceDefTarget) this.enumTestService;
 		target.setServiceEntryPoint(GWT.getModuleBaseURL() + "enums");
-		this.enumTestService.echo(Basic.A,
-				new AsyncCallback<EnumsTestService.Basic>() {
+		this.enumTestService.echo(Basic.A, new AsyncCallback<EnumsTestService.Basic>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+			}
 
-					@Override
-					public void onSuccess(Basic result) {
-					}
-				});
+			@Override
+			public void onSuccess(Basic result) {
+			}
+		});
 
-		this.loggingRPCService.echoLogRecord(createLogRecord(),
-				new AsyncCallback<LogRecord>() {
-					@Override
-					public void onFailure(Throwable caught) {
+		this.loggingRPCService.echoLogRecord(createLogRecord(), new AsyncCallback<LogRecord>() {
+			@Override
+			public void onFailure(Throwable caught) {
 
-					}
+			}
 
-					@Override
-					public void onSuccess(LogRecord result) {
+			@Override
+			public void onSuccess(LogRecord result) {
 
-					}
-				});
+			}
+		});
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
@@ -439,8 +407,7 @@ public class SPAWebTest implements EntryPoint {
 				// dialogBox.center();
 				// }
 				// });
-				SPAWebTest.this.cookieService
-				.generateCookiesOnServer(new AsyncCallback<Void>() {
+				SPAWebTest.this.cookieService.generateCookiesOnServer(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -450,8 +417,7 @@ public class SPAWebTest implements EntryPoint {
 					@Override
 					public void onSuccess(Void result) {
 						dialogBox.setText("Cookie RPC");
-						serverResponseLabel.setHTML(Cookies
-								.getCookieNames().toString());
+						serverResponseLabel.setHTML(Cookies.getCookieNames().toString());
 						dialogBox.center();
 					}
 				});

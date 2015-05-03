@@ -24,3 +24,8 @@
 /gwt-syncproxy/server
 /gwt-syncproxy/store.jks
 /gwt-syncproxy/certs.jks
+/SPWTest/gwt-unitCache
+/SPWTest/.gradle
+/SPWTest/bin
+/SPWTest/build
+/SPWTest/war

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/SPWebTest/test/com/gdevelop/gwt/syncrpc/spawebtest/client/StandardTests.java"/>
+<listEntry value="/SPWTest/src/test/java/com/gdevelop/gwt/syncrpc/spawebtest/client/StandardTests.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -29,6 +29,6 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.gdevelop.gwt.syncrpc.spawebtest.client.StandardTests"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SPWebTest"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SPWTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dgwt.args=&quot; -logLevel WARN&quot; -Xmx256M"/>
 </launchConfiguration>
