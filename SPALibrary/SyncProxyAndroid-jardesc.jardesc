@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="SyncProxyAndroid-0.5.1-alpha.jar"/>
+    <jar path="SyncProxyAndroid-0.6.0-alpha.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/SPALibrary/SyncProxyAndroid-jardesc.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -42,6 +42,7 @@
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.safehtml.shared{SafeHtmlBuilder.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.safehtml.shared{SafeHtml.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.event.shared{UmbrellaException.java"/>
+        <javaElement handleIdentifier="=SPALibrary/G-SP&lt;com.gdevelop.gwt.syncrpc.auth"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.core.client{JsDate.java"/>
         <javaElement handleIdentifier="=SPALibrary/GWT_USER&lt;com.google.gwt.user.server{Base64Utils.java"/>
         <javaElement handleIdentifier="=SPALibrary/src&lt;com.gdevelop.gwt.syncrpc.android{GetCookieRunnable.java"/>

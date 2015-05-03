@@ -183,7 +183,7 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		if (service.isUserLoggedIn()) {
 			usUser = service.getCurrentUser();
 			// Local Dev Mode
-			if (usUser != null && usUser.getUserId().equals("0")) {
+			if (usUser != null && (usUser.getUserId() == null || usUser.getUserId().equals("0"))) {
 				User lUser = new User(usUser.getEmail(), usUser.getAuthDomain(), usUser.getEmail());
 				usUser = lUser;
 			}

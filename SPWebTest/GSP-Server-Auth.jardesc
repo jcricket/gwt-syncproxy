@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="GSP-Server-Auth-0.5.1-alpha.jar"/>
+    <jar path="GSP-Server-Auth-0.6.0-alpha.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/SPWebTest/GSP-Server-Auth.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
