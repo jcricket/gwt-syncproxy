@@ -60,11 +60,19 @@ sourceSets {
 	}
 }
 
+task gwttestservicesJar(type: Jar){
+	baseName = 'GWTTestServices'
+	from sourceSets.gwttestservices.output
+}
+
 sourceCompatibility = 1.7
+
+war.dependsOn gwttestservicesJar
 
 dependencies {
 	compile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
 	compile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
+	compile files('build/libs/GWTTestServices.jar')
 
 	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
 	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
@@ -95,6 +103,7 @@ appengine {
 	downloadSdk = true
 	jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
 	httpPort = 8082
+	httpAddress = '192.168.1.107'
 	appcfg{
 		oauth2 = true
 	}
