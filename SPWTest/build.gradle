@@ -102,7 +102,7 @@ configurations{
 appengine {
 	downloadSdk = true
 	jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
-	httpPort = 8082
+	httpPort = 8888
 	httpAddress = '192.168.1.107'
 	appcfg{
 		oauth2 = true

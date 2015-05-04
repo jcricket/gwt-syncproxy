@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -34,6 +35,7 @@ import com.gdevelop.gwt.syncrpc.auth.GoogleOAuthClientIdManager;
 import com.gdevelop.gwt.syncrpc.auth.HasOAuthBearerToken;
 import com.gdevelop.gwt.syncrpc.auth.HasOAuthTokens;
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
+import com.gdevelop.gwt.syncrpc.auth.TestModeHostVerifier;
 import com.google.gson.Gson;
 
 /**
@@ -48,7 +50,8 @@ import com.google.gson.Gson;
  * @since 0.6
  *
  */
-public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, HasOAuthBearerToken, HasOAuthTokens {
+public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, HasOAuthBearerToken, HasOAuthTokens,
+		TestModeHostVerifier {
 	/**
 	 * Amount of time before access code expires that this class will attempt to
 	 * get a new access code
@@ -119,6 +122,16 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 			DeviceServiceAuthenticationListener listener) {
 		this.idManager = idManager;
 		this.listener = listener;
+	}
+
+	ArrayList<String> testModeHosts;
+
+	public ArrayList<String> getTestModeHosts() {
+		return testModeHosts;
+	}
+
+	public void setTestModeHosts(ArrayList<String> testModeHosts) {
+		this.testModeHosts = testModeHosts;
 	}
 
 	/**
@@ -380,6 +393,15 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 			// e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean isTestModeHost(URL serviceUrl) {
+		if (testModeHosts != null && testModeHosts.contains(serviceUrl.getHost())) {
+			logger.config("Test mode host verified: " + serviceUrl);
+			return true;
+		}
+		return false;
 	}
 
 }

@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyStore;
+import java.util.ArrayList;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -41,8 +42,7 @@ public class ManualAuthTest extends BasicFrame {
 	public static void main(final String[] args) {
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
-		Logger.getLogger(JavaGAEOAuthBearerAuthenticator.class.getName())
-				.setLevel(Level.FINE);
+		Logger.getLogger(JavaGAEOAuthBearerAuthenticator.class.getName()).setLevel(Level.FINE);
 		logger.setLevel(Level.FINE);
 		setLoggingLevel(Level.FINE);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -98,21 +98,18 @@ public class ManualAuthTest extends BasicFrame {
 			FileInputStream in = new FileInputStream(file);
 			localTrustStore.load(in, "login1".toCharArray());
 			// localTrustStore.getCertificate("server").
-			TrustManagerFactory tmf = TrustManagerFactory
-					.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 			tmf.init(localTrustStore);
 			SSLContext ctx = SSLContext.getInstance("TLS");
 			ctx.init(null, tmf.getTrustManagers(), null);
 			sslFactory = ctx.getSocketFactory();
-			HttpsURLConnection
-					.setDefaultHostnameVerifier(new HostnameVerifier() {
+			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
 
-						@Override
-						public boolean verify(String hostname,
-								SSLSession session) {
-							return true;
-						}
-					});
+				@Override
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
+			});
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslFactory);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -120,7 +117,7 @@ public class ManualAuthTest extends BasicFrame {
 		/***************************************************************************/
 		logger.info("Initializting Profile Service RPC");
 		SyncProxy.setLoggingLevel(Level.FINER);
-		SyncProxy.setBaseURL("https://192.168.1.107:8080/spawebtest/");
+		SyncProxy.setBaseURL("http://192.168.1.107:8888/spawebtest/");
 		// Send RPC to Profile Service
 		ProfileServiceAsync service = SyncProxy.create(ProfileService.class);
 		((HasProxySettings) service).setServiceAuthenticator(authenticator);
@@ -154,15 +151,13 @@ public class ManualAuthTest extends BasicFrame {
 			}
 
 			@Override
-			public void onUserCodeAvailable(String userCode,
-					String verificationUrl) {
-				logger.info("User Code Available: " + userCode + "- "
-						+ verificationUrl);
+			public void onUserCodeAvailable(String userCode, String verificationUrl) {
+				logger.info("User Code Available: " + userCode + "- " + verificationUrl);
 				setStatus("Polling initiated, click URL to login");
 				authorize.setText("Authorize: " + userCode);
 				try {
-					authorize.addActionListener(new OpenActionListener(new URI(
-							verificationUrl), OpenActionListener.Type.WEB));
+					authorize.addActionListener(new OpenActionListener(new URI(verificationUrl),
+							OpenActionListener.Type.WEB));
 				} catch (URISyntaxException e) {
 					throw new RuntimeException();
 				}
@@ -170,6 +165,9 @@ public class ManualAuthTest extends BasicFrame {
 			}
 		};
 		authenticator = new JavaGAEOAuthBearerAuthenticator(idManager, listener);
+		ArrayList<String> testModeHosts = new ArrayList<>();
+		testModeHosts.add("192.168.1.107");
+		authenticator.setTestModeHosts(testModeHosts);
 		logger.info("Preparing Authenticator");
 		authenticator.prepareAuthentication();
 	}

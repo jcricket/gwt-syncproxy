@@ -23,7 +23,7 @@
 		<link>
 			<name>SPWeb</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/SPWebTest/src</locationURI>
+			<location>D:/GSPWK/SPWTest/src/main/java</location>
 		</link>
 		<link>
 			<name>SPWebTest</name>
