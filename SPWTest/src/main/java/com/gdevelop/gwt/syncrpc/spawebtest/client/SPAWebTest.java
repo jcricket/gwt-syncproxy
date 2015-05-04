@@ -30,7 +30,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AnnotatedRpcTokenTestService;
 import com.google.gwt.user.client.rpc.AnnotatedRpcTokenTestServiceAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -341,15 +340,13 @@ public class SPAWebTest implements EntryPoint {
 				serverResponseLabel.setText("");
 
 				// Greet Server for General T1 Object
-				// greetingService.greetServer(textToServer,
-				// new AsyncCallback<T1>() {
+				// greetingService.greetServer(textToServer, new
+				// AsyncCallback<T1>() {
 				// @Override
 				// public void onFailure(Throwable caught) {
 				// // Show the RPC error message to the user
-				// dialogBox
-				// .setText("Remote Procedure Call - Failure");
-				// serverResponseLabel
-				// .addStyleName("serverResponseLabelError");
+				// dialogBox.setText("Remote Procedure Call - Failure");
+				// serverResponseLabel.addStyleName("serverResponseLabelError");
 				// serverResponseLabel.setHTML(SERVER_ERROR);
 				// dialogBox.center();
 				// closeButton.setFocus(true);
@@ -358,8 +355,7 @@ public class SPAWebTest implements EntryPoint {
 				// @Override
 				// public void onSuccess(T1 result) {
 				// dialogBox.setText("Remote Procedure Call");
-				// serverResponseLabel
-				// .removeStyleName("serverResponseLabelError");
+				// serverResponseLabel.removeStyleName("serverResponseLabelError");
 				// serverResponseLabel.setHTML(result.getText());
 				// dialogBox.center();
 				// closeButton.setFocus(true);
@@ -367,30 +363,27 @@ public class SPAWebTest implements EntryPoint {
 				// });
 
 				// Greet Server for ArrayList<String>
-				// SPAWebTest.this.greetingService.greetServerArr(textToServer,
-				// new AsyncCallback<ArrayList<String>>() {
-				// @Override
-				// public void onFailure(Throwable caught) {
-				// // Show the RPC error message to the user
-				// dialogBox
-				// .setText("Remote Procedure Call - Failure");
-				// serverResponseLabel
-				// .addStyleName("serverResponseLabelError");
-				// serverResponseLabel.setHTML(SERVER_ERROR);
-				// dialogBox.center();
-				// closeButton.setFocus(true);
-				// }
-				//
-				// @Override
-				// public void onSuccess(ArrayList<String> result) {
-				// dialogBox.setText("Remote Procedure Call");
-				// serverResponseLabel
-				// .removeStyleName("serverResponseLabelError");
-				// serverResponseLabel.setHTML(result.get(0));
-				// dialogBox.center();
-				// closeButton.setFocus(true);
-				// }
-				// });
+				SPAWebTest.this.greetingService.greetServerArr(textToServer, new AsyncCallback<ArrayList<String>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						// Show the RPC error message to the user
+						dialogBox.setText("Remote Procedure Call - Failure");
+						serverResponseLabel.addStyleName("serverResponseLabelError");
+						serverResponseLabel.setHTML(SERVER_ERROR);
+						dialogBox.center();
+						closeButton.setFocus(true);
+					}
+
+					@Override
+					public void onSuccess(ArrayList<String> result) {
+						dialogBox.setText("Remote Procedure Call");
+						serverResponseLabel.removeStyleName("serverResponseLabelError");
+						serverResponseLabel.setHTML(result.get(0));
+						dialogBox.center();
+						closeButton.setFocus(true);
+					}
+				});
+
 				// Cookies.setCookie("Test", "Value");
 				// SPAWebTest.this.cookieService
 				// .testCookie(new AsyncCallback<ArrayList<String>>() {
@@ -407,20 +400,21 @@ public class SPAWebTest implements EntryPoint {
 				// dialogBox.center();
 				// }
 				// });
-				SPAWebTest.this.cookieService.generateCookiesOnServer(new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						throw new RuntimeException(caught);
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						dialogBox.setText("Cookie RPC");
-						serverResponseLabel.setHTML(Cookies.getCookieNames().toString());
-						dialogBox.center();
-					}
-				});
+				// SPAWebTest.this.cookieService.generateCookiesOnServer(new
+				// AsyncCallback<Void>() {
+				//
+				// @Override
+				// public void onFailure(Throwable caught) {
+				// throw new RuntimeException(caught);
+				// }
+				//
+				// @Override
+				// public void onSuccess(Void result) {
+				// dialogBox.setText("Cookie RPC");
+				// serverResponseLabel.setHTML(Cookies.getCookieNames().toString());
+				// dialogBox.center();
+				// }
+				// });
 
 			}
 		}

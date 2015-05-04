@@ -20,36 +20,43 @@ apply plugin: 'war'
 apply plugin: 'appengine'
 apply plugin: 'gwt'
 
+classes.dependsOn 'gwttestservicesClasses'
+
 sourceSets {
-	//gwttest{
-	main{
+	gwttestservices{
 		java{
-			srcDir 'src/main/java'
-			include '**/com/gdevelop/**'
 			srcDir "../google-web-toolkit/user/test"
-			include '**/client/rpc/*.java'
-			include '**/client/rpc/*.java'
-			include '**/i18n/client/CustomPluralsTest.java'
-			include '**/junit/client/*ExceptionAsserter.java'
-			include '**/junit/client/ExpectedFailure.java'
-			include '**/junit/client/GWTTestCaseStackTraceTest.java'
-			include '**/junit/client/GWTTestCaseTest*.java'
-			include '**/resources/client/CSSResourceTest.java'
-			include '**/resources/client/Custom*Resource.java'
-			include '**/resources/client/NestedBundleTest.java'
-			include '**/resources/client/gss/ImportResource.java'
-			include '**/resources/client/impl/*.java'
-			include '**/resources/rg/Custom*ResourceGenerator.java'
 			include '**/safehtml/shared/GwtSafeHtmlBuilderTest.java'
 			include '**/safehtml/shared/GwtSafeHtmlStringTest.java'
+			include '**/client/rpc/*.java'
+			include 'com/google/gwt/user/RPCSuite.gwt.xml'
 			include '**/server/rpc/*ServerCustomFieldSerializer.java'
 			include '**/server/rpc/*ServiceImpl.java'
 			include '**/server/rpc/*TestServiceImpl*.java'
 			include '**/server/rpc/LogFilterServletContext.java'
 			include '**/server/rpc/RpcTokenAwareRemoteService.java'
+			
+			include '**/i18n/client/CustomPluralsTest.java'
+			include '**/junit/client/GWTTestCaseStackTraceTest.java'
+			include '**/junit/client/GWTTestCaseTest*.java'
+			include '**/resources/client/CSSResourceTest.java'
 			include '**/validation/client/ValidationClientGwtTestCase.java'
 			include '**/validation/client/constraints/PatternValidatorGwtTest.java'
+			include '**/junit/client/*ExceptionAsserter.java'
+			include '**/junit/client/ExpectedFailure.java'
+			include '**/resources/client/Custom*Resource.java'
+			include '**/resources/client/NestedBundleTest.java'
+			include '**/resources/client/gss/ImportResource.java'
+			include '**/resources/client/impl/*.java'
+			include '**/resources/rg/Custom*ResourceGenerator.java'
 		}
+	}
+	main{
+		java{
+			srcDir 'src/main/java'
+			include '**/com/gdevelop/**'
+		}
+		compileClasspath += gwttestservices.output
 	}
 }
 
@@ -58,6 +65,11 @@ sourceCompatibility = 1.7
 dependencies {
 	compile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
 	compile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
+
+	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
+	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
+	gwttestservicesCompile 'junit:junit:4.11'
+
 	compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: gaeVer
 	compile 'com.google.api-client:google-api-client-servlet:1.20.0'
 	compile 'com.google.api-client:google-api-client-gson:1.20.0'
@@ -73,13 +85,21 @@ gwt{
 	//gwtVersion='2.7.0' // Including this seems to remove -user and -dev, along with several app engine dependencies from the gradle listing in Eclipse
 	modules 'com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest'
 	devModules 'com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest'
+	logLevel = 'INFO'
+	src += files(sourceSets.gwttestservices.allJava.srcDirs)
 }
-
+configurations{
+	gwttestservices
+}
 appengine {
 	downloadSdk = true
 	jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
-	httpPort = 8085
+	httpPort = 8082
 	appcfg{
 		oauth2 = true
 	}
+}
+
+war{
+	classpath configurations.gwttestservices
 }
