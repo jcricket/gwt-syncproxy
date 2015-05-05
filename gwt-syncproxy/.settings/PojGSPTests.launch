@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/gwt-syncproxy/test/com/gdevelop/gwt/syncrpc/test/SyncProxyLibraryTests.java"/>
+<listEntry value="/gwt-syncproxy/src/test/java/com/gdevelop/gwt/syncrpc/test/SyncProxyLibraryTests.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>

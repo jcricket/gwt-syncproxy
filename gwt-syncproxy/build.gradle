@@ -1,0 +1,128 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+sourceCompatibility = 1.7
+sourceSets{
+	rpcbase{
+		java{
+			srcDir "src/test/java/"
+			srcDir "src/main/java"
+			include '**/client/rpc/RpcTestBase.java'
+			include '**/SyncProxy.java'
+			include '**/SyncProxyException.java'
+			include '**/RemoteServiceSyncProxy.java'
+			include '**/ProxySettings.java'
+			include '**/HasProxySettings.java'
+			include '**/SyncClientSerializationStreamReader.java'
+			include '**/SyncClientSerializationStreamWriter.java'
+			include '**/syncrpc/auth/ServiceAuthenticator.java'
+			include '**/TestModeHostVerifier.java'
+			include '**/RpcPolicyFinder.java'
+			include '**/SerializationPolicyLoader.java'
+			include '**/Utils.java'
+			include '**/RemoteServiceInvocationHandler.java'
+		}
+	}
+	gwttestservices{
+		java{
+			srcDir "../google-web-toolkit/user/test"
+			
+			include '**/client/rpc/FailedRequestTest.java'
+			include '**/client/rpc/ManuallySerialized*.java'
+			include '**/client/rpc/MixedSerializable.java'
+			include '**/client/rpc/SerializableGenericWrapperType.java'
+			include '**/client/rpc/TypeChecked*Class.java'
+			include '**/client/rpc/TypeUncheckedGenericClass.java'
+			include '**/client/rpc/UnicodeEscapingService*.java'
+			include '**/rpc/*TestService*.java'
+			include '**/rpc/*TestSet*.java'
+			include '**/rpc/MixedSerializableEchoService*.java'
+			include '**/rpc/Type*_CustomFieldSerializer.java'
+			include '**/safehtml/shared/GwtSafeHtmlBuilderTest.java'
+			include '**/safehtml/shared/GwtSafeHtmlStringTest.java'
+			include '**/server/rpc/LogFilterServletContext.java'
+			include '**/server/rpc/RpcTokenAwareRemoteService.java'
+			include '**/server/rpc/RpcTokenServiceImpl.java'
+			exclude '**/client/rpc/RunTimeSerializationErrorsTest.java'
+			exclude '**/server/rpc/*ServiceImpl.java'
+		}
+		compileClasspath += sourceSets.rpcbase.output
+	}
+}
+
+repositories{
+	mavenCentral()
+	mavenLocal()
+}
+
+task gwttestservicesJar(type: Jar){
+	baseName = 'GWTTestServices'
+	from sourceSets.gwttestservices.output
+}
+
+compileTestJava.dependsOn gwttestservicesJar
+
+dependencies {
+	rpcbaseCompile 'junit:junit:4.11'
+	rpcbaseCompile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
+	rpcbaseCompile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile 'com.google.code.gson:gson:2.3.1'
+	compile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
+	compile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
+	compile group: 'com.gdevelop.gwt.syncrpc', name: 'spweb-client-tests', version: gspVer
+	compile group: 'com.gdevelop.gwt.syncrpc', name: 'spweb-client-api', version: gspVer
+	//gwttestservicesCompile sourceSets.test.output
+	gwttestservicesCompile group: 'com.gdevelop.gwt.syncrpc', name: 'spweb-client-tests', version: gspVer
+	compile group: 'com.google.guava', name:'guava', version: '15.0'
+	
+	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
+	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
+	gwttestservicesCompile 'junit:junit:4.11'
+	
+	testCompile files('build/libs/GWTTestServices.jar')
+	testCompile 'junit:junit:4.11'
+}
+
+/***************** SyncProxy Jar to Local Maven Repo ************/
+apply plugin: 'maven-publish' 
+
+task gspJar(type: Jar){
+	baseName = 'syncproxy'
+	from sourceSets.main.output
+	include '**/client/**'
+	include '**/shared/**'
+	exclude '**/SPAWebTest*'
+}
+
+task gspSourcesJar(type: Jar, dependsOn:classes) {
+    from sourceSets.main.output
+}
+
+task gspJavadoc(type: Javadoc){
+	source = sourceSets.main.allJava
+	destinationDir new File(rootProject.buildDir,'gspJavaDoc')
+	destinationDir.mkdirs()
+}
+
+task gspJavadocJar(type: Jar, dependsOn:gspJavadoc) {
+    classifier = 'javadoc'
+    from gspJavadoc.destinationDir
+}
+
+publishing{
+	publications{
+		gspJava(MavenPublication){
+			groupId 'com.gdevelop.gwt.syncrpc'
+			artifactId 'gsp-java'
+			version gspVer
+			
+			artifact gspJar
+			artifact gspSourcesJar{
+				classifier "sources"
+			}
+			artifact gspJavadocJar{
+				classifier 'javadoc'
+			}
+		}
+	}
+}

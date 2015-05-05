@@ -29,3 +29,4 @@
 /SPWTest/bin
 /SPWTest/build
 /SPWTest/war
+/gwt-syncproxy/.gradle

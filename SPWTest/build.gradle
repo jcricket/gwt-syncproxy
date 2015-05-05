@@ -112,3 +112,75 @@ appengine {
 war{
 	classpath configurations.gwttestservices
 }
+
+/*****************GWT API Jar to Local Maven Repo*********/
+apply plugin: 'maven-publish' 
+
+task clientTestsJar(type: Jar){
+	baseName = 'clientTests'
+	from sourceSets.test.output
+	include '**/GreetingServiceTest*'
+	include '**/LargePayloadTest*'
+}
+
+task clientTestsSourcesJar(type: Jar, dependsOn:testClasses){
+	from sourceSets.test.output
+	include '**/GreetingServiceTest*'
+	include '**/LargePayloadTest*'
+}
+
+task clientApiJar(type: Jar){
+	baseName = 'clientApi'
+	from sourceSets.main.output
+	include '**/client/**'
+	include '**/shared/**'
+	exclude '**/SPAWebTest*'
+}
+
+task clientApiSourcesJar(type: Jar, dependsOn:classes) {
+    from sourceSets.main.output
+	include '**/client/**'
+	include '**/shared/**'
+	exclude '**/SPAWebTest*'
+}
+
+task clientApiJavadoc(type: Javadoc){
+	source = sourceSets.main.allJava
+	include '**/client/**'
+	include '**/shared/**'
+	destinationDir new File(rootProject.buildDir,'apiJavaDoc')
+	destinationDir.mkdirs()
+}
+
+task clientApiJavadocJar(type: Jar, dependsOn:clientApiJavadoc) {
+    classifier = 'javadoc'
+    from clientApiJavadoc.destinationDir
+}
+
+publishing{
+	publications{
+		spwebClientApi(MavenPublication){
+			groupId 'com.gdevelop.gwt.syncrpc'
+			artifactId 'spweb-client-api'
+			version gspVer
+			
+			artifact clientApiJar
+			artifact clientApiSourcesJar{
+				classifier "sources"
+			}
+			//artifact clientApiJavadocJar{
+			//	classifier 'javadoc'
+			//}
+		}
+		spwebClientTests(MavenPublication){
+			groupId 'com.gdevelop.gwt.syncrpc'
+			artifactId 'spweb-client-tests'
+			version gspVer
+			
+			artifact clientTestsJar
+			artifact clientTestsSourcesJar{
+				classifier "sources"
+			}
+		}
+	}
+}
