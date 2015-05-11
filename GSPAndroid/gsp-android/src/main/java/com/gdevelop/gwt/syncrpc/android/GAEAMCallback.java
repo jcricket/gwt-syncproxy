@@ -31,8 +31,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.gdevelop.gwt.syncrpc.LoginUtils;
-
 /**
  * Call back from request for authorization token.
  *
@@ -60,10 +58,10 @@ public class GAEAMCallback implements AccountManagerCallback<Bundle> {
 				AccountManager accountManager = AccountManager
 						.get(GAEAMCallback.this.parent);
 				accountManager.invalidateAuthToken(
-						LoginUtils.GOOGLE_ACCOUNT_TYPE,
+						AndroidLoginUtils.GOOGLE_ACCOUNT_TYPE,
 						GAEAMCallback.this.auth_token);
 				accountManager.getAuthToken(GAEAMCallback.this.account,
-						LoginUtils.GAE_SERVICE_NAME, null, false,
+						AndroidLoginUtils.GAE_SERVICE_NAME, null, false,
 						new GAEAMCallback(GAEAMCallback.this.parent,
 								GAEAMCallback.this.account,
 

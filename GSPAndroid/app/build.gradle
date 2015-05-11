@@ -19,7 +19,13 @@ android {
     }
 }
 
+repositories{
+    mavenLocal()
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.gdevelop.gwt.syncrpc:spweb-client-api:0.6.0'
+    compile project(':gsp-android')
 }

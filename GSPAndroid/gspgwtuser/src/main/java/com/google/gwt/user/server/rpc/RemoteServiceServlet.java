@@ -1,23 +1,22 @@
 /*
  * Copyright 2008 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Modified for the SPA Library May 2013 to reference the custom SP SerializationPolicyLoader
  */
 package com.google.gwt.user.server.rpc;
 
-import com.gdevelop.gwt.syncrpc.SerializationPolicyLoader;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.RpcTokenException;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -39,6 +38,8 @@ import javax.servlet.http.HttpServletResponse;
  * The servlet base class for your RPC service implementations that
  * automatically deserializes incoming requests from the client and serializes
  * outgoing responses for client/server RPCs.
+ *
+ * Modified by Prith for GSP Android Library. This class is only referenced for it's class comparison and in javadoc, so unneeded references are broken
  */
 public class RemoteServiceServlet extends AbstractRemoteServiceServlet
     implements SerializationPolicyProvider {
@@ -81,24 +82,24 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
       // strict prefix.
       String contextRelativePath = modulePath.substring(contextPath.length());
 
-      String serializationPolicyFilePath = SerializationPolicyLoader.getSerializationPolicyFileName(contextRelativePath
-          + strongName);
+      String serializationPolicyFilePath = /*SerializationPolicyLoader.getSerializationPolicyFileName(contextRelativePath
+          + strongName);*/ "";
 
       // Open the RPC resource file and read its contents.
       InputStream is = servlet.getServletContext().getResourceAsStream(
           serializationPolicyFilePath);
       try {
         if (is != null) {
-          try {
-            serializationPolicy = SerializationPolicyLoader.loadFromStream(is,
-                null);
-          } catch (ParseException e) {
-            servlet.log("ERROR: Failed to parse the policy file '"
-                + serializationPolicyFilePath + "'", e);
-          } catch (IOException e) {
-            servlet.log("ERROR: Could not read the policy file '"
-                + serializationPolicyFilePath + "'", e);
-          }
+          //try {
+            serializationPolicy = /*SerializationPolicyLoader.loadFromStream(is,
+                null);*/null;
+//          } catch (ParseException e) {
+//            servlet.log("ERROR: Failed to parse the policy file '"
+//                + serializationPolicyFilePath + "'", e);
+//          } catch (IOException e) {
+//            servlet.log("ERROR: Could not read the policy file '"
+//                + serializationPolicyFilePath + "'", e);
+//          }
         } else {
           String message = "ERROR: The serialization policy file '"
               + serializationPolicyFilePath
@@ -190,7 +191,7 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
    * {@link #getThreadLocalResponse()} methods.
    * </p>
    * This is public so that it can be unit tested easily without HTTP.
-   * 
+   *
    * @param payload the UTF-8 request payload
    * @return a string which encodes either the method's return, a checked
    *         exception thrown by the method, or an
@@ -225,11 +226,11 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
 
   /**
    * Standard HttpServlet method: handle the POST.
-   * 
+   *
    * This doPost method swallows ALL exceptions, logs them in the
    * ServletContext, and returns a GENERIC_FAILURE_MSG response with status code
    * 500.
-   * 
+   *
    * @throws ServletException
    * @throws SerializationException
    */
@@ -266,7 +267,7 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
    * clients that are not expected to provide the
    * {@value com.google.gwt.user.client.rpc.RpcRequestBuilder#STRONG_NAME_HEADER}
    * header.
-   * 
+   *
    * @throws SecurityException if {@link #getPermutationStrongName()} returns
    *           <code>null</code>
    */
@@ -280,10 +281,10 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
   /**
    * Gets the {@link SerializationPolicy} for given module base URL and strong
    * name if there is one.
-   * 
+   *
    * Override this method to provide a {@link SerializationPolicy} using an
    * alternative approach.
-   * 
+   *
    * @param request the HTTP request being serviced
    * @param moduleBaseURL as specified in the incoming payload
    * @param strongName a strong name that uniquely identifies a serialization
@@ -300,7 +301,7 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
    * Override this method to examine the serialized response that will be
    * returned to the client. The default implementation does nothing and need
    * not be called by subclasses.
-   * 
+   *
    * @param serializedResponse
    */
   protected void onAfterResponseSerialized(String serializedResponse) {
@@ -310,7 +311,7 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
    * Override this method to examine the serialized version of the request
    * payload before it is deserialized into objects. The default implementation
    * does nothing and need not be called by subclasses.
-   * 
+   *
    * @param serializedRequest
    */
   protected void onBeforeRequestDeserialized(String serializedRequest) {
@@ -325,7 +326,7 @@ public class RemoteServiceServlet extends AbstractRemoteServiceServlet
    * string's estimated byte length is longer than 256 bytes. Subclasses can
    * override this logic.
    * </p>
-   * 
+   *
    * @param request the request being served
    * @param response the response that will be written into
    * @param responsePayload the payload that is about to be sent to the client

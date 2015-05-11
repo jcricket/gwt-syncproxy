@@ -1,23 +1,22 @@
 /*
  * Copyright 2008 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Modified for the SPA Library May 2013 to reference the custom SP RemoteServiceSyncProxy
  */
 package com.google.gwt.user.client.rpc.impl;
 
-import com.gdevelop.gwt.syncrpc.RemoteServiceSyncProxy;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -34,9 +33,9 @@ import com.google.gwt.user.client.rpc.StatusCodeException;
 /**
  * Adapter from a {@link RequestCallback} interface to an {@link AsyncCallback}
  * interface.
- * 
+ *
  * For internal use only.
- * 
+ *
  * @param <T> the type parameter for the {@link AsyncCallback}
  */
 public class RequestCallbackAdapter<T> implements RequestCallback {
@@ -157,7 +156,7 @@ public class RequestCallbackAdapter<T> implements RequestCallback {
    * {@link SerializationStreamReader}.
    */
   private final ResponseReader responseReader;
-  
+
   /**
    * {@link RpcTokenExceptionHandler} to notify of token exceptions.
    */
@@ -197,7 +196,15 @@ public class RequestCallbackAdapter<T> implements RequestCallback {
     callback.onFailure(exception);
   }
 
-  @SuppressWarnings(value = {"unchecked", "unused"})
+	public static boolean isReturnValue(String encodedResponse) {
+		return encodedResponse.startsWith("//OK");
+	}
+
+	public static boolean isThrownException(String encodedResponse) {
+		return encodedResponse.startsWith("//EX");
+	}
+
+	@SuppressWarnings(value = {"unchecked", "unused"})
   public void onResponseReceived(Request request, Response response) {
     T result = null;
     Throwable caught = null;
@@ -213,9 +220,9 @@ public class RequestCallbackAdapter<T> implements RequestCallback {
       } else if (encodedResponse == null) {
         // This can happen if the XHR is interrupted by the server dying
         caught = new InvocationException("No response payload from " + methodName);
-      } else if (RemoteServiceSyncProxy.isReturnValue(encodedResponse)) {
+      } else if (isReturnValue(encodedResponse)) {
         result = (T) responseReader.read(streamFactory.createStreamReader(encodedResponse));
-      } else if (RemoteServiceSyncProxy.isThrownException(encodedResponse)) {
+      } else if (isThrownException(encodedResponse)) {
         caught = (Throwable) streamFactory.createStreamReader(encodedResponse).readObject();
       } else {
         caught = new InvocationException(encodedResponse + " from " + methodName);

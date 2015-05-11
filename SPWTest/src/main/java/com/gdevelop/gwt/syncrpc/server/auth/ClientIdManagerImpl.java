@@ -7,7 +7,7 @@ import javax.servlet.ServletContext;
 
 public class ClientIdManagerImpl implements ClientIdManager {
 	public enum ClientId {
-		GAE("gsp.clientid.gae"), ANDROID("gsp.clientid.android");
+		GAE("gsp.clientid.gae"), ANDROID("gsp.clientid.android"), ANDROID_NEW("gsp.clientid.androidnew");
 		String propName;
 
 		private ClientId(String propName) {
@@ -28,8 +28,8 @@ public class ClientIdManagerImpl implements ClientIdManager {
 
 	@Override
 	public String[] getAllClients() {
-		return new String[] { getClientId(ClientId.GAE, context),
-				getClientId(ClientId.ANDROID, context) };
+		return new String[] { getClientId(ClientId.GAE, context), getClientId(ClientId.ANDROID, context),
+				getClientId(ClientId.ANDROID_NEW, context) };
 	}
 
 	@Override
@@ -38,8 +38,7 @@ public class ClientIdManagerImpl implements ClientIdManager {
 	}
 
 	protected String getClientId(ClientId idType, ServletContext context) {
-		InputStream is = context
-				.getResourceAsStream("/WEB-INF/client_ids.properties");
+		InputStream is = context.getResourceAsStream("/WEB-INF/client_ids.properties");
 		Properties props = new Properties();
 		try {
 			props.load(is);

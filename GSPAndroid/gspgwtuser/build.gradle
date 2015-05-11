@@ -8,6 +8,8 @@ sourceSets {
             exclude 'com/google/gwt/core/client/impl/StackTraceCreator.java'
             exclude 'com/google/gwt/safehtml/shared/SafeHtmlHostedModeUtils.java'
             exclude 'com/google/gwt/user/client/rpc/core/com/google/gwt/core/shared/SerializableThrowable_CustomFieldSerializer.java'
+            exclude 'com/google/gwt/user/client/rpc/impl/RequestCallbackAdapter.java'
+            exclude 'com/google/gwt/user/server/rpc/RemoteServiceServlet.java'
 
             include '**/SafeHtml.java'
             include '**/SafeHtmlBuilder.java'
@@ -99,10 +101,12 @@ sourceSets {
 task gwtUserJar(type: Jar) {
     baseName = 'GSPGwtUserAndroid'
     from sourceSets.gwtuser.output
+    from sourceSets.main.output
 }
 
 dependencies {
     gwtuserCompile group: 'com.google.gwt', name: 'gwt-user', version: "2.7.0"
     gwtuserCompile group: 'com.google.gwt', name: 'gwt-dev', version: '2.7.0'
     compile sourceSets.gwtuser.output
+    compile 'javax.servlet:servlet-api:2.4'
 }

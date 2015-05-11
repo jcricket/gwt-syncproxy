@@ -18,7 +18,7 @@
  *  ideas found from: http://blog.notdot.net/2010/05/Authenticating-against-App-Engine-from-an-Android-app.
  *  This is a modified LoginUtils.java file from the original SyncProxy project.
  */
-package com.gdevelop.gwt.syncrpc;
+package com.gdevelop.gwt.syncrpc.android;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -26,12 +26,6 @@ import android.accounts.AccountsException;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
-
-import com.gdevelop.gwt.syncrpc.android.AccountList;
-import com.gdevelop.gwt.syncrpc.android.CookieManagerAvailableListener;
-import com.gdevelop.gwt.syncrpc.android.GAEAMCallback;
-import com.gdevelop.gwt.syncrpc.android.GetCookieRunnable;
-import com.gdevelop.gwt.syncrpc.android.R;
 
 import java.io.IOException;
 import java.net.URL;
@@ -68,7 +62,7 @@ import java.net.URLEncoder;
  * @since 0.4
  *
  */
-public class LoginUtils {
+public class AndroidLoginUtils {
 	public static void chooseAccount(Activity parent, int requestCode) {
 		Intent intent = new Intent(parent, AccountList.class);
 		intent.putExtra(LOCAL_DEV_MODE_FLAG, localDevMode);
@@ -153,7 +147,7 @@ public class LoginUtils {
 	 *            https://example.appspot.com for deployed app
 	 */
 	public static void setLoginUrl(String loginUrl) {
-		LoginUtils.loginUrl = loginUrl;
+		AndroidLoginUtils.loginUrl = loginUrl;
 		// if (loginUrl.startsWith("http://localhost")) {
 		localDevMode = loginUrl.startsWith("http://10.0.2.2")
 				|| loginUrl.startsWith("http://localhost");
@@ -166,7 +160,7 @@ public class LoginUtils {
 	 * @param loginUrl
 	 */
 	public static void setLoginUrl(String loginUrl, boolean testMode) {
-		LoginUtils.loginUrl = loginUrl;
+		AndroidLoginUtils.loginUrl = loginUrl;
 		localDevMode = testMode;
 	}
 
@@ -175,7 +169,7 @@ public class LoginUtils {
 	 *            the useAccountSelector to set
 	 */
 	public static void useAccountSelector(boolean useAccountSelector) {
-		LoginUtils.useAccountSelector = useAccountSelector;
+		AndroidLoginUtils.useAccountSelector = useAccountSelector;
 	}
 
 	public static final String GAE_SERVICE_NAME = "ah";

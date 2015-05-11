@@ -33,9 +33,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.gdevelop.gwt.syncrpc.LoginUtils;
-
-
 /**
  * @author Preethum
  * @since 0.4
@@ -52,7 +49,7 @@ public class AccountList extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		devMode = this.getIntent().getBooleanExtra(
-				LoginUtils.LOCAL_DEV_MODE_FLAG, devMode);
+				AndroidLoginUtils.LOCAL_DEV_MODE_FLAG, devMode);
 
 		accountManager = AccountManager.get(getApplicationContext());
 	}
@@ -73,7 +70,7 @@ public class AccountList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Account account = (Account) getListView().getItemAtPosition(position);
 		Intent rData = new Intent();
-		rData.putExtra(LoginUtils.ACCOUNT_KEY, account);
+		rData.putExtra(AndroidLoginUtils.ACCOUNT_KEY, account);
 		setResult(Activity.RESULT_OK, rData);
 		finish();
 	}
@@ -99,9 +96,9 @@ public class AccountList extends ListActivity {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 							Account account = new Account(input.getText()
-									.toString(), LoginUtils.TEST_ACCOUNT_TYPE);
+									.toString(), AndroidLoginUtils.TEST_ACCOUNT_TYPE);
 							Intent rData = new Intent();
-							rData.putExtra(LoginUtils.ACCOUNT_KEY, account);
+							rData.putExtra(AndroidLoginUtils.ACCOUNT_KEY, account);
 							setResult(Activity.RESULT_OK, rData);
 							finish();
 						}
