@@ -89,13 +89,10 @@ apply plugin: 'maven-publish'
 task gspJar(type: Jar){
 	baseName = 'syncproxy'
 	from sourceSets.main.output
-	include '**/client/**'
-	include '**/shared/**'
-	exclude '**/SPAWebTest*'
 }
 
 task gspSourcesJar(type: Jar, dependsOn:classes) {
-    from sourceSets.main.output
+    from sourceSets.main.allJava
 }
 
 task gspJavadoc(type: Javadoc){

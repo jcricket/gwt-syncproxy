@@ -1,0 +1,101 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "0.6.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories{
+    mavenCentral()
+    mavenLocal()
+}
+
+preBuild.dependsOn tasks.getByPath(":gspgwtuser:gwtUserJar")
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.gdevelop.gwt.syncrpc:gsp-java:0.6.0'
+    compile 'com.google.android.gms:play-services-identity:7.3.0'
+    compile files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
+}
+
+task androidJar(type: Jar) {
+    baseName = 'syncproxy'
+    from files('build/intermediates/classes/debug/')
+    //from files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
+    from(zipTree('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')){
+        include '**'
+    }
+//    configurations.compile.filter({ include '*gsp*' }).each{
+//        println it
+//    }
+    from({zipTree(configurations.compile.filter({file -> if(file.name.contains('gsp')){return true}}).singleFile)}){
+        include '**/syncrpc/**'
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    from files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
+    classifier = 'sources'
+}
+
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        gspAndroid(MavenPublication) {
+            groupId 'com.gdevelop.gwt.syncrpc'
+            artifactId 'gsp-android'
+            version '0.6.0'
+
+            artifact androidJar
+            artifact sourcesJar {
+                classifier "sources"
+            }
+//            artifact gspJavadocJar {
+//                classifier 'javadoc'
+//            }
+            // Work-around for missing dependencies: http://stackoverflow.com/a/24764713/1544046
+//            pom.withXml {
+//                def dependenciesNode = asNode().appendNode('dependencies')
+//
+//                // Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+//                configurations.compile.allDependencies.each {
+//                    // Handle skipping over the manually added testing files jar
+//                    if (!(it instanceof org.gradle.api.internal.artifacts.dependencies.DefaultSelfResolvingDependency_Decorated)) {
+//                        def dependencyNode = dependenciesNode.appendNode('dependency')
+//                        dependencyNode.appendNode('groupId', it.group)
+//                        dependencyNode.appendNode('artifactId', it.name)
+//                        dependencyNode.appendNode('version', it.version)
+//                    }
+//                }
+//            }
+
+        }
+    }
+}

@@ -1,11 +1,19 @@
 buildscript {
+	// Dependency Versions
+	ext{
+		gaeVer = '1.9.19'
+		gwtVer = '2.7.0'
+		gspVer = '0.6.0'
+		groupId = 'com.gdevelop.gwt.syncrpc'
+	}
+	
 	repositories {
 		mavenCentral()
 		jcenter()
 	}
 
 	dependencies {
-		classpath group: 'com.google.appengine', name: 'gradle-appengine-plugin', version: gaeVer
+		classpath "com.google.appengine:gradle-appengine-plugin:$gaeVer"
 		classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
 	}
 }
@@ -70,30 +78,29 @@ sourceCompatibility = 1.7
 war.dependsOn gwttestservicesJar
 
 dependencies {
-	compile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
-	compile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
-	compile files('build/libs/GWTTestServices.jar')
-
-	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-user', version: gwtVer
-	gwttestservicesCompile group: 'com.google.gwt', name: 'gwt-dev', version: gwtVer
+	gwttestservicesCompile "com.google.gwt:gwt-user:$gwtVer"
+	gwttestservicesCompile "com.google.gwt:gwt-dev:$gwtVer"
 	gwttestservicesCompile 'junit:junit:4.11'
 
-	compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: gaeVer
+	compile "com.google.gwt:gwt-user:$gwtVer"
+	compile "com.google.gwt:gwt-dev:$gwtVer"
+	compile files('build/libs/GWTTestServices.jar')
 	compile 'com.google.api-client:google-api-client-servlet:1.20.0'
 	compile 'com.google.api-client:google-api-client-gson:1.20.0'
+	compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVer"
 	appengineSdk "com.google.appengine:appengine-java-sdk:$gaeVer"
 
 	compile 'junit:junit:4.11'
-	testCompile group: 'com.google.appengine', name: 'appengine-testing', version: gaeVer
-	testCompile group: 'com.google.appengine', name: 'appengine-api-labs', version: gaeVer
-	testCompile group: 'com.google.appengine', name: 'appengine-api-stubs', version: gaeVer
+	testCompile "com.google.appengine:appengine-testing:$gaeVer"
+	testCompile "com.google.appengine:appengine-api-labs:$gaeVer"
+	testCompile "com.google.appengine:appengine-api-stubs:$gaeVer"
 }
 
 gwt{
 	//gwtVersion='2.7.0' // Including this seems to remove -user and -dev, along with several app engine dependencies from the gradle listing in Eclipse
 	modules 'com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest'
 	devModules 'com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest'
-	logLevel = 'INFO'
+	// logLevel = 'INFO'
 	src += files(sourceSets.gwttestservices.allJava.srcDirs)
 }
 configurations{
@@ -113,74 +120,4 @@ war{
 	classpath configurations.gwttestservices
 }
 
-/*****************GWT API Jar to Local Maven Repo*********/
-apply plugin: 'maven-publish' 
-
-task clientTestsJar(type: Jar){
-	baseName = 'clientTests'
-	from sourceSets.test.output
-	include '**/GreetingServiceTest*'
-	include '**/LargePayloadTest*'
-}
-
-task clientTestsSourcesJar(type: Jar, dependsOn:testClasses){
-	from sourceSets.test.output
-	include '**/GreetingServiceTest*'
-	include '**/LargePayloadTest*'
-}
-
-task clientApiJar(type: Jar){
-	baseName = 'clientApi'
-	from sourceSets.main.output
-	include '**/client/**'
-	include '**/shared/**'
-	exclude '**/SPAWebTest*'
-}
-
-task clientApiSourcesJar(type: Jar, dependsOn:classes) {
-    from sourceSets.main.output
-	include '**/client/**'
-	include '**/shared/**'
-	exclude '**/SPAWebTest*'
-}
-
-task clientApiJavadoc(type: Javadoc){
-	source = sourceSets.main.allJava
-	include '**/client/**'
-	include '**/shared/**'
-	destinationDir new File(rootProject.buildDir,'apiJavaDoc')
-	destinationDir.mkdirs()
-}
-
-task clientApiJavadocJar(type: Jar, dependsOn:clientApiJavadoc) {
-    classifier = 'javadoc'
-    from clientApiJavadoc.destinationDir
-}
-
-publishing{
-	publications{
-		spwebClientApi(MavenPublication){
-			groupId 'com.gdevelop.gwt.syncrpc'
-			artifactId 'spweb-client-api'
-			version gspVer
-			
-			artifact clientApiJar
-			artifact clientApiSourcesJar{
-				classifier "sources"
-			}
-			//artifact clientApiJavadocJar{
-			//	classifier 'javadoc'
-			//}
-		}
-		spwebClientTests(MavenPublication){
-			groupId 'com.gdevelop.gwt.syncrpc'
-			artifactId 'spweb-client-tests'
-			version gspVer
-			
-			artifact clientTestsJar
-			artifact clientTestsSourcesJar{
-				classifier "sources"
-			}
-		}
-	}
-}
+apply from: 'publishing.gradle'
