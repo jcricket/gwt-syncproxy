@@ -52,5 +52,9 @@ public enum ServiceTaskProgress {
 	 * Indicates the task has ended and the appropriate AsyncCallback methods
 	 * have been called
 	 */
-	TASK_COMPLETE
+	TASK_COMPLETE,
+	/**
+	 * Indicates the task was canceled before completion. A CanceledException will be thrown to the primaryCallback
+	 */
+	TASK_CANCELED
 }
