@@ -22,7 +22,7 @@ package com.gdevelop.gwt.syncrpc.android;
  */
 public class ServiceTaskCanceledException extends RuntimeException {
 
-	public ServiceTaskCanceledException(Exception exception) {
-		super(exception);
+	public ServiceTaskCanceledException(String message,Exception exception) {
+		super(message,exception);
 	}
 }

@@ -61,6 +61,7 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 	private Class<RemoteService> serviceClass;
 	private Context context;
 	private Exception exception;
+	private String exceptionMsg;
 
 	/**
 	 * @param authenticator the authenticator that will be applied to the service before the RPC
@@ -144,6 +145,7 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 		try {
 			verifyBaseUrl();
 		} catch (Exception e) {
+			exceptionMsg = "Problem verifying the Base URL";
 			exception = e;
 		}
 		if (isCancelled()) {
@@ -170,6 +172,7 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 			serviceCall();
 		} catch (Exception e) {
 			exception = e;
+			exceptionMsg = "Problem occurred during user defined #serviceCall()";
 			cancel(true);
 			return null;
 		}
@@ -198,12 +201,12 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 			if (rpcBaseRes <= 0) {
 				Log.e(LOG_ID, "No Base url defined or resolvable: " + getClass().getName());
 				cancel(true);
-				throw new RuntimeException("Unable to execute asyncTask due to invalid baseUrl");
+				throw new IllegalStateException("Unable to execute asyncTask due to invalid baseUrl");
 			}
 			if (context == null) {
 				Log.e(LOG_ID, "No Context available to resolve rpcBase resource");
 				cancel(true);
-				throw new RuntimeException("Context not available for resource resolution");
+				throw new IllegalArgumentException("Context not available for resource resolution");
 			}
 			baseUrl = context.getString(rpcBaseRes);
 		}
@@ -233,11 +236,29 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 		onProgressUpdate(ServiceTaskProgress.TASK_COMPLETE);
 	}
 
+	/**
+	 * Handles when the tasks is canceled. If the cancellation occurred due to an exception that is
+	 * reported by #getCancelledException, then that exception is sent to the
+	 * AsyncCallback#onFailure method
+	 */
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
 		onProgressUpdate(ServiceTaskProgress.TASK_CANCELED);
-		primaryCallback.onFailure(new ServiceTaskCanceledException(exception));
+		Exception exc = getCancelledException();
+		if (exc != null) {
+			primaryCallback.onFailure(exc);
+		}
+	}
+
+	/**
+	 * Can be overridden by sub-classes to provided localized exception that are handled and should
+	 * be sent back to the AsyncCallback#onFailure method. If the exception's resulted in a
+	 * cancelation of this task, it is best handled to wrap that exception in a
+	 * ServiceTaskCanceledException that can be uniformly handled by the callback
+	 */
+	protected Exception getCancelledException() {
+		return new ServiceTaskCanceledException(exceptionMsg, exception);
 	}
 
 	/**
