@@ -56,13 +56,12 @@ import java.net.URL;
 public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, String> implements ServiceAuthenticator,
 																										 HasOAuthIDToken, TestModeHostVerifier {
 	public static final String OAUTH_ID_SCOPE_PREFIX = "audience:server:client_id:";
-
 	public final static int RC_ACCOUNT_CHOOSER_REQUEST = 3032;
 	public final static int RC_RECOVER_AUTH_ERROR = 3031;
 	public final static int RC_RECOVER_PLAY_SERVICES_ERROR = 3030;
 	public static final String LOG_TAG = "AGAECCAuth";
+	boolean prepared;
 	String accountName;
-	boolean actionComplete = false;
 	Activity activity;
 	Context context;
 	GoogleOAuthIdManager idManager;
@@ -74,12 +73,11 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	private int rcAccountChooser = RC_ACCOUNT_CHOOSER_REQUEST;
 	private int rcRecoverAuth = RC_RECOVER_AUTH_ERROR;
 	private int rcRecoverPlayServices = RC_RECOVER_PLAY_SERVICES_ERROR;
-
 	/**
 	 * Use case for performing authentication within a {@link Fragment}, which expects to handle the
 	 * {@link #onActivityResult(int, int, Intent)}
 	 */
-	public AndroidGAECrossClientAuthenticator(Activity activity, Fragment actResultDelegate,											  GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
+	public AndroidGAECrossClientAuthenticator(Activity activity, Fragment actResultDelegate, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
 		this(activity, idManager, listener);
 		this.actResultDelegate = actResultDelegate;
 	}
@@ -89,7 +87,7 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	 * The listener will be called when authentication has been prepared regarding which account was
 	 * chosen.
 	 */
-	public AndroidGAECrossClientAuthenticator(Activity activity, GoogleOAuthIdManager idManager,											  ServiceAuthenticationListener listener) {
+	public AndroidGAECrossClientAuthenticator(Activity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
 		this.context = activity;
 		this.activity = activity;
 		this.idManager = idManager;
@@ -113,6 +111,40 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 		this.listener = listener;
 	}
 
+	@Override
+	public boolean isPrepared() {
+		return prepared;
+	}
+
+	@Override
+	public void prepareAuthentication() {
+		try {
+			prepareAuthenticationL();
+		} catch (GoogleAuthException | IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Applies the OAuth 2 Id Token (OpenId Connect)
+	 */
+	@Override
+	public void applyAuthenticationToService(HasProxySettings service) {
+		try {
+			service.setOAuth2IdToken(getOAuthIDToken());
+		} catch (TokenNotAvailableException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public String getOAuthIDToken() throws TokenNotAvailableException {
+		if (!prepared) {
+			throw new TokenNotAvailableException();
+		}
+		return idToken;
+	}
+
 	/**
 	 * Handles activity results relating to the {@link GoogleAuthUtil} service.
 	 *
@@ -120,7 +152,7 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	 * @throws IOException
 	 * @throws GoogleAuthException
 	 */
-	public boolean onActivityResult(int requestCode, int resultCode, Intent data) throws IOException,																								 GoogleAuthException {
+	public boolean onActivityResult(int requestCode, int resultCode, Intent data) throws IOException, GoogleAuthException {
 		if ((requestCode == rcRecoverPlayServices || requestCode == rcRecoverAuth) && resultCode == Activity.RESULT_OK) {
 			// Receiving a result that follows a GoogleAuthException, try auth
 			// again
@@ -151,7 +183,7 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 		if (scheduled) {
 			return;
 		}
-		if (actionComplete) {
+		if (prepared) {
 			listener.onAuthenticatorPrepared(accountName);
 			return;
 		}
@@ -169,35 +201,6 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 		}
 		scheduled = true;
 		execute();
-	}
-
-	@Override
-	public void prepareAuthentication() {
-		try {
-			prepareAuthenticationL();
-		} catch (GoogleAuthException | IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Applies the OAuth 2 Id Token (OpenId Connect)
-	 */
-	@Override
-	public void applyAuthenticationToService(HasProxySettings service) {
-		try {
-			service.setOAuth2IdToken(getOAuthIDToken());
-		} catch (TokenNotAvailableException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public String getOAuthIDToken() throws TokenNotAvailableException {
-		if (!actionComplete) {
-			throw new TokenNotAvailableException();
-		}
-		return idToken;
 	}
 
 	public void setRcAccountChooser(int rcAccountChooser) {
@@ -266,14 +269,10 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 			// automatically to gain further information
 			return;
 		}
-		actionComplete = true;
+		prepared = true;
 		if (listener != null) {
 			listener.onAuthenticatorPrepared(accountName);
 		}
-	}
-
-	protected int getTestModeHostArrayResource(){
-		return R.array.gsp_no_ssl_whitelist;
 	}
 
 	@Override
@@ -288,5 +287,9 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 			}
 		}
 		return false;
+	}
+
+	protected int getTestModeHostArrayResource() {
+		return R.array.gsp_no_ssl_whitelist;
 	}
 }

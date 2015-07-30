@@ -26,6 +26,13 @@ import com.gdevelop.gwt.syncrpc.HasProxySettings;
 public interface ServiceAuthenticator {
 
 	/**
+	 * Helper method to verify if this authenticator has been prepared. Should
+	 * return true IFF the {@link #prepareAuthentication()} method has completed
+	 * successfully
+	 */
+	boolean isPrepared();
+
+	/**
 	 * Performs whatever actions are necessary to retrieve and prepare
 	 * authentication details and data prior to application to the service
 	 */

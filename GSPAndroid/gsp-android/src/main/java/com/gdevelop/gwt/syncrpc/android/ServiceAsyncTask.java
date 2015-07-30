@@ -102,6 +102,10 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 		onProgressUpdate(ServiceTaskProgress.INIT);
 	}
 
+	protected void setAuthenticator(ServiceAuthenticator authenticator) {
+		this.authenticator = authenticator;
+	}
+
 	public Context getContext() {
 		return context;
 	}

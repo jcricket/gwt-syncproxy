@@ -67,6 +67,7 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	boolean autoStartPolling = true;
 	boolean continuePolling = false;
+	boolean prepared = false;
 
 	OAuth2DeviceCodeResponse deviceCodeResponse;
 
@@ -329,6 +330,7 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 					throw new RuntimeException("Unexpected token type: " + tokenResponse.getToken_type());
 				}
 				listener.onAuthenticatorPrepared(null);
+				prepared = true;
 				// Schedule the ability to automatically refresh the access
 				// token so that updated bearer codes will be applied to service
 				// calls automatically
@@ -402,6 +404,11 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isPrepared() {
+		return prepared;
 	}
 
 }
