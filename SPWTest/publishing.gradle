@@ -1,0 +1,125 @@
+apply plugin: 'maven-publish' 
+
+/********** Server-Authentication Classes **********/
+task serverAuthJar(type: Jar){
+	baseName = 'serverAuth'
+	from sourceSets.main.output
+	include '**/syncrpc/server/auth/**'
+}
+
+task serverAuthSourcesJar(type: Jar, dependsOn:classes) {
+    from sourceSets.main.allJava
+	include '**/syncrpc/server/auth/**'
+}
+
+task serverAuthJavadoc(type: Javadoc){
+	source = sourceSets.main.allJava
+	include '**/syncrpc/server/auth/**'
+	destinationDir new File(rootProject.buildDir,'serverAuthJavaDoc')
+	destinationDir.mkdirs()
+}
+
+task serverAuthJavadocJar(type: Jar, dependsOn:serverAuthJavadoc) {
+    classifier = 'javadoc'
+    from serverAuthJavadoc.destinationDir
+}
+
+/********** Defined Tests for Use by Clients **********/ 
+task clientTestsJar(type: Jar){
+	baseName = 'clientTests'
+	from sourceSets.test.output
+	include '**/GreetingServiceTest*'
+	include '**/LargePayloadTest*'
+}
+
+task clientTestsSourcesJar(type: Jar, dependsOn:testClasses){
+	from sourceSets.test.allJava
+	include '**/GreetingServiceTest*'
+	include '**/LargePayloadTest*'
+}
+
+/********** Client API Files **********/
+task clientApiJar(type: Jar){
+	baseName = 'clientApi'
+	from sourceSets.main.output
+	include '**/client/**'
+	include '**/shared/**'
+	exclude '**/SPAWebTest*'
+}
+
+task clientApiSourcesJar(type: Jar, dependsOn:classes) {
+    from sourceSets.main.allJava
+	include '**/client/**'
+	include '**/shared/**'
+	exclude '**/SPAWebTest*'
+}
+
+task clientApiJavadoc(type: Javadoc){
+	source = sourceSets.main.allJava
+	include '**/client/**'
+	include '**/shared/**'
+	destinationDir new File(rootProject.buildDir,'apiJavaDoc')
+	destinationDir.mkdirs()
+}
+
+task clientApiJavadocJar(type: Jar, dependsOn:clientApiJavadoc) {
+    classifier = 'javadoc'
+    from clientApiJavadoc.destinationDir
+}
+
+publishing{
+	publications{
+		serverAuthApi(MavenPublication){
+			groupId 'com.gdevelop.gwt.syncrpc'
+			artifactId 'server-auth'
+			version gspVer
+			
+			artifact serverAuthJar
+			artifact serverAuthSourcesJar{
+				classifier "sources"
+			}
+			artifact serverAuthJavadocJar{
+				classifier 'javadoc'
+			}
+			// Work-around for missing dependencies: http://stackoverflow.com/a/24764713/1544046
+			pom.withXml {
+     			def dependenciesNode = asNode().appendNode('dependencies')
+    
+        		// Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+        		configurations.compile.allDependencies.each {
+            		// Handle skipping over the manually added testing files jar
+            		if(!(it instanceof org.gradle.api.internal.artifacts.dependencies.DefaultSelfResolvingDependency_Decorated)){
+	            		def dependencyNode = dependenciesNode.appendNode('dependency')
+    	        		dependencyNode.appendNode('groupId', it.group)
+        	    		dependencyNode.appendNode('artifactId', it.name)
+            			dependencyNode.appendNode('version', it.version)
+            		}
+        		}
+			}
+		}
+		spwebClientApi(MavenPublication){
+			groupId 'com.gdevelop.gwt.syncrpc'
+			artifactId 'spweb-client-api'
+			version gspVer
+			
+			artifact clientApiJar
+			artifact clientApiSourcesJar{
+				classifier "sources"
+			}
+			// TODO JavaDoc is failing
+			//artifact clientApiJavadocJar{
+			//	classifier 'javadoc'
+			//}
+		}
+		spwebClientTests(MavenPublication){
+			groupId 'com.gdevelop.gwt.syncrpc'
+			artifactId 'spweb-client-tests'
+			version gspVer
+			
+			artifact clientTestsJar
+			artifact clientTestsSourcesJar{
+				classifier "sources"
+			}
+		}
+	}
+}

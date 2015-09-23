@@ -12,28 +12,14 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
 	<linkedResources>
 		<link>
-			<name>GData</name>
+			<name>test</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/gdata</locationURI>
-		</link>
-		<link>
-			<name>GWT_USER_TESTS</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/google-web-toolkit/user/test</locationURI>
-		</link>
-		<link>
-			<name>SPWeb</name>
-			<type>2</type>
-			<location>D:/SPWKN/SPWebTest/src</location>
-		</link>
-		<link>
-			<name>SPWebTest</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/SPWebTest/test</locationURI>
+			<location>D:/GSPWK/google-web-toolkit/user/test</location>
 		</link>
 	</linkedResources>
 </projectDescription>

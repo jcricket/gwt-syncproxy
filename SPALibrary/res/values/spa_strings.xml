@@ -1,9 +1,14 @@
 <resources>
 
-	<string name="spa_app_name">SyncProxyAndroid</string>
-	<string name="spa_account_list_title">Account Selection</string>
-	<string name="spa_non_dev_toast">Must choose a Google Account for deployed service</string>
-	<string name="spa_add_custom_menu">Add Test Account</string>
-	<string name="spa_add_account_menu">Add Google Account</string>
+    <string name="spa_app_name">SyncProxyAndroid</string>
+    <string name="spa_account_list_title">Account Selection</string>
+    <string name="spa_non_dev_toast">Must choose a Google Account for deployed service</string>
+    <string name="spa_add_custom_menu">Add Test Account</string>
+    <string name="spa_add_account_menu">Add Google Account</string>
 
+    <bool name="gsp_dry_run">false</bool>
+
+    <string-array name="gsp_no_ssl_whitelist">
+        
+    </string-array>
 </resources>

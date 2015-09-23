@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry including="**/*Test.java" kind="src" path="SPWebTest"/>
-	<classpathentry including="java/lib/gdata-client-1.0.jar" kind="src" path="GData"/>
-	<classpathentry excluding="**/*ServiceImpl.java" including="**/*Service*.java|**/shared/**" kind="src" path="SPWeb"/>
-	<classpathentry excluding="**/client/rpc/RunTimeSerializationErrorsTest.java" including="**/client/rpc/FailedRequestTest.java|**/client/rpc/ManuallySerialized*.java|**/client/rpc/MixedSerializable.java|**/client/rpc/SerializableGenericWrapperType.java|**/client/rpc/TypeChecked*Class.java|**/client/rpc/TypeUncheckedGenericClass.java|**/client/rpc/UnicodeEscapingService*.java|**/rpc/*TestService*.java|**/rpc/*TestSet*.java|**/rpc/MixedSerializableEchoService*.java|**/rpc/Type*_CustomFieldSerializer.java|**/safehtml/shared/GwtSafeHtmlBuilderTest.java|**/safehtml/shared/GwtSafeHtmlStringTest.java|**/server/rpc/LogFilterServletContext.java|**/server/rpc/RpcTokenAwareRemoteService.java|**/server/rpc/RpcTokenServiceImpl.java" kind="src" path="GWT_USER_TESTS"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="GData/java/lib/gdata-core-1.0.jar"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry excluding="**/client/rpc/RunTimeSerializationErrorsTest.java|**/server/rpc/*ServiceImpl.java" including="**/client/rpc/FailedRequestTest.java|**/client/rpc/ManuallySerialized*.java|**/client/rpc/MixedSerializable.java|**/client/rpc/SerializableGenericWrapperType.java|**/client/rpc/TypeChecked*Class.java|**/client/rpc/TypeUncheckedGenericClass.java|**/client/rpc/UnicodeEscapingService*.java|**/rpc/*TestService*.java|**/rpc/*TestSet*.java|**/rpc/MixedSerializableEchoService*.java|**/rpc/Type*_CustomFieldSerializer.java|**/safehtml/shared/GwtSafeHtmlBuilderTest.java|**/safehtml/shared/GwtSafeHtmlStringTest.java|**/server/rpc/LogFilterServletContext.java|**/server/rpc/RpcTokenAwareRemoteService.java|**/server/rpc/RpcTokenServiceImpl.java" kind="src" path="test"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

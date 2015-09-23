@@ -7,5 +7,9 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("rpcsuite/profile")
 public interface ProfileService extends RemoteService {
-	public UserInfo getMyProfile() throws UnauthenticateException;
+
+	public UserInfo getAuthProfile() throws UnauthenticateException;
+
+	public UserInfo getOAuthProfile() throws UnauthenticateException;
+
 }

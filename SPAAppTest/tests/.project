@@ -35,7 +35,7 @@
 		<link>
 			<name>G-SP-T</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/gwt-syncproxy/test</locationURI>
+			<location>D:/GSPWK/gwt-syncproxy/src/test/java</location>
 		</link>
 		<link>
 			<name>GWT_USER_SRC</name>

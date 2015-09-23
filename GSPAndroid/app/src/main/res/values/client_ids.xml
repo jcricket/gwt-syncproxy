@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gae_client_id">589648672140-lf460788c4kr8gpe9nfgge7glcjgko82.apps.googleusercontent.com</string>
+    <string-array name="gsp_no_ssl_whitelist">
+        <item>192.168.1.107</item>
+    </string-array>
+</resources>

@@ -29,6 +29,14 @@
 		<servlet-name>TestLargePayload</servlet-name>
 		<url-pattern>/spawebtest/rpcsuite/largePayload</url-pattern>
 	</servlet-mapping>
+		<servlet>
+		<servlet-name>TestProfile</servlet-name>
+		<servlet-class>com.gdevelop.gwt.syncrpc.spawebtest.server.ProfileServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TestProfile</servlet-name>
+		<url-pattern>/spawebtest/rpcsuite/profile</url-pattern>
+	</servlet-mapping>
 	<listener>
     	<listener-class>com.gdevelop.gwt.syncrpc.spawebtest.server.SessionsTracker</listener-class>
 	</listener>

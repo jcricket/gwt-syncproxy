@@ -1,20 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.gdevelop.gwt.syncrpc"
-	android:versionCode="2"
-	android:versionName="0.4.2" android:installLocation="internalOnly">
+    package="com.gdevelop.gwt.syncrpc"
+    android:installLocation="internalOnly"
+    android:versionCode="2"
+    android:versionName="0.4.2" >
 
-	<uses-sdk
-		android:minSdkVersion="14"
-		android:targetSdkVersion="19" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="22" />
 
-	<application
-		android:allowBackup="true"
-		android:icon="@drawable/ic_launcher"
-		android:label="@string/spa_app_name"
-		android:theme="@style/AppTheme" >
-		<activity
-			android:name="com.gdevelop.gwt.syncrpc.android.AccountList"
-			android:label="@string/spa_account_list_title" />
-	</application>
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/spa_app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.gdevelop.gwt.syncrpc.android.AccountList"
+            android:label="@string/spa_account_list_title" />
+    </application>
 
 </manifest>
