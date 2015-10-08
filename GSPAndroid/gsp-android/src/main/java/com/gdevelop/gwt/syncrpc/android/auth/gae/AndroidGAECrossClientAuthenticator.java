@@ -53,8 +53,7 @@ import java.net.URL;
  * @author Preethum
  * @since 0.6
  */
-public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, String> implements ServiceAuthenticator,
-																										 HasOAuthIDToken, TestModeHostVerifier {
+public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, String> implements ServiceAuthenticator, HasOAuthIDToken, TestModeHostVerifier {
 	public static final String OAUTH_ID_SCOPE_PREFIX = "audience:server:client_id:";
 	public final static int RC_ACCOUNT_CHOOSER_REQUEST = 3032;
 	public final static int RC_RECOVER_AUTH_ERROR = 3031;
@@ -73,6 +72,12 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	private int rcAccountChooser = RC_ACCOUNT_CHOOSER_REQUEST;
 	private int rcRecoverAuth = RC_RECOVER_AUTH_ERROR;
 	private int rcRecoverPlayServices = RC_RECOVER_PLAY_SERVICES_ERROR;
+
+	@Override
+	public String accountName() {
+		return accountName;
+	}
+
 	/**
 	 * Use case for performing authentication within a {@link Fragment}, which expects to handle the
 	 * {@link #onActivityResult(int, int, Intent)}
@@ -146,6 +151,43 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	}
 
 	/**
+	 * Makes sure details necessary for authentication are available before undergoing preparation
+	 * measures. Specifically, an account name must be specified, and if not an activity must be
+	 * available to query the user for which account to utilize
+	 * <p/>
+	 * TODO Check network connectivity to handle IOException errors
+	 * <p/>
+	 * TODO Customize the newChooseAccountIntent parameters
+	 *
+	 * @throws IOException
+	 * @throws GoogleAuthException for Unrecoverable errors or if no activity was provided to
+	 *                             auto-handle these errors
+	 */
+	protected void prepareAuthenticationL() throws IOException, GoogleAuthException {
+		if (scheduled) {
+			return;
+		}
+		if (prepared) {
+			listener.onAuthenticatorPrepared(this);
+			return;
+		}
+
+		if (accountName == null && activity != null) {
+			Intent googlePicker = AccountPicker.newChooseAccountIntent(null, null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, true, null, null, null, null);
+			if (actResultDelegate != null) {
+				actResultDelegate.startActivityForResult(googlePicker, rcAccountChooser);
+			} else {
+				activity.startActivityForResult(googlePicker, rcAccountChooser);
+			}
+			return;
+		} else if (accountName == null) {
+			throw new RuntimeException("Must provide an activity for account choosing or provide a valid account");
+		}
+		scheduled = true;
+		execute();
+	}
+
+	/**
 	 * Handles activity results relating to the {@link GoogleAuthUtil} service.
 	 *
 	 * @return true if this class was able to handle the result
@@ -164,43 +206,6 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Makes sure details necessary for authentication are available before undergoing preparation
-	 * measures. Specifically, an account name must be specified, and if not an activity must be
-	 * available to query the user for which account to utilize
-	 * <p/>
-	 * TODO Check network connectivity to handle IOException errors
-	 * <p/>
-	 * TODO Customize the newChooseAccountIntent parameters
-	 *
-	 * @throws IOException
-	 * @throws GoogleAuthException for Unrecoverable errors or if no activity was provided to
-	 *                             auto-handle these errors
-	 */
-	protected void prepareAuthenticationL() throws IOException, GoogleAuthException {
-		if (scheduled) {
-			return;
-		}
-		if (prepared) {
-			listener.onAuthenticatorPrepared(accountName);
-			return;
-		}
-
-		if (accountName == null && activity != null) {
-			Intent googlePicker = AccountPicker.newChooseAccountIntent(null, null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, true, null, null, null, null);
-			if (actResultDelegate != null) {
-				actResultDelegate.startActivityForResult(googlePicker, rcAccountChooser);
-			} else {
-				activity.startActivityForResult(googlePicker, rcAccountChooser);
-			}
-			return;
-		} else if (accountName == null) {
-			throw new RuntimeException("Must provide an activity for account choosing or provide a valid account");
-		}
-		scheduled = true;
-		execute();
 	}
 
 	public void setRcAccountChooser(int rcAccountChooser) {
@@ -271,7 +276,7 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 		}
 		prepared = true;
 		if (listener != null) {
-			listener.onAuthenticatorPrepared(accountName);
+			listener.onAuthenticatorPrepared(this);
 		}
 	}
 

@@ -102,6 +102,9 @@ gwt{
 	devModules 'com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest'
 	// logLevel = 'INFO'
 	src += files(sourceSets.gwttestservices.allJava.srcDirs)
+	eclipse {
+		addGwtContainer=false
+	}
 }
 configurations{
 	gwttestservices

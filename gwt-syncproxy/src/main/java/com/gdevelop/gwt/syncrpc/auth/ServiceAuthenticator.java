@@ -24,6 +24,11 @@ import com.gdevelop.gwt.syncrpc.HasProxySettings;
  * @since 0.6
  */
 public interface ServiceAuthenticator {
+	
+	/**
+	 * @return the name of the account or email address that is associated with this authenticator
+	 */
+	String accountName();
 
 	/**
 	 * Helper method to verify if this authenticator has been prepared. Should

@@ -32,6 +32,7 @@ public interface ServiceAuthenticationListener {
 	 *            null in circumstances where a token was provided for access
 	 *            without identified specifically which user is being
 	 *            represented.
+	 * @version 0.6.1
 	 */
-	void onAuthenticatorPrepared(String accountName);
+	void onAuthenticatorPrepared(ServiceAuthenticator authenticator);
 }

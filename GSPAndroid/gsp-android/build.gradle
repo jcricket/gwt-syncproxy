@@ -28,7 +28,7 @@ preBuild.dependsOn tasks.getByPath(":gspgwtuser:gwtUserJar")
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$androidSupportVer"
-    compile 'com.gdevelop.gwt.syncrpc:gsp-java:0.6.0'
+    compile 'com.gdevelop.gwt.syncrpc:gsp-java:0.6.1'
     compile 'com.google.android.gms:play-services-identity:8.1.0'
     compile files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
 }

@@ -99,6 +99,7 @@ task gspJavadoc(type: Javadoc){
 	source = sourceSets.main.allJava
 	destinationDir new File(rootProject.buildDir,'gspJavaDoc')
 	destinationDir.mkdirs()
+	failOnError false
 }
 
 task gspJavadocJar(type: Jar, dependsOn:gspJavadoc) {
