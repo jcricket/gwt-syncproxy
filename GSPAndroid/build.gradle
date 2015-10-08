@@ -20,5 +20,6 @@ allprojects {
 
 ext{
     sdkVer = 23
-    buildToolsVer = "23.0.0"
+    buildToolsVer = "23.0.1"
+    androidSupportVer = "23.0.1"
 }

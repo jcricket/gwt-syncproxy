@@ -17,6 +17,7 @@ task serverAuthJavadoc(type: Javadoc){
 	include '**/syncrpc/server/auth/**'
 	destinationDir new File(rootProject.buildDir,'serverAuthJavaDoc')
 	destinationDir.mkdirs()
+	failOnError false
 }
 
 task serverAuthJavadocJar(type: Jar, dependsOn:serverAuthJavadoc) {
@@ -60,6 +61,7 @@ task clientApiJavadoc(type: Javadoc){
 	include '**/shared/**'
 	destinationDir new File(rootProject.buildDir,'apiJavaDoc')
 	destinationDir.mkdirs()
+	failOnError false
 }
 
 task clientApiJavadocJar(type: Jar, dependsOn:clientApiJavadoc) {

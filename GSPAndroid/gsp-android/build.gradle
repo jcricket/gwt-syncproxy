@@ -8,7 +8,7 @@ android {
         minSdkVersion 14
         targetSdkVersion sdkVer
         versionCode 1
-        versionName "0.6.0"
+        versionName "0.6.1"
     }
     buildTypes {
         release {
@@ -27,9 +27,9 @@ preBuild.dependsOn tasks.getByPath(":gspgwtuser:gwtUserJar")
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile "com.android.support:appcompat-v7:$androidSupportVer"
     compile 'com.gdevelop.gwt.syncrpc:gsp-java:0.6.0'
-    compile 'com.google.android.gms:play-services-identity:7.3.0'
+    compile 'com.google.android.gms:play-services-identity:8.1.0'
     compile files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
 }
 
