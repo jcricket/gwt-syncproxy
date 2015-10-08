@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion sdkVer
+    buildToolsVersion buildToolsVer
 
     defaultConfig {
         applicationId "com.gdevelop.gwt.syncrpc.gspapp"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion sdkVer
         versionCode 1
         versionName "1.0"
     }

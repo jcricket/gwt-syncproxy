@@ -32,3 +32,5 @@
 /gwt-syncproxy/.gradle
 /GSPAndroid/gspgwtuser/build
 /SPWTest/.gwt
+SPWTest/.settings/gradle.prefs
+gwt-syncproxy/.settings/gradle.prefs
