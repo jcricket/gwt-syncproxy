@@ -29,6 +29,7 @@ import com.gdevelop.gwt.syncrpc.android.ServiceTaskProgress;
 import com.gdevelop.gwt.syncrpc.android.auth.GoogleOAuthIdManager;
 import com.gdevelop.gwt.syncrpc.android.auth.gae.AndroidGAECrossClientAuthenticator;
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticationListener;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileService;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileServiceAsync;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.UserInfo;
@@ -72,9 +73,9 @@ public class AndroidGAECrossClientFragment extends Fragment {
 				new ServiceAuthenticationListener() {
 
 					@Override
-					public void onAuthenticatorPrepared(String accountName) {
+					public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
 						EditText selected = (EditText) getActivity().findViewById(R.id.choosen_account);
-						selected.setText(accountName);
+						selected.setText(authenticator.accountName());
 						verify.setEnabled(true);
 					}
 				});
