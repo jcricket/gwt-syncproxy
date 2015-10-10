@@ -12,12 +12,16 @@
  */
 package com.gdevelop.gwt.syncrpc.android;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.StringRes;
 import android.util.Log;
 
 import com.gdevelop.gwt.syncrpc.HasProxySettings;
 import com.gdevelop.gwt.syncrpc.SyncProxy;
+import com.gdevelop.gwt.syncrpc.android.auth.AuthenticatorManager;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticationListener;
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -48,10 +52,12 @@ import com.google.gwt.user.client.rpc.RemoteService;
  * @param <AsyncService> the AsyncService class that will be utilized for the RPC
  * @param <ReturnType>   the type expected to be returned from the RPC
  * @author Preethum
+ * @version 0.6.1
  * @since 0.6
  */
 public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTask<Void, ServiceTaskProgress, Void> {
 	public static final String LOG_ID = "GSP_ASYNCTASK";
+	AuthenticatorManager manager;
 	private AsyncService asyncService;
 	private ServiceAuthenticator authenticator;
 	private BridgeCallback<ReturnType> callback;
@@ -64,42 +70,39 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 	private String exceptionMsg;
 
 	/**
-	 * @param authenticator the authenticator that will be applied to the service before the RPC
+	 * Although builder pattern is available, this method remains public for instances of anonymous
+	 * classes
+	 *
+	 * @since 0.6.1
 	 */
-	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, Context context, ServiceAuthenticator authenticator, AsyncCallback<ReturnType> primaryCallback) {
-		this(clazz, context, -1, authenticator, primaryCallback);
-	}
-
-	/**
-	 * @param authenticator the authenticator that will be applied to the service before the RPC
-	 */
-	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, Context context, int rpcBaseRes, ServiceAuthenticator authenticator, AsyncCallback<ReturnType> primaryCallback) {
-		this(clazz, context, rpcBaseRes, primaryCallback);
-		this.authenticator = authenticator;
-	}
-
-	/**
-	 * @param clazz           service class definition
-	 * @param rpcBaseRes      the resource string that specifies the Server's Base URL, for use with
-	 *                        {@link SyncProxy#setBaseURL(String)}
-	 * @param primaryCallback the callback that will handle the success or failure returned by the
-	 *                        RPC
-	 */
-	@SuppressWarnings("unchecked")
-	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, Context context, int rpcBaseRes, AsyncCallback<ReturnType> primaryCallback) {
-		this(clazz, context, primaryCallback);
-		this.rpcBaseRes = rpcBaseRes;
-	}
-
-	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, Context context, AsyncCallback<ReturnType> primaryCallback) {
-		this(clazz, context);
-		this.primaryCallback = primaryCallback;
-	}
-
-	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, Context context) {
+	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, Context context, @StringRes int rpcBaseRes, ServiceAuthenticator authenticator, AsyncCallback<ReturnType> primaryCallback, AuthenticatorManager manager) {
 		this.serviceClass = (Class<RemoteService>) clazz;
 		this.context = context;
+		this.rpcBaseRes = rpcBaseRes;
+		this.authenticator = authenticator;
+		this.primaryCallback = primaryCallback;
+		this.manager = manager;
 		onProgressUpdate(ServiceTaskProgress.INIT);
+	}
+
+	/**
+	 * Executes when an authenticator is available for the specified account in the declared
+	 * AuthenticatorManager
+	 *
+	 * @since 0.6.1
+	 */
+	public void executeForAccount(Account account) {
+		if (manager == null) {
+			throw new RuntimeException("Cannot execute for account without an AuthenticationManager being specified");
+		}
+		// Wait for account authenticator to become available
+		manager.get(account, new ServiceAuthenticationListener() {
+			@Override
+			public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+				setAuthenticator(authenticator);
+				execute();
+			}
+		});
 	}
 
 	protected void setAuthenticator(ServiceAuthenticator authenticator) {
@@ -286,5 +289,58 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 			((HasProxySettings) asyncService).setServiceAuthenticator(authenticator);
 		}
 		return asyncService;
+	}
+
+	/**
+	 * Abstract builder to help descendent classes build this hierarchy
+	 *
+	 * @param <AsyncService>
+	 * @param <ReturnType>
+	 * @since 0.6.1
+	 */
+	public abstract static class Builder<AsyncService, ReturnType> {
+		Class<?> clazz;
+		Context context;
+		ServiceAuthenticator authenticator;
+		AsyncCallback<ReturnType> primaryCallback;
+		AuthenticatorManager manager;
+		@StringRes
+		int rpcBaseRes = -1;
+
+		public <ServiceClass extends RemoteService> Builder(Class<ServiceClass> clazz, Context context) {
+			this.clazz = clazz;
+			this.context = context;
+		}
+
+		/**
+		 * @param authenticator the authenticator that will be applied to the service before the
+		 *                      RPC
+		 */
+		public void setAuthenticator(ServiceAuthenticator authenticator) {
+			this.authenticator = authenticator;
+		}
+
+		/**
+		 * @param primaryCallback the callback that will handle the success or failure returned by
+		 *                        the RPC
+		 */
+		public void setPrimaryCallback(AsyncCallback<ReturnType> primaryCallback) {
+			this.primaryCallback = primaryCallback;
+		}
+
+		/**
+		 * @param rpcBaseRes the resource string that specifies the Server's Base URL, for use with
+		 *                   {@link SyncProxy#setBaseURL(String)}
+		 */
+		public void setRpcBaseRes(int rpcBaseRes) {
+			this.rpcBaseRes = rpcBaseRes;
+		}
+
+		public void setManager(AuthenticatorManager manager) {
+			this.manager = manager;
+		}
+
+		public abstract ServiceAsyncTask<AsyncService, ReturnType> build();
+
 	}
 }
