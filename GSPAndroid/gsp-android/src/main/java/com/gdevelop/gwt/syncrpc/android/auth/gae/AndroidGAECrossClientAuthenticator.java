@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.gdevelop.gwt.syncrpc.HasProxySettings;
 import com.gdevelop.gwt.syncrpc.android.R;
+import com.gdevelop.gwt.syncrpc.android.auth.AuthenticatorManager;
 import com.gdevelop.gwt.syncrpc.android.auth.GoogleOAuthIdManager;
 import com.gdevelop.gwt.syncrpc.auth.HasOAuthIDToken;
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticationListener;
@@ -73,16 +74,11 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	private int rcRecoverAuth = RC_RECOVER_AUTH_ERROR;
 	private int rcRecoverPlayServices = RC_RECOVER_PLAY_SERVICES_ERROR;
 
-	@Override
-	public String accountName() {
-		return accountName;
-	}
-
 	/**
 	 * Use case for performing authentication within a {@link Fragment}, which expects to handle the
 	 * {@link #onActivityResult(int, int, Intent)}
 	 */
-	public AndroidGAECrossClientAuthenticator(Activity activity, Fragment actResultDelegate, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
+	private AndroidGAECrossClientAuthenticator(Activity activity, Fragment actResultDelegate, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
 		this(activity, idManager, listener);
 		this.actResultDelegate = actResultDelegate;
 	}
@@ -92,7 +88,7 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	 * The listener will be called when authentication has been prepared regarding which account was
 	 * chosen.
 	 */
-	public AndroidGAECrossClientAuthenticator(Activity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
+	private AndroidGAECrossClientAuthenticator(Activity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
 		this.context = activity;
 		this.activity = activity;
 		this.idManager = idManager;
@@ -108,12 +104,16 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 	 * @param listener  to be called once this authenticator is prepared with the details necessary
 	 *                  to apply to any target service
 	 */
-	public AndroidGAECrossClientAuthenticator(Context context, Account account, GoogleOAuthIdManager idManager,
-											  ServiceAuthenticationListener listener) {
+	private AndroidGAECrossClientAuthenticator(Context context, Account account, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener) {
 		this.context = context;
 		this.accountName = account.name;
 		this.idManager = idManager;
 		this.listener = listener;
+	}
+
+	@Override
+	public String accountName() {
+		return accountName;
 	}
 
 	@Override
@@ -296,5 +296,119 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 
 	protected int getTestModeHostArrayResource() {
 		return R.array.gsp_no_ssl_whitelist;
+	}
+
+	/**
+	 * Whichever method is called last is the mode that will be utilized for building.
+	 *
+	 * @since 0.6.1
+	 */
+	public static class Builder {
+		ServiceAuthenticationListener listener;
+		GoogleOAuthIdManager idManager;
+		Activity activity;
+		Fragment actResultDelegate;
+		Context context;
+		Account account;
+		Mode mode;
+		AuthenticatorManager manager;
+
+		/**
+		 * Standard use for building an authenticator
+		 *
+		 * @param listener  to be called once this authenticator is prepared with the details
+		 *                  necessary to apply to any target service
+		 * @param idManager containing the server's client id to retrieve and Id Token instead of
+		 *                  other credentials
+		 */
+		public Builder(ServiceAuthenticationListener listener, GoogleOAuthIdManager idManager) {
+			this.listener = listener;
+			this.idManager = idManager;
+		}
+
+		/**
+		 * When set, the defined ServiceAuthenticationListener will actually be added to the
+		 * manager's call-list
+		 */
+		public void setManager(AuthenticatorManager manager) {
+			this.manager = manager;
+		}
+
+		/**
+		 * Mode for Use case for authentication and this sub-system will query for the user's
+		 * selected account. The listener will be called when authentication has been prepared
+		 * regarding which account was chosen.
+		 */
+		public Builder autoQuery(Activity activity) {
+			mode = Mode.AUTO_QUERY_ONLY;
+			this.activity = activity;
+			return this;
+		}
+
+		/**
+		 * Mode for Use case for performing authentication within a {@link Fragment}, which expects
+		 * to handle the {@link #onActivityResult(int, int, Intent)}
+		 */
+		public Builder fromFragment(Fragment actResultDelegate) {
+			mode = Mode.FRAGMENT;
+			this.activity = actResultDelegate.getActivity();
+			this.actResultDelegate = actResultDelegate;
+			return this;
+		}
+
+		/**
+		 * Mode for Use case non-Activity, non-Fragment authentication preparation for the specified
+		 * account
+		 *
+		 * @param account to gain authentication details about
+		 */
+		public Builder fromNonUI(Context context, Account account) {
+			mode = Mode.NON_UI;
+			this.context = context;
+			this.account = account;
+			return this;
+		}
+
+		public AndroidGAECrossClientAuthenticator build() {
+			if (manager != null) {
+				if (mode != Mode.NON_UI) {
+					throw new RuntimeException("Attaching the Authenticator to a manager services no purpose for a UI mode: " + mode);
+				}
+				manager.get(account,listener);
+						listener = new AuthManagingSAL(manager);
+			}
+			switch (mode) {
+				case AUTO_QUERY_ONLY:
+					return new AndroidGAECrossClientAuthenticator(activity, idManager, listener);
+				case FRAGMENT:
+					return new AndroidGAECrossClientAuthenticator(activity, actResultDelegate, idManager, listener);
+				case NON_UI:
+					return new AndroidGAECrossClientAuthenticator(context, account, idManager, listener);
+				default:
+					throw new RuntimeException("Unhandled Builder Mode: " + mode);
+			}
+		}
+
+		private enum Mode {
+			AUTO_QUERY_ONLY, FRAGMENT, NON_UI;
+		}
+	}
+
+	/**
+	 * Service Authentication Listener that adds the authenticator, once prepared directly into the
+	 * specified manager
+	 */
+	public static class AuthManagingSAL implements ServiceAuthenticationListener {
+
+		AuthenticatorManager manager;
+
+		public AuthManagingSAL(AuthenticatorManager manager) {
+			this.manager = manager;
+		}
+
+		@Override
+		public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+			manager.put(authenticator.accountName(), authenticator);
+		}
 	}
 }
