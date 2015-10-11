@@ -1,6 +1,27 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+    }
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
 
 def gspVer = "0.6.1"
+
+group = 'com.gdevelop.gwt.syncrpc'
+version = '0.6.1'
+def projectName = 'Gwt-SyncProxy Android Library'
+def projectUrl = 'http://www.blueesoteric.com'
+def licenseName = 'The Apache Software License, Version 2.0'
+def licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+def devId = 'P.Prith'
+def devName = 'Preethum Prithviraj'
+def devEmail = 'p.prith@blueesoteric.com'
 
 android {
     compileSdkVersion sdkVer
@@ -31,24 +52,29 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$androidSupportVer"
     compile 'com.gdevelop.gwt.syncrpc:gsp-java:0.6.1'
-    compile 'com.google.android.gms:play-services-identity:8.1.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
     compile files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
 }
-
-task androidJar(type: Jar) {
-    baseName = 'syncproxy'
-    from files('build/intermediates/classes/debug/')
-    //from files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
-    from(zipTree('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')){
-        include '**'
-    }
-//    configurations.compile.filter({ include '*gsp*' }).each{
-//        println it
+//
+//task androidJar(type: Jar) {
+//    //baseName = 'syncproxy'
+//    from files('build/intermediates/classes/debug/')
+//    //from files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
+//    from(zipTree('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')){
+//        include '**'
 //    }
-    from({zipTree(configurations.compile.filter({file -> if(file.name.contains('gsp')){return true}}).singleFile)}){
-        include '**/syncrpc/**'
-    }
-}
+////    configurations.compile.filter({ include '*gsp*' }).each{
+////        println it
+////    }
+////    from({zipTree(configurations.compile.filter({file -> if(file.name.contains('gsp')){return true}}).singleFile)}){
+////        include '**/syncrpc/**'
+////    }
+//
+//    def gspPath = project.configurations.compile.find { it.name.startsWith("gsp") }
+//    from(zipTree(gspPath)){
+//        include '**/syncrpc/**'
+//    }
+//}
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -66,19 +92,58 @@ task sourcesJar(type: Jar) {
 //    from javadoc.destinationDir
 //}
 
-apply plugin: 'maven-publish'
 
-publishing {
-    publications {
-        gspAndroid(MavenPublication) {
-            groupId 'com.gdevelop.gwt.syncrpc'
-            artifactId 'gsp-android'
-            version gspVer
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
 
-            artifact androidJar
-            artifact sourcesJar {
-                classifier "sources"
+                // Add your description here
+                name projectName
+                url projectUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id devId
+                        name devName
+                        email devEmail
+                    }
+                }
+
             }
+        }
+    }
+}
+
+artifacts {
+    //archives androidJar
+//    archives javadocJar
+    archives sourcesJar
+}
+//
+//apply plugin: 'maven-publish'
+//
+//publishing {
+//    publications {
+//        gspAndroid(MavenPublication) {
+//            groupId 'com.gdevelop.gwt.syncrpc'
+//            artifactId 'gsp-android'
+//            version gspVer
+//            //asNode().appendNode('packaging','aar')
+//
+//            artifact androidJar
+//            artifact sourcesJar {
+//                classifier "sources"
+//            }
 //            artifact gspJavadocJar {
 //                classifier 'javadoc'
 //            }
@@ -98,6 +163,6 @@ publishing {
 //                }
 //            }
 
-        }
-    }
-}
+//        }
+//    }
+//}
