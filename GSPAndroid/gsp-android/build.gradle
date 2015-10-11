@@ -11,8 +11,6 @@ buildscript {
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-def gspVer = "0.6.1"
-
 group = 'com.gdevelop.gwt.syncrpc'
 version = '0.6.1'
 def projectName = 'Gwt-SyncProxy Android Library'
@@ -31,7 +29,7 @@ android {
         minSdkVersion 14
         targetSdkVersion sdkVer
         versionCode 2
-        versionName gspVer
+        versionName version
     }
     buildTypes {
         release {

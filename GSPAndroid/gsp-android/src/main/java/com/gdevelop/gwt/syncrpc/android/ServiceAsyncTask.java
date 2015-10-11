@@ -105,10 +105,6 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 		});
 	}
 
-	protected void setAuthenticator(ServiceAuthenticator authenticator) {
-		this.authenticator = authenticator;
-	}
-
 	public Context getContext() {
 		return context;
 	}
@@ -289,6 +285,14 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 			((HasProxySettings) asyncService).setServiceAuthenticator(authenticator);
 		}
 		return asyncService;
+	}
+
+	public ServiceAuthenticator getAuthenticator() {
+		return authenticator;
+	}
+
+	protected void setAuthenticator(ServiceAuthenticator authenticator) {
+		this.authenticator = authenticator;
 	}
 
 	/**
