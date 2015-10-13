@@ -35,19 +35,24 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 	HashMap<String, ArrayList<ServiceAuthenticationListener>> pendingListeners;
 
 	/**
-	 * @version 0.6.1
+	 * @see #listenFor(String, ServiceAuthenticationListener)
+	 * @since 0.6.1
 	 */
-	public void get(Account account, ServiceAuthenticationListener listener) {
-		this.get(account.name, listener);
+	public boolean listenFor(Account account, ServiceAuthenticationListener listener) {
+		return this.listenFor(account.name, listener);
 	}
 
 	/**
-	 * Used to manage asynchronous authenticator usage
+	 * Used to manage asynchronous authenticator usage. If authenticator is not available, listener
+	 * is place in a queue and will be called once an authenticator for the specified account is
+	 * available
 	 *
 	 * @param listener to be called when a prepared authenticator has been made available
+	 * @return <code>true</code> if authenticator was available, otherwise <code>false</code> if it
+	 * the listener was put into waiting
 	 * @since 0.6.1
 	 */
-	public void get(String accName, ServiceAuthenticationListener listener) {
+	public boolean listenFor(String accName, ServiceAuthenticationListener listener) {
 		ServiceAuthenticator auth = get(accName);
 		if (auth == null) {
 			if (pendingListeners == null) {
@@ -59,8 +64,10 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 				pendingListeners.put(accName, listeners);
 			}
 			listeners.add(listener);
+			return false;
 		} else {
 			listener.onAuthenticatorPrepared(auth);
+			return true;
 		}
 	}
 
@@ -79,6 +86,9 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 		return this.put(account.name, authenticator);
 	}
 
+	/**
+	 * @since 0.6.1
+	 */
 	public ServiceAuthenticator put(String accName, ServiceAuthenticator authenticator) {
 		if (!authenticator.isPrepared()) {
 			throw new RuntimeException("Service Authenticator should have been prepared prior to installing to manager");
@@ -99,6 +109,25 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 					sal.onAuthenticatorPrepared(authenticator);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Quick use Listener that will automatically add an authenticator to this provided manager once
+	 * it is prepared
+	 *
+	 * @since 0.6.1
+	 */
+	public static class AMAdder implements ServiceAuthenticationListener {
+		AuthenticatorManager manager;
+
+		public AMAdder(AuthenticatorManager manager) {
+			this.manager = manager;
+		}
+
+		@Override
+		public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+			manager.put(authenticator.accountName(), authenticator);
 		}
 	}
 }

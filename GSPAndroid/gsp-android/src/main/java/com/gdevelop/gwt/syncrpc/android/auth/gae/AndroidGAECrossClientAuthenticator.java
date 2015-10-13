@@ -374,8 +374,8 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 				if (mode != Mode.NON_UI) {
 					throw new RuntimeException("Attaching the Authenticator to a manager services no purpose for a UI mode: " + mode);
 				}
-				manager.get(account,listener);
-						listener = new AuthManagingSAL(manager);
+				manager.listenFor(account, listener);
+				listener = new AuthenticatorManager.AMAdder(manager);
 			}
 			switch (mode) {
 				case AUTO_QUERY_ONLY:
@@ -391,24 +391,6 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 
 		private enum Mode {
 			AUTO_QUERY_ONLY, FRAGMENT, NON_UI;
-		}
-	}
-
-	/**
-	 * Service Authentication Listener that adds the authenticator, once prepared directly into the
-	 * specified manager
-	 */
-	public static class AuthManagingSAL implements ServiceAuthenticationListener {
-
-		AuthenticatorManager manager;
-
-		public AuthManagingSAL(AuthenticatorManager manager) {
-			this.manager = manager;
-		}
-
-		@Override
-		public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
-			manager.put(authenticator.accountName(), authenticator);
 		}
 	}
 }

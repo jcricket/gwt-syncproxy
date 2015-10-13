@@ -86,23 +86,33 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 	}
 
 	/**
+	 * @see #executeForAccount(String)
+	 * @since 0.6.1
+	 */
+	public void executeForAccount(Account account) {
+		executeForAccount(account.name);
+	}
+
+	/**
 	 * Executes when an authenticator is available for the specified account in the declared
 	 * AuthenticatorManager
 	 *
 	 * @since 0.6.1
 	 */
-	public void executeForAccount(Account account) {
+	public void executeForAccount(String accName) {
 		if (manager == null) {
 			throw new RuntimeException("Cannot execute for account without an AuthenticationManager being specified");
 		}
 		// Wait for account authenticator to become available
-		manager.get(account, new ServiceAuthenticationListener() {
+		manager.listenFor(accName, new ServiceAuthenticationListener() {
 			@Override
 			public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+				Log.d(LOG_ID, "Authenticator available for: " + authenticator.accountName());
 				setAuthenticator(authenticator);
 				execute();
 			}
 		});
+		Log.i(LOG_ID, "Waiting for authenticator for account: " + accName);
 	}
 
 	public Context getContext() {
@@ -145,6 +155,15 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 	 */
 	@Override
 	protected Void doInBackground(Void... params) {
+		try {
+			if (requiresAuthenticator() && getAuthenticator() == null) {
+				cancel(true);
+				throw new RuntimeException("No authenticator available for required method");
+			}
+		} catch (Exception e) {
+			exceptionMsg = "Authenticator missing. Set Authenticator or #executeForAccount(Account)";
+			exception = e;
+		}
 		try {
 			verifyBaseUrl();
 		} catch (Exception e) {
@@ -193,6 +212,17 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 			throw new RuntimeException(e);
 		}
 		return null;
+	}
+
+	/**
+	 * This method can be overriden by sub-classes to ensure that the task is not executed without
+	 * an authenticator or authentication manager being available. While it defaults to false, if
+	 * this task is executed with the executeForAccount method or if an authenticator is available,
+	 * it will be utilized even if the method does note "require" an authenticator as indicated by
+	 * this method.
+	 */
+	protected boolean requiresAuthenticator() {
+		return false;
 	}
 
 	/**
