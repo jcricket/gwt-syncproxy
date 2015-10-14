@@ -33,6 +33,17 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 	 * Trackers listeners waiting for an authenticator of a particular account to be made available
 	 */
 	HashMap<String, ArrayList<ServiceAuthenticationListener>> pendingListeners;
+	ArrayList<String> callingListenersFor;
+	String name;
+
+	public AuthenticatorManager(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	/**
 	 * @see #listenFor(String, ServiceAuthenticationListener)
@@ -71,19 +82,13 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 		}
 	}
 
-	public ServiceAuthenticator get(Account account) {
-		return super.get(account.name);
-	}
-
 	/**
-	 * Ensures the authenticator has been prepared and calls any listeners that were waiting for
-	 * this authenticator
+	 * Uses ServiceAuthenticator#accountName() as the key
 	 *
-	 * @version 0.6.1
-	 * @see HashMap#put(Object, Object)
+	 * @since 0.6.1
 	 */
-	public ServiceAuthenticator put(Account account, ServiceAuthenticator authenticator) {
-		return this.put(account.name, authenticator);
+	public void put(ServiceAuthenticator authenticator) {
+		put(authenticator.accountName(), authenticator);
 	}
 
 	/**
@@ -104,12 +109,35 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 	private void callListeners(String accName, ServiceAuthenticator authenticator) {
 		// Call listeners if they were waiting
 		if (pendingListeners != null) {
-			if (pendingListeners.get(accName) != null) {
+			if (callingListenersFor == null) {
+				callingListenersFor = new ArrayList<>();
+			}
+			// Check if we're already calling listeners for this account to prevent embedded loops
+			if (pendingListeners.get(accName) != null && !callingListenersFor.contains(accName)) {
+				callingListenersFor.add(accName);
 				for (ServiceAuthenticationListener sal : pendingListeners.get(accName)) {
 					sal.onAuthenticatorPrepared(authenticator);
 				}
+				// Clear the pending listeners for this account
+				pendingListeners.get(accName).clear();
+				callingListenersFor.remove(accName);
 			}
 		}
+	}
+
+	public ServiceAuthenticator get(Account account) {
+		return super.get(account.name);
+	}
+
+	/**
+	 * Ensures the authenticator has been prepared and calls any listeners that were waiting for
+	 * this authenticator
+	 *
+	 * @version 0.6.1
+	 * @see HashMap#put(Object, Object)
+	 */
+	public ServiceAuthenticator put(Account account, ServiceAuthenticator authenticator) {
+		return this.put(account.name, authenticator);
 	}
 
 	/**

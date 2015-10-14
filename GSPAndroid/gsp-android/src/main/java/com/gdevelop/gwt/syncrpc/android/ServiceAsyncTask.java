@@ -82,6 +82,9 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 		this.authenticator = authenticator;
 		this.primaryCallback = primaryCallback;
 		this.manager = manager;
+		if (manager != null) {
+			Log.v(LOG_ID, "Manager set: " + manager.toString());
+		}
 		onProgressUpdate(ServiceTaskProgress.INIT);
 	}
 
@@ -112,7 +115,7 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 				execute();
 			}
 		});
-		Log.i(LOG_ID, "Waiting for authenticator for account: " + accName);
+		Log.i(LOG_ID, getClass().getSimpleName() + " is Waiting for authenticator for account: " + accName + " in manager: " + manager.toString());
 	}
 
 	public Context getContext() {
