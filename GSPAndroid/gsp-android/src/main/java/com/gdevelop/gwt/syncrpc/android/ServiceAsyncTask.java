@@ -73,6 +73,7 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 	 * Although builder pattern is available, this method remains public for instances of anonymous
 	 * classes
 	 *
+	 * @param rpcBaseRes resource with a fully formed url with module path, ex: https://mytestsite.com/mymodule or http://192.168.1.100:8888/mymodule
 	 * @since 0.6.1
 	 */
 	public <ServiceClass extends RemoteService> ServiceAsyncTask(Class<ServiceClass> clazz, Context context, @StringRes int rpcBaseRes, ServiceAuthenticator authenticator, AsyncCallback<ReturnType> primaryCallback, AuthenticatorManager manager) {
@@ -218,7 +219,7 @@ public abstract class ServiceAsyncTask<AsyncService, ReturnType> extends AsyncTa
 	}
 
 	/**
-	 * This method can be overriden by sub-classes to ensure that the task is not executed without
+	 * This method can be overridden by sub-classes to ensure that the task is not executed without
 	 * an authenticator or authentication manager being available. While it defaults to false, if
 	 * this task is executed with the executeForAccount method or if an authenticator is available,
 	 * it will be utilized even if the method does note "require" an authenticator as indicated by

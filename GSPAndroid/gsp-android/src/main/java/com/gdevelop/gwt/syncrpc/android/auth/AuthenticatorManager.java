@@ -56,7 +56,7 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 	/**
 	 * Used to manage asynchronous authenticator usage. If authenticator is not available, listener
 	 * is place in a queue and will be called once an authenticator for the specified account is
-	 * available
+	 * available. This method does take care not to put the exact listener instance into the queue multiple times
 	 *
 	 * @param listener to be called when a prepared authenticator has been made available
 	 * @return <code>true</code> if authenticator was available, otherwise <code>false</code> if it
@@ -74,7 +74,9 @@ public class AuthenticatorManager extends HashMap<String, ServiceAuthenticator> 
 				listeners = new ArrayList<>();
 				pendingListeners.put(accName, listeners);
 			}
-			listeners.add(listener);
+			if(!listeners.contains(listener)) {
+				listeners.add(listener);
+			}
 			return false;
 		} else {
 			listener.onAuthenticatorPrepared(auth);

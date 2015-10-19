@@ -370,12 +370,18 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 		}
 
 		public AndroidGAECrossClientAuthenticator build() {
+			Log.i(LOG_TAG, "Starting build of AGAECCA");
 			if (manager != null) {
 				if (mode != Mode.NON_UI) {
 					throw new RuntimeException("Attaching the Authenticator to a manager services no purpose for a UI mode: " + mode);
 				}
-				manager.listenFor(account, listener);
-				listener = new AuthenticatorManager.AMAdder(manager);
+				if (manager.listenFor(account, listener)) {
+					Log.d(LOG_TAG, "Authenticator for Account: " + account.name + " already in manager, not building new authenticator");
+					return (AndroidGAECrossClientAuthenticator) manager.get(account);
+				} else {
+					Log.d(LOG_TAG, "Delegating authentication listener to manager for pending preparation");
+					listener = new AuthenticatorManager.AMAdder(manager);
+				}
 			}
 			switch (mode) {
 				case AUTO_QUERY_ONLY:
