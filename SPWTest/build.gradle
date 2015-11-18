@@ -3,7 +3,7 @@ buildscript {
 	ext{
 		gaeVer = '1.9.19'
 		gwtVer = '2.7.0'
-		gspVer = '0.6.0'
+		gspVer = '0.6.1'
 		groupId = 'com.gdevelop.gwt.syncrpc'
 	}
 	
@@ -102,6 +102,9 @@ gwt{
 	devModules 'com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest'
 	// logLevel = 'INFO'
 	src += files(sourceSets.gwttestservices.allJava.srcDirs)
+	eclipse {
+		addGwtContainer=false
+	}
 }
 configurations{
 	gwttestservices

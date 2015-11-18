@@ -29,13 +29,13 @@ import com.gdevelop.gwt.syncrpc.android.ServiceTaskProgress;
 import com.gdevelop.gwt.syncrpc.android.auth.GoogleOAuthIdManager;
 import com.gdevelop.gwt.syncrpc.android.auth.gae.AndroidGAECrossClientAuthenticator;
 import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticationListener;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileService;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileServiceAsync;
 import com.gdevelop.gwt.syncrpc.spawebtest.shared.UserInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- *
  * @author Preethum
  * @since 0.6
  */
@@ -68,17 +68,16 @@ public class AndroidGAECrossClientFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		authenticator = new AndroidGAECrossClientAuthenticator(getActivity(), this, manager,
-				new ServiceAuthenticationListener() {
+		AndroidGAECrossClientAuthenticator.Builder builder = new AndroidGAECrossClientAuthenticator.Builder(new ServiceAuthenticationListener() {
 
-					@Override
-					public void onAuthenticatorPrepared(String accountName) {
-						EditText selected = (EditText) getActivity().findViewById(R.id.choosen_account);
-						selected.setText(accountName);
-						verify.setEnabled(true);
-					}
-				});
-
+			@Override
+			public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+				EditText selected = (EditText) getActivity().findViewById(R.id.choosen_account);
+				selected.setText(authenticator.accountName());
+				verify.setEnabled(true);
+			}
+		}, manager).fromFragment(this);
+		authenticator = builder.build();
 	}
 
 	@Override
@@ -128,8 +127,7 @@ public class AndroidGAECrossClientFragment extends Fragment {
 		// STunnel.reconfig(getActivity(), R.raw.server, "login1");
 		// }
 		/***************************************************************************/
-		ServiceAsyncTask<ProfileServiceAsync, UserInfo> serviceTask = new ServiceAsyncTask<ProfileServiceAsync, UserInfo>(
-				ProfileService.class, getActivity(), R.string.gsp_base, authenticator, new AsyncCallback<UserInfo>() {
+		ServiceAsyncTask<ProfileServiceAsync, UserInfo> serviceTask = new ServiceAsyncTask<ProfileServiceAsync, UserInfo>(ProfileService.class, getActivity(), R.string.gsp_base, authenticator, new AsyncCallback<UserInfo>() {
 
 			@Override
 			public void onFailure(Throwable arg0) {
@@ -143,7 +141,7 @@ public class AndroidGAECrossClientFragment extends Fragment {
 				EditText returned = (EditText) getActivity().findViewById(R.id.returned_account);
 				returned.setText(arg0.getEmail());
 			}
-		}) {
+		}, null) {
 
 			@Override
 			public void serviceCall() {

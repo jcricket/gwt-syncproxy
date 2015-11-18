@@ -15,10 +15,19 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        // Work around https://code.google.com/p/android/issues/detail?id=69270.
+        def androidHome = System.getenv("ANDROID_HOME")
+        maven {
+            url "$androidHome/extras/android/m2repository/"
+        }
+        maven {
+            url "$androidHome/extras/google/m2repository/"
+        }
     }
 }
 
 ext{
     sdkVer = 23
-    buildToolsVer = "23.0.0"
+    buildToolsVer = "23.0.1"
+    androidSupportVer = "23.0.1"
 }
