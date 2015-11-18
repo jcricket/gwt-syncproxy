@@ -20,6 +20,18 @@
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>test</name>
+			<type>2</type>
+			<location>D:/GSPWksp/google-web-toolkit/user/test</location>
+		</link>
+		<link>
+			<name>test_</name>
+			<type>2</type>
+			<location>C:/Users/Preethum/Documents/GSPWK/google-web-toolkit/user/test</location>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>1442977133784</id>

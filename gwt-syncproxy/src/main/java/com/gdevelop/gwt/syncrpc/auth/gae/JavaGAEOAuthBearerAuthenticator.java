@@ -50,8 +50,8 @@ import com.google.gson.Gson;
  * @since 0.6
  *
  */
-public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, HasOAuthBearerToken, HasOAuthTokens,
-		TestModeHostVerifier {
+public class JavaGAEOAuthBearerAuthenticator
+		implements ServiceAuthenticator, HasOAuthBearerToken, HasOAuthTokens, TestModeHostVerifier {
 	/**
 	 * Amount of time before access code expires that this class will attempt to
 	 * get a new access code
@@ -189,7 +189,7 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 	 *
 	 * Once these tokens (the access token is the Bearer token) are available,
 	 * the
-	 * {@link DeviceServiceAuthenticationListener#onAuthenticatorPrepared(String)}
+	 * {@link DeviceServiceAuthenticationListener#onAuthenticatorPrepared(ServiceAuthenticator)}
 	 * method will be called.
 	 */
 	@Override
@@ -201,8 +201,8 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			String requestBody = String.format(DEVICE_CODE_REQUEST_BODY_TEMPLATE, idManager.getClientId(), URLEncoder
-					.encode(OAUTH_SCOPE, "UTF-8").replace("+", "%20"));
+			String requestBody = String.format(DEVICE_CODE_REQUEST_BODY_TEMPLATE, idManager.getClientId(),
+					URLEncoder.encode(OAUTH_SCOPE, "UTF-8").replace("+", "%20"));
 			logger.config("Request Body: " + requestBody);
 			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 			writer.write(requestBody);
@@ -329,7 +329,7 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 				if (!tokenResponse.getToken_type().equals("Bearer")) {
 					throw new RuntimeException("Unexpected token type: " + tokenResponse.getToken_type());
 				}
-				listener.onAuthenticatorPrepared(null);
+				listener.onAuthenticatorPrepared(this);
 				prepared = true;
 				// Schedule the ability to automatically refresh the access
 				// token so that updated bearer codes will be applied to service
@@ -409,6 +409,12 @@ public class JavaGAEOAuthBearerAuthenticator implements ServiceAuthenticator, Ha
 	@Override
 	public boolean isPrepared() {
 		return prepared;
+	}
+
+	@Override
+	public String accountName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

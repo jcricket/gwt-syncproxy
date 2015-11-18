@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 
 import com.gdevelop.gwt.syncrpc.auth.DeviceServiceAuthenticationListener;
 import com.gdevelop.gwt.syncrpc.auth.GoogleOAuthClientIdManager;
+import com.gdevelop.gwt.syncrpc.auth.ServiceAuthenticator;
 import com.gdevelop.gwt.syncrpc.auth.gae.JavaGAEOAuthBearerAuthenticator;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileService;
 import com.gdevelop.gwt.syncrpc.spawebtest.client.ProfileServiceAsync;
@@ -144,8 +145,8 @@ public class ManualAuthTest extends BasicFrame {
 		DeviceServiceAuthenticationListener listener = new DeviceServiceAuthenticationListener() {
 
 			@Override
-			public void onAuthenticatorPrepared(String accountName) {
-				logger.info("Authenticator Prepared: " + accountName);
+			public void onAuthenticatorPrepared(ServiceAuthenticator auth) {
+				logger.info("Authenticator Prepared: " + auth.accountName());
 				setStatus("Authenticator Prepared. Click verify to talk to App Engine");
 				verify.setEnabled(true);
 			}

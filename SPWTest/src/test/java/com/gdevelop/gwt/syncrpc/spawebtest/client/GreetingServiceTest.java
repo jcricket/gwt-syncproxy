@@ -26,7 +26,7 @@ public class GreetingServiceTest extends RpcTestBase {
 	 */
 	@Override
 	public String getModuleName() {
-		return "com.gdevelop.gwt.syncrpc.spawebtest.SPAGWTTest";
+		return "com.gdevelop.gwt.syncrpc.spawebtest.SPAWebTest";
 	}
 
 	/**
