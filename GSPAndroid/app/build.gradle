@@ -26,6 +26,6 @@ repositories{
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "com.android.support:appcompat-v7:$androidSupportVer"
-    compile 'com.gdevelop.gwt.syncrpc:spweb-client-api:0.6.1'
+    compile 'com.gdevelop.gwt.syncrpc:spweb-client-api:0.6.2'
     compile project(':gsp-android')
 }
