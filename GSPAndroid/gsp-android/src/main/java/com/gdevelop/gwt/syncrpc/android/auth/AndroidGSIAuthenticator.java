@@ -12,9 +12,9 @@
  */
 package com.gdevelop.gwt.syncrpc.android.auth;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.gdevelop.gwt.syncrpc.HasProxySettings;
@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -39,7 +40,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 	public static final int RC_GSI = 9001;
 	public static final String LOG_TAG = "AGSI_AUTH";
 	Context context;
-	Activity activity;
+	FragmentActivity activity;
 	GoogleOAuthIdManager idManager;
 	ServiceAuthenticationListener listener;
 	String accountName;
@@ -51,7 +52,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 	 * The listener will be called when authentication has been prepared regarding which account was
 	 * chosen.
 	 */
-	private AndroidGSIAuthenticator(Activity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener, GoogleSignInAccount account, String accountName) {
+	private AndroidGSIAuthenticator(FragmentActivity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener, GoogleSignInAccount account, String accountName) {
 		this.context = activity;
 		this.activity = activity;
 		this.idManager = idManager;
@@ -92,7 +93,12 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 		}
 		GoogleSignInOptions gso = gsoBuilder.requestEmail().requestIdToken(idManager.getServerClientId(context)).build();
 		// TODO Setup activity and failed listener
-		mGoogleApiClient = new GoogleApiClient.Builder(context).enableAutoManage(null /* FragmentActivity */, null /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+		mGoogleApiClient = new GoogleApiClient.Builder(context).enableAutoManage(activity /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
+			@Override
+			public void onConnectionFailed(ConnectionResult connectionResult) {
+				throw new RuntimeException(connectionResult.getErrorMessage());
+			}
+		} /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 		if (accountName == null) {
 
 			Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -132,7 +138,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 	}
 
 	public static class Builder {
-		Activity activity;
+		FragmentActivity activity;
 		ServiceAuthenticationListener listener;
 		GoogleOAuthIdManager idManager;
 		AuthenticatorManager manager;
@@ -176,7 +182,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 		/**
 		 * Use when setting up an inital account selection request
 		 */
-		public Builder signIn(Activity activity) {
+		public Builder signIn(FragmentActivity activity) {
 			this.activity = activity;
 			return this;
 		}

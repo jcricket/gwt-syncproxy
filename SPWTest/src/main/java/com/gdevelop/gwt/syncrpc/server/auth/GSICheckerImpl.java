@@ -13,66 +13,48 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 
-/**
- * http://android-developers.blogspot.co.il/2013/01/verifying-back-end-calls-
- * from-android.html
- *
- */
-public class GoogleOAuth2CheckerImpl implements GoogleOAuth2Checker {
-
+public class GSICheckerImpl implements GoogleOAuth2Checker {
 	private final List<String> mClientIDs;
 	private final String mAudience;
 	private GoogleIdTokenVerifier mVerifier;
 	private JsonFactory mJFactory;
 	private String mProblem = "Verification failed. (Time-out?)";
 
-	public GoogleOAuth2CheckerImpl(ServletContext context) {
+	public GSICheckerImpl(ServletContext context) {
 		ClientIdManager manager = new ClientIdManagerImpl(context);
 		mClientIDs = Arrays.asList(manager.getAllClients());
 		mAudience = manager.getServerAudience();
 		init();
 	}
 
-	public GoogleOAuth2CheckerImpl(ServletContext context, ClientIdManager manager) {
-		this(manager.getAllClients(), manager.getServerAudience());
-	}
-
 	protected void init() {
 		NetHttpTransport transport = new NetHttpTransport();
 		mJFactory = new GsonFactory();
-		mVerifier = new GoogleIdTokenVerifier(transport, mJFactory);
+		mVerifier = new GoogleIdTokenVerifier.Builder(transport, mJFactory).setAudience(mClientIDs)
+				.setIssuer("https://accounts.google.com").build();
+
 	}
 
-	public GoogleOAuth2CheckerImpl(String[] clientIDs, String audience) {
-		mClientIDs = Arrays.asList(clientIDs);
-		mAudience = audience;
-		init();
+	public String problem() {
+		return mProblem;
 	}
 
-	@Override
 	public GoogleIdToken.Payload check(String tokenString) {
 		GoogleIdToken.Payload payload = null;
+		GoogleIdToken idToken = null;
 		try {
-			GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
-			if (mVerifier.verify(token)) {
-				GoogleIdToken.Payload tempPayload = token.getPayload();
-				if (!tempPayload.getAudience().equals(mAudience)) {
-					mProblem = "Audience mismatch";
-				} else if (!mClientIDs.contains(tempPayload.getAuthorizedParty())) {
-					mProblem = "Client ID mismatch";
-				} else {
-					payload = tempPayload;
-				}
-			}
+			idToken = mVerifier.verify(tokenString);
 		} catch (GeneralSecurityException e) {
 			mProblem = "Security issue: " + e.getLocalizedMessage();
 		} catch (IOException e) {
 			mProblem = "Network problem: " + e.getLocalizedMessage();
 		}
+		if (idToken != null) {
+			payload = idToken.getPayload();
+			System.out.println("User ID: " + payload.getSubject());
+		} else {
+			System.out.println("Invalid ID token.");
+		}
 		return payload;
-	}
-
-	public String problem() {
-		return mProblem;
 	}
 }

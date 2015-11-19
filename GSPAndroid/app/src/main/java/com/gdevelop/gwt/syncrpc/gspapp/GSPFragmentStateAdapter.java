@@ -11,37 +11,10 @@ public class GSPFragmentStateAdapter extends FragmentStatePagerAdapter {
 
 	}
 
-	public enum GSPFrag {
-		GREET("Greeting"), OAUTH("A-GAE CC");
-
-		String title;
-
-		private GSPFrag(String title) {
-			this.title = title;
-		}
-
-		public Fragment getFragment() {
-			switch (this) {
-			case GREET:
-				return new GreetFragment();
-			case OAUTH:
-				return new AndroidGAECrossClientFragment();
-			default:
-				throw new RuntimeException("Unhandled Fragment Type: " + this);
-			}
-		}
-
-		public String getTitle() {
-			return title;
-		}
-	}
-
 	@Override
 	public Fragment getItem(int i) {
 		Fragment fragment = GSPFrag.values()[i].getFragment();
 		Bundle args = new Bundle();
-		// // Our object is just an integer :-P
-		// args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -54,5 +27,32 @@ public class GSPFragmentStateAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public CharSequence getPageTitle(int position) {
 		return GSPFrag.values()[position].getTitle();
+	}
+
+	public enum GSPFrag {
+		GREET("Greeting"), OAUTH("A-GAE CC"), GSI("A-GSI");
+
+		String title;
+
+		private GSPFrag(String title) {
+			this.title = title;
+		}
+
+		public Fragment getFragment() {
+			switch (this) {
+				case GREET:
+					return new GreetFragment();
+				case OAUTH:
+					return new AndroidGAECrossClientFragment();
+				case GSI:
+					return new AndroidGSIFragment();
+				default:
+					throw new RuntimeException("Unhandled Fragment Type: " + this);
+			}
+		}
+
+		public String getTitle() {
+			return title;
+		}
 	}
 }

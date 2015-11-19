@@ -16,8 +16,8 @@ package com.gdevelop.gwt.syncrpc.server.auth.gae;
 
 import java.util.logging.Logger;
 
+import com.gdevelop.gwt.syncrpc.server.auth.GSICheckerImpl;
 import com.gdevelop.gwt.syncrpc.server.auth.GoogleOAuth2Checker;
-import com.gdevelop.gwt.syncrpc.server.auth.GoogleOAuth2CheckerImpl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
@@ -140,7 +140,8 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 	 * @return
 	 */
 	protected GoogleOAuth2Checker getAuthChecker() {
-		return new GoogleOAuth2CheckerImpl(this.getServletContext());
+		//return new GoogleOAuth2CheckerImpl(this.getServletContext());
+		return new GSICheckerImpl(this.getServletContext());
 	}
 
 	/**
