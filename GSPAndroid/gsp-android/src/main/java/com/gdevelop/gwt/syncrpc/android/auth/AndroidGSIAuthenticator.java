@@ -30,6 +30,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import java.net.URL;
 
@@ -52,13 +53,14 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 	boolean prepared = false;
 	Mode mode;
 	GoogleApiClient mGoogleApiClient = null;
+	boolean revoking = false;
 
 	/**
 	 * Use case for authentication and this sub-system will query for the user's selected account.
 	 * The listener will be called when authentication has been prepared regarding which account was
 	 * chosen.
 	 */
-	private AndroidGSIAuthenticator(Context context, FragmentActivity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener, GoogleSignInAccount account, String accountName,Mode mode) {
+	private AndroidGSIAuthenticator(Context context, FragmentActivity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener, GoogleSignInAccount account, String accountName, Mode mode) {
 		this.context = context;
 		this.activity = activity;
 		this.idManager = idManager;
@@ -109,23 +111,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 			listener.onAuthenticatorPrepared(this);
 			return;
 		}
-		GoogleSignInOptions.Builder gsoBuilder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestIdToken(idManager.getServerClientId(context));
-		if (accountName != null) {
-			Log.v(LOG_TAG, "Setting accounting name to GSO");
-			gsoBuilder.setAccountName(accountName);
-		}
-		// Attempt Silent Sign in first, if fails requiring a sign in, launch intent
-		GoogleSignInOptions gso = gsoBuilder.build();
-		GoogleApiClient.Builder clientBuilder = new GoogleApiClient.Builder(context).addApi(Auth.GOOGLE_SIGN_IN_API, gso);
-		if (mode == Mode.LOGIN_NEW) {
-			clientBuilder.enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
-				@Override
-				public void onConnectionFailed(ConnectionResult connectionResult) {
-					throw new RuntimeException(connectionResult.getErrorMessage());
-				}
-			});
-		}
-		mGoogleApiClient = clientBuilder.build();
+		buildClient();
 		if (mode == Mode.LOGIN_ACC) {
 			Log.v(LOG_TAG, "Manually Connecting API Client");
 			mGoogleApiClient.connect();
@@ -170,8 +156,27 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		}
 	}
 
-	public void disconnectGoogleApiClient(){
-		mGoogleApiClient.disconnect();
+	private void buildClient() {
+		GoogleSignInOptions.Builder gsoBuilder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestIdToken(idManager.getServerClientId(context));
+		if (accountName != null) {
+			Log.v(LOG_TAG, "Setting account name to GSO");
+			gsoBuilder.setAccountName(accountName);
+		} else if (account != null) {
+			Log.v(LOG_TAG, "Setting AR account name to GSO");
+			gsoBuilder.setAccountName(account.getEmail());
+		}
+		// Attempt Silent Sign in first, if fails requiring a sign in, launch intent
+		GoogleSignInOptions gso = gsoBuilder.build();
+		GoogleApiClient.Builder clientBuilder = new GoogleApiClient.Builder(context).addApi(Auth.GOOGLE_SIGN_IN_API, gso);
+		if (mode == Mode.LOGIN_NEW) {
+			clientBuilder.enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
+				@Override
+				public void onConnectionFailed(ConnectionResult connectionResult) {
+					throw new RuntimeException(connectionResult.getErrorMessage());
+				}
+			});
+		}
+		mGoogleApiClient = clientBuilder.build();
 	}
 
 	@Override
@@ -181,9 +186,102 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		}
 	}
 
+	public void signOut() {
+		signOutA();
+	}
+
+	protected void signOutA() {
+		if (!isPrepared()) {
+			throw new RuntimeException("Authenticator must be prepared before it can be signed out");
+		}
+		if (mGoogleApiClient == null) {
+			Log.d(LOG_TAG, "Building client for signout");
+			buildClient();
+			mGoogleApiClient.connect();
+			OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+			Log.d(LOG_TAG, "API Client Connected: " + mGoogleApiClient.isConnected());
+			if (opr.isDone()) {
+				// If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+				// and the GoogleSignInResult will be available instantly.
+				Log.d(LOG_TAG, "Got cached sign-in for signout");
+
+				prepared = true;
+				if (revoking) {
+					revoke();
+				} else {
+					secondarySignOut();
+				}
+			} else {
+				// If the user has not previously signed in on this device or the sign-in has expired,
+				// this asynchronous branch will attempt to sign in the user silently.  Cross-device
+				// single sign-on will occur in this branch.
+				Log.v(LOG_TAG, "Awaiting OPR Callback for signout");
+				opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+					@Override
+					public void onResult(GoogleSignInResult googleSignInResult) {
+						Log.d(LOG_TAG, "OPR Result fpr signout");
+						if (googleSignInResult.isSuccess()) {
+							Log.v(LOG_TAG, "Authenticator prepared for signout");
+							prepared = true;
+							if (revoking) {
+								revoke();
+							} else {
+								secondarySignOut();
+							}
+						} else {
+							throw new RuntimeException(googleSignInResult.getStatus().getStatusMessage());
+//						Log.d(LOG_TAG, "Launching account selection intent");
+//						Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+//						activity.startActivityForResult(signInIntent, RC_GSI);
+						}
+						if (mode == Mode.LOGIN_ACC) {
+							Log.v(LOG_TAG, "Manually Dis-Connecting API Client from signout");
+							mGoogleApiClient.disconnect();
+						}
+					}
+				});
+			}
+		} else {
+			if (revoking) {
+				revoke();
+			} else {
+				secondarySignOut();
+			}
+		}
+	}
+
+	private void revoke() {
+		Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+																					 new ResultCallback<Status>() {
+																						 @Override
+																						 public void onResult(Status status) {
+																							 Log.d(LOG_TAG, "Revoke Completed: " + status.getStatusMessage());
+																						 }
+																					 });
+	}
+
+	protected void secondarySignOut() {
+		Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+			@Override
+			public void onResult(Status status) {
+				Log.d(LOG_TAG, "SIGN Out Completed: " + status.getStatusMessage());
+			}
+		});
+	}
+
+	public void disconnect() {
+		revoking = true;
+		signOutA();
+	}
+
+	public void disconnectGoogleApiClient() {
+		mGoogleApiClient.disconnect();
+	}
+
 	private enum Mode {
 		ACTIVITY_RESULT, LOGIN_NEW, LOGIN_ACC, AR_FAIL_REQ, AR_FAIL_SIGNIN;
 	}
+
 	public static class Builder {
 		FragmentActivity activity;
 		Context context;
@@ -193,8 +291,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		GoogleSignInResult gsiResult;
 		GoogleSignInAccount acct;
 		String accountName;
-Mode mode;
-
+		Mode mode;
 
 		/**
 		 * Standard use for building an authenticator
@@ -205,7 +302,7 @@ Mode mode;
 		 *                  other credentials
 		 */
 		public Builder(Context context, ServiceAuthenticationListener listener, GoogleOAuthIdManager idManager) {
-			this.context =context;
+			this.context = context;
 			this.listener = listener;
 			this.idManager = idManager;
 		}
@@ -226,10 +323,10 @@ Mode mode;
 					// Signed in successfully, show authenticated UI.
 					acct = gsiResult.getSignInAccount();
 					mode = Mode.ACTIVITY_RESULT;
-				}				else{
+				} else {
 					mode = Mode.AR_FAIL_SIGNIN;
 				}
-			}else{
+			} else {
 				mode = Mode.AR_FAIL_REQ;
 			}
 			return this;
@@ -240,7 +337,7 @@ Mode mode;
 		 */
 		public Builder signIn(FragmentActivity activity) {
 			mode = Mode.LOGIN_NEW;
-			this.activity=activity;
+			this.activity = activity;
 			return this;
 		}
 
@@ -287,7 +384,7 @@ Mode mode;
 				default:
 					throw new RuntimeException("Invalid settings for mode: " + mode);
 			}
-			return new AndroidGSIAuthenticator(context, activity, idManager, listener, acct, accountName,mode);
+			return new AndroidGSIAuthenticator(context, activity, idManager, listener, acct, accountName, mode);
 		}
 	}
 }

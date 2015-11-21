@@ -58,6 +58,7 @@ public class AndroidGSIFragment extends Fragment {
 	TextView selectedAcc;
 	TextView returnedAcc;
 	Button signOut;
+	Button disconnect;
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -79,6 +80,7 @@ public class AndroidGSIFragment extends Fragment {
 		selectedAcc.setText(accName);
 		prepare.setVisibility(View.GONE);
 		signOut.setVisibility(View.VISIBLE);
+		disconnect.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -108,20 +110,26 @@ public class AndroidGSIFragment extends Fragment {
 		reapply = (Button) root.findViewById(R.id.reapply);
 		selectedAcc = (TextView) root.findViewById(R.id.choosen_account);
 		returnedAcc = (TextView) root.findViewById(R.id.returned_account);
+		disconnect = (Button) root.findViewById(R.id.disconnect_button);
 		return root;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		prepare.setVisibility(View.VISIBLE);
-		signOut.setVisibility(View.GONE);
 		signOut.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				signOut();
 			}
 		});
+		disconnect.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				disconnect();
+			}
+		});
+		signedOut();
 		verify.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -147,8 +155,22 @@ public class AndroidGSIFragment extends Fragment {
 		});
 	}
 
-	private void signOut() {
+	private void disconnect() {
+		authenticator.disconnect();
+		signOut();
+	}
 
+	private void signOut() {
+		authenticator.signOut();
+		signedOut();
+	}
+
+	private void signedOut() {
+		selectedAcc.setText("");
+		returnedAcc.setText("");
+		prepare.setVisibility(View.VISIBLE);
+		signOut.setVisibility(View.GONE);
+		disconnect.setVisibility(View.GONE);
 	}
 
 	private void reapplyNewAuth() {
