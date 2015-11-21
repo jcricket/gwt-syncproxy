@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class AndroidGSIFragment extends Fragment {
 			return context.getString(R.string.gae_client_id);
 		}
 	};
+	public static final String LOG_TAG = "AGSI_FRAG";
 	SignInButton prepare;
 	Button verify;
 	Button reapply;
@@ -58,10 +60,12 @@ public class AndroidGSIFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Log.d(LOG_TAG, "Activity Result authenticator building");
 		AndroidGSIAuthenticator.Builder builder = new AndroidGSIAuthenticator.Builder(new ServiceAuthenticationListener() {
 
 			@Override
 			public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+				Log.v(LOG_TAG, "Activity Result authenticator prepared");
 				EditText selected = (EditText) getActivity().findViewById(R.id.choosen_account);
 				selected.setText(authenticator.accountName());
 				reapply();
@@ -77,6 +81,7 @@ public class AndroidGSIFragment extends Fragment {
 
 			@Override
 			public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+				Log.v(LOG_TAG, "Standard Authenticator prepared");
 				EditText selected = (EditText) getActivity().findViewById(R.id.choosen_account);
 				selected.setText(authenticator.accountName());
 				verify.setEnabled(true);
@@ -125,10 +130,12 @@ public class AndroidGSIFragment extends Fragment {
 	}
 
 	private void reapplyNewAuth() {
+		Log.i(LOG_TAG, "Building reapply authenticator");
 		AndroidGSIAuthenticator.Builder builder = new AndroidGSIAuthenticator.Builder(new ServiceAuthenticationListener() {
 
 			@Override
 			public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
+				Log.v(LOG_TAG, "Reapply authenticator preapred");
 				EditText selected = (EditText) getActivity().findViewById(R.id.choosen_account);
 				selected.setText(authenticator.accountName());
 				reapply();
@@ -138,6 +145,7 @@ public class AndroidGSIFragment extends Fragment {
 	}
 
 	private void reapply() {
+		Log.d(LOG_TAG, "Reapplying");
 		EditText returned = (EditText) getActivity().findViewById(R.id.returned_account);
 		returned.setText("");
 		serviceProgress.setText("");
@@ -187,6 +195,7 @@ public class AndroidGSIFragment extends Fragment {
 	}
 
 	private void verify() {
+		Log.i(LOG_TAG, "Verifing");
 		EditText returned = (EditText) getActivity().findViewById(R.id.returned_account);
 		returned.setText("");
 		serviceProgress.setText("");

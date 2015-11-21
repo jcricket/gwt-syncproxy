@@ -60,6 +60,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 		this.account = account;
 		this.accountName = accountName;
 		if (account != null) {
+			Log.i(LOG_TAG, "Account provided, prepared");
 			prepared = true;
 			listener.onAuthenticatorPrepared(this);
 		}
@@ -80,19 +81,22 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 
 	@Override
 	public void prepareAuthentication() {
+		Log.i(LOG_TAG, "Prepare authenticator");
 		if (prepared) {
+			Log.d(LOG_TAG, "Already Prepared");
 			listener.onAuthenticatorPrepared(this);
 			return;
 		}
 		GoogleSignInOptions.Builder gsoBuilder;
 		GoogleApiClient mGoogleApiClient;
 		if (accountName != null) {
+			Log.v(LOG_TAG, "Setting accounting name to GSO");
 			gsoBuilder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).setAccountName(accountName);
 		} else {
 			gsoBuilder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN);
 		}
 		GoogleSignInOptions gso = gsoBuilder.requestEmail().requestIdToken(idManager.getServerClientId(context)).build();
-		// TODO Setup activity and failed listener
+		//  Setup activity and failed listener
 		mGoogleApiClient = new GoogleApiClient.Builder(context).enableAutoManage(activity /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
 			@Override
 			public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -100,10 +104,11 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 			}
 		} /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 		if (accountName == null) {
-
+			Log.d(LOG_TAG, "Launching account selection intent");
 			Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
 			activity.startActivityForResult(signInIntent, RC_GSI);
 		} else {
+			Log.d(LOG_TAG, "Attempting silent log in");
 			OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
 			if (opr.isDone()) {
 				// If the user's cached credentials are valid, the OptionalPendingResult will be "done"
@@ -117,10 +122,11 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator {
 				// If the user has not previously signed in on this device or the sign-in has expired,
 				// this asynchronous branch will attempt to sign in the user silently.  Cross-device
 				// single sign-on will occur in this branch.
-
+				Log.v(LOG_TAG, "Awaiting OPR Callacbk");
 				opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
 					@Override
 					public void onResult(GoogleSignInResult googleSignInResult) {
+						Log.d(LOG_TAG, "OPR Result, authenticator prepared");
 						account = googleSignInResult.getSignInAccount();
 						prepared = true;
 						listener.onAuthenticatorPrepared(AndroidGSIAuthenticator.this);
