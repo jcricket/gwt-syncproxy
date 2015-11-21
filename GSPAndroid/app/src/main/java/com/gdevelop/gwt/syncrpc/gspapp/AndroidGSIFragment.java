@@ -94,7 +94,7 @@ public class AndroidGSIFragment extends Fragment {
 				signedIn(accName);
 				verify.setEnabled(true);
 			}
-		}, manager).signIn();
+		}, manager).signIn(getActivity());
 		authenticator = builder.build();
 	}
 
@@ -116,6 +116,12 @@ public class AndroidGSIFragment extends Fragment {
 		super.onResume();
 		prepare.setVisibility(View.VISIBLE);
 		signOut.setVisibility(View.GONE);
+		signOut.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				signOut();
+			}
+		});
 		verify.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -141,6 +147,10 @@ public class AndroidGSIFragment extends Fragment {
 		});
 	}
 
+	private void signOut() {
+
+	}
+
 	private void reapplyNewAuth() {
 		Log.i(LOG_TAG, "Building reapply authenticator");
 		selectedAcc.setText("");
@@ -155,11 +165,12 @@ public class AndroidGSIFragment extends Fragment {
 				reapply();
 			}
 		}, manager).forAccount(verifiedAccount);
+		authenticator.disconnectGoogleApiClient();
 		authenticator = builder.build();
 	}
 
 	private void verify() {
-		Log.i(LOG_TAG, "Verifing");
+		Log.i(LOG_TAG, "Verifying");
 
 		returnedAcc.setText("");
 		serviceProgress.setText("");
