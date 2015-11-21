@@ -19,6 +19,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.ArrayRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
@@ -294,6 +295,7 @@ public class AndroidGAECrossClientAuthenticator extends AsyncTask<Void, Void, St
 		return false;
 	}
 
+	@ArrayRes
 	protected int getTestModeHostArrayResource() {
 		return R.array.gsp_no_ssl_whitelist;
 	}

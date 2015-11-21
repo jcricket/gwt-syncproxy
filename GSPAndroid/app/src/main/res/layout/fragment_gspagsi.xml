@@ -5,11 +5,23 @@
               android:orientation="vertical">
 
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/prepare_auth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/prepare_auth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Out"
+            android:id="@+id/sign_out_button"/>
+    </LinearLayout>
 
     <GridLayout
         android:layout_width="match_parent"
@@ -36,18 +48,16 @@
             android:text="Returned Account"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-        <EditText
+        <TextView
             android:id="@+id/choosen_account"
             android:layout_column="0"
             android:layout_gravity="left|top"
             android:layout_row="1"
             android:ems="7"
             android:hint="No Account Chosen">
+        </TextView>
 
-            <requestFocus/>
-        </EditText>
-
-        <EditText
+        <TextView
             android:id="@+id/returned_account"
             android:layout_column="1"
             android:layout_gravity="left|top"

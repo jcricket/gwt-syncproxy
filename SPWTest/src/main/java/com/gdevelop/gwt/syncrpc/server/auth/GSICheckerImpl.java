@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 
+import com.gdevelop.gwt.syncrpc.server.auth.gae.CrossClientAuthRSS;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -19,6 +21,7 @@ public class GSICheckerImpl implements GoogleOAuth2Checker {
 	private GoogleIdTokenVerifier mVerifier;
 	private JsonFactory mJFactory;
 	private String mProblem = "Verification failed. (Time-out?)";
+	Logger logger = Logger.getLogger(GSICheckerImpl.class.getName());
 
 	public GSICheckerImpl(ServletContext context) {
 		ClientIdManager manager = new ClientIdManagerImpl(context);
@@ -35,10 +38,12 @@ public class GSICheckerImpl implements GoogleOAuth2Checker {
 
 	}
 
+	@Override
 	public String problem() {
 		return mProblem;
 	}
 
+	@Override
 	public GoogleIdToken.Payload check(String tokenString) {
 		GoogleIdToken.Payload payload = null;
 		GoogleIdToken idToken = null;
@@ -51,9 +56,9 @@ public class GSICheckerImpl implements GoogleOAuth2Checker {
 		}
 		if (idToken != null) {
 			payload = idToken.getPayload();
-			System.out.println("User ID: " + payload.getSubject());
+			logger.info("User ID: " + payload.getSubject());
 		} else {
-			System.out.println("Invalid ID token.");
+			logger.info("Invalid ID token.");
 		}
 		return payload;
 	}

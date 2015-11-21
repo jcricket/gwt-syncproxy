@@ -133,15 +133,18 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		}
 		return null;
 	}
-
+private GoogleOAuth2Checker oauthChecker;
 	/**
 	 * May be overridden to provide a custom auth checker
 	 *
 	 * @return
 	 */
 	protected GoogleOAuth2Checker getAuthChecker() {
+		if(oauthChecker != null){
+			return oauthChecker;
+		}
 		//return new GoogleOAuth2CheckerImpl(this.getServletContext());
-		return new GSICheckerImpl(this.getServletContext());
+		return oauthChecker = new GSICheckerImpl(this.getServletContext());
 	}
 
 	/**
@@ -209,6 +212,7 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		GoogleIdToken.Payload payload = verify();
 		if (payload == null) {
 			logger.fine("No usable payload available for OAuth CC");
+			logger.finer(getAuthChecker().problem());
 			user = null;
 			return;
 		}
