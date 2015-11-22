@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import com.gdevelop.gwt.syncrpc.server.auth.GSICheckerImpl;
 import com.gdevelop.gwt.syncrpc.server.auth.GoogleOAuth2Checker;
+import com.gdevelop.gwt.syncrpc.server.auth.GoogleOAuth2CheckerImpl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
@@ -55,10 +56,10 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		 * Token, OAuth 2 by Bearer Token, and User Service user exist and are
 		 * not the same
 		 */
-		EXCEPTION,
-		/**
-		 * Returns the UserOption based on Priority of {@link #usersPriority()}
-		 */
+		EXCEPTION, /**
+					 * Returns the UserOption based on Priority of
+					 * {@link #usersPriority()}
+					 */
 		PRIORITY;
 	}
 
@@ -66,19 +67,20 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		/**
 		 * Will preferentially return the OAuth2 Cross Client user if it exists
 		 */
-		CROSS_CLIENT,
-		/**
-		 * Will preferentially return the GAE OAuth User Service User if it
-		 * exists
-		 */
-		OAUTH_USER_SERVICE,
-		/**
-		 * Will preferentially return the GAE User Service user if it exists
-		 */
+		CROSS_CLIENT, /**
+						 * Will preferentially return the GAE OAuth User Service
+						 * User if it exists
+						 */
+		OAUTH_USER_SERVICE, /**
+							 * Will preferentially return the GAE User Service
+							 * user if it exists
+							 */
 		USER_SERVICE
 	}
 
 	public final static String OAUTH_HEADER = "X-GSP-OAUTH-ID";
+	public static final String OAUTH_TYPE_HEADER = "X-GSP-OAUTH-TYPE";
+	public static final String OAUTH_TYPE_GSI = "GSI";
 
 	private static boolean equalUsers(User userA, User userB) {
 		// Check's against id 0 to eliminate psedo-user example@example.com
@@ -133,18 +135,19 @@ public class CrossClientAuthRSS extends RemoteServiceServlet {
 		}
 		return null;
 	}
-private GoogleOAuth2Checker oauthChecker;
+
 	/**
 	 * May be overridden to provide a custom auth checker
 	 *
 	 * @return
 	 */
 	protected GoogleOAuth2Checker getAuthChecker() {
-		if(oauthChecker != null){
-			return oauthChecker;
+		String type = getThreadLocalRequest().getHeader(OAUTH_TYPE_HEADER);
+		if (OAUTH_TYPE_GSI.equals(type)) {
+			return new GSICheckerImpl(this.getServletContext());
+		} else {
+			return new GoogleOAuth2CheckerImpl(this.getServletContext());
 		}
-		//return new GoogleOAuth2CheckerImpl(this.getServletContext());
-		return oauthChecker = new GSICheckerImpl(this.getServletContext());
 	}
 
 	/**

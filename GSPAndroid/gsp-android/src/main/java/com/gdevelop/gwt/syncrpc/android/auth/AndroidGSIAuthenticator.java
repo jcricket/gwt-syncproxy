@@ -159,10 +159,13 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		mGoogleApiClient = clientBuilder.build();
 	}
 
+	public static final String OAUTH_TYPE_HEADER = "X-GSP-OAUTH-TYPE";
+	public static final String OAUTH_TYPE_GSI = "GSI";
 	@Override
 	public void applyAuthenticationToService(HasProxySettings service) {
 		if (isPrepared()) {
 			service.setOAuth2IdToken(account.getIdToken());
+			service.getCustomHeaders().put(OAUTH_TYPE_HEADER, OAUTH_TYPE_GSI);
 		}
 	}
 
