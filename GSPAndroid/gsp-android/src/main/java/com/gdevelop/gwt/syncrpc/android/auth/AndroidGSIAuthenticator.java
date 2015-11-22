@@ -14,6 +14,7 @@ package com.gdevelop.gwt.syncrpc.android.auth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -27,7 +28,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -74,7 +74,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		if (account != null) {
 			Log.i(LOG_TAG, "Account provided, prepared");
 			prepared = true;
-			listener.onAuthenticatorPrepared(this);
+			//listener.onAuthenticatorPrepared(this);
 		}
 	}
 
@@ -115,10 +115,46 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 			return;
 		}
 		buildClient();
-		if (mode == Mode.LOGIN_ACC) {
-			Log.v(LOG_TAG, "Manually Connecting API Client");
-			mGoogleApiClient.connect();
+		mGoogleApiClient.registerConnectionCallbacks(new PreparingCCL());
+		//if (mode == Mode.LOGIN_ACC) {
+		Log.v(LOG_TAG, "Manually Connecting API Client");
+		mGoogleApiClient.connect();
+		//}
+
+	}
+
+	private void buildClient() {
+		GoogleSignInOptions.Builder gsoBuilder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestIdToken(idManager.getServerClientId(context));
+		if (accountName != null) {
+			Log.v(LOG_TAG, "Setting account name to GSO");
+			gsoBuilder.setAccountName(accountName);
+		} else if (account != null) {
+			Log.v(LOG_TAG, "Setting AR account name to GSO");
+			gsoBuilder.setAccountName(account.getEmail());
 		}
+		// Attempt Silent Sign in first, if fails requiring a sign in, launch intent
+		GoogleSignInOptions gso = gsoBuilder.build();
+		GoogleApiClient.Builder clientBuilder = new GoogleApiClient.Builder(context).addApi(Auth.GOOGLE_SIGN_IN_API, gso);
+//		if (mode == Mode.LOGIN_NEW) {
+//			Log.v(LOG_TAG, "Enable GAPI Client Auto Manage");
+//			clientBuilder.enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
+//				@Override
+//				public void onConnectionFailed(ConnectionResult connectionResult) {
+//					throw new RuntimeException(connectionResult.getErrorMessage());
+//				}
+//			});
+//		}
+		mGoogleApiClient = clientBuilder.build();
+	}
+
+	@Override
+	public void applyAuthenticationToService(HasProxySettings service) {
+		if (isPrepared()) {
+			service.setOAuth2IdToken(account.getIdToken());
+		}
+	}
+
+	private void standardLogIn() {
 		Log.d(LOG_TAG, "Attempting silent log in");
 		OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
 		Log.d(LOG_TAG, "API Client Connected: " + mGoogleApiClient.isConnected());
@@ -129,6 +165,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 			GoogleSignInResult result = opr.get();
 			account = result.getSignInAccount();
 			prepared = true;
+			disconnectGoogleApiClient();
 			listener.onAuthenticatorPrepared(this);
 		} else {
 			// If the user has not previously signed in on this device or the sign-in has expired,
@@ -154,44 +191,16 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 							activity.startActivityForResult(signInIntent, RC_GSI);
 						}
 					}
-					if (mode == Mode.LOGIN_ACC) {
-						Log.v(LOG_TAG, "Manually Dis-Connecting API Client");
-						mGoogleApiClient.disconnect();
-					}
+					disconnectGoogleApiClient();
 				}
 			});
 		}
 	}
 
-	private void buildClient() {
-		GoogleSignInOptions.Builder gsoBuilder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestIdToken(idManager.getServerClientId(context));
-		if (accountName != null) {
-			Log.v(LOG_TAG, "Setting account name to GSO");
-			gsoBuilder.setAccountName(accountName);
-		} else if (account != null) {
-			Log.v(LOG_TAG, "Setting AR account name to GSO");
-			gsoBuilder.setAccountName(account.getEmail());
-		}
-		// Attempt Silent Sign in first, if fails requiring a sign in, launch intent
-		GoogleSignInOptions gso = gsoBuilder.build();
-		GoogleApiClient.Builder clientBuilder = new GoogleApiClient.Builder(context).addApi(Auth.GOOGLE_SIGN_IN_API, gso);
-		if (mode == Mode.LOGIN_NEW) {
-			Log.v(LOG_TAG, "Enable GAPI Client Auto Manage");
-			clientBuilder.enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
-				@Override
-				public void onConnectionFailed(ConnectionResult connectionResult) {
-					throw new RuntimeException(connectionResult.getErrorMessage());
-				}
-			});
-		}
-		mGoogleApiClient = clientBuilder.build();
-	}
-
-	@Override
-	public void applyAuthenticationToService(HasProxySettings service) {
-		if (isPrepared()) {
-			service.setOAuth2IdToken(account.getIdToken());
-		}
+	private void disconnectGoogleApiClient() {
+		Log.v(LOG_TAG, "Disconnecting GAPI");
+		mGoogleApiClient.disconnect();
+		mGoogleApiClient = null;
 	}
 
 	public void signOut() {
@@ -202,62 +211,53 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		if (!isPrepared()) {
 			throw new RuntimeException("Authenticator must be prepared before it can be signed out");
 		}
-		if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
-			if (mGoogleApiClient == null) {
-				Log.d(LOG_TAG, "Building client for signout");
-				buildClient();
-			}
-			Log.d(LOG_TAG, "Connecting client for signout");
-			mGoogleApiClient.connect();
-			OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-			Log.d(LOG_TAG, "API Client Connected: " + mGoogleApiClient.isConnected());
-			if (opr.isDone()) {
-				// If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-				// and the GoogleSignInResult will be available instantly.
-				Log.d(LOG_TAG, "Got cached sign-in for signout");
+		Log.d(LOG_TAG, "Building client for signout");
+		buildClient();
+		mGoogleApiClient.registerConnectionCallbacks(new SignoutCCL());
+		Log.d(LOG_TAG, "Connecting client for signout");
+		mGoogleApiClient.connect();
+	}
 
-				prepared = true;
-				if (revoking) {
-					revoke();
-				} else {
-					secondarySignOut();
-				}
-			} else {
-				// If the user has not previously signed in on this device or the sign-in has expired,
-				// this asynchronous branch will attempt to sign in the user silently.  Cross-device
-				// single sign-on will occur in this branch.
-				Log.v(LOG_TAG, "Awaiting OPR Callback for signout");
-				opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-					@Override
-					public void onResult(GoogleSignInResult googleSignInResult) {
-						Log.d(LOG_TAG, "OPR Result fpr signout");
-						if (googleSignInResult.isSuccess()) {
-							Log.v(LOG_TAG, "Authenticator prepared for signout");
-							prepared = true;
-							if (revoking) {
-								revoke();
-							} else {
-								secondarySignOut();
-							}
-						} else {
-							throw new RuntimeException(googleSignInResult.getStatus().getStatusMessage());
-//						Log.d(LOG_TAG, "Launching account selection intent");
-//						Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-//						activity.startActivityForResult(signInIntent, RC_GSI);
-						}
-						if (mode == Mode.LOGIN_ACC) {
-							Log.v(LOG_TAG, "Manually Dis-Connecting API Client from signout");
-							mGoogleApiClient.disconnect();
-						}
-					}
-				});
-			}
-		} else {
+	private void signOutProcessor() {
+		OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+		Log.d(LOG_TAG, "API Client Connected: " + mGoogleApiClient.isConnected());
+		if (opr.isDone()) {
+			// If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+			// and the GoogleSignInResult will be available instantly.
+			Log.d(LOG_TAG, "Got cached sign-in for signout");
+
+			prepared = true;
 			if (revoking) {
 				revoke();
 			} else {
 				secondarySignOut();
 			}
+		} else {
+			// If the user has not previously signed in on this device or the sign-in has expired,
+			// this asynchronous branch will attempt to sign in the user silently.  Cross-device
+			// single sign-on will occur in this branch.
+			Log.v(LOG_TAG, "Awaiting OPR Callback for signout");
+			opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+				@Override
+				public void onResult(GoogleSignInResult googleSignInResult) {
+					Log.d(LOG_TAG, "OPR Result fpr signout");
+					if (googleSignInResult.isSuccess()) {
+						Log.v(LOG_TAG, "Authenticator prepared for signout");
+						prepared = true;
+						if (revoking) {
+							revoke();
+						} else {
+							secondarySignOut();
+						}
+					} else {
+						disconnectGoogleApiClient();
+						throw new RuntimeException(googleSignInResult.getStatus().getStatusMessage());
+//						Log.d(LOG_TAG, "Launching account selection intent");
+//						Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+//						activity.startActivityForResult(signInIntent, RC_GSI);
+					}
+				}
+			});
 		}
 	}
 
@@ -287,19 +287,6 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 	public void disconnect() {
 		revoking = true;
 		signOutA();
-	}
-
-	public void disconnectGoogleApiClient() {
-		if (mGoogleApiClient != null) {
-			if (activity != null) {
-				Log.v(LOG_TAG, "Halting GAPI Auto Manage");
-				mGoogleApiClient.stopAutoManage(activity);
-			}
-			Log.v(LOG_TAG, "Disconnecting GAPI");
-			mGoogleApiClient.disconnect();
-		} else {
-			Log.v(LOG_TAG, "No Client to Disconnect: " + accountName());
-		}
 	}
 
 	private enum Mode {
@@ -419,6 +406,31 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 					throw new RuntimeException("Invalid settings for mode: " + mode);
 			}
 			return new AndroidGSIAuthenticator(context, activity == null && fragment != null ? fragment.getActivity() : activity, fragment, idManager, listener, acct, accountName, mode);
+		}
+	}
+
+	private class SignoutCCL implements GoogleApiClient.ConnectionCallbacks {
+		@Override
+		public void onConnected(Bundle bundle) {
+			signOutProcessor();
+		}
+
+		@Override
+		public void onConnectionSuspended(int i) {
+			throw new RuntimeException("Connect suspended: " + i);
+		}
+	}
+
+	private class PreparingCCL implements GoogleApiClient.ConnectionCallbacks {
+		@Override
+		public void onConnected(Bundle bundle) {
+			Log.i(LOG_TAG, "GAPI Connection for prepartion");
+			standardLogIn();
+		}
+
+		@Override
+		public void onConnectionSuspended(int i) {
+			throw new RuntimeException("Connect suspended: " + i);
 		}
 	}
 }

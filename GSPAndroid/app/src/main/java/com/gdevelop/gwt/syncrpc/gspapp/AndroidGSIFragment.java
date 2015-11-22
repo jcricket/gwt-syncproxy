@@ -73,11 +73,18 @@ public class AndroidGSIFragment extends Fragment {
 				verify.setEnabled(true);
 			}
 		}, manager).onActivityResult(requestCode, resultCode, data);
-		if (authenticator != null) {
-			Log.d(LOG_TAG, "Activity Result disconnecting prior auth GAPI Client");
-			authenticator.disconnectGoogleApiClient();
-		}
+//		if (authenticator != null) {
+//			Log.d(LOG_TAG, "Activity Result disconnecting prior auth GAPI Client");
+//			authenticator.disconnectGoogleApiClient();
+//		}
 		authenticator = builder.build();
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				authenticator.prepareAuthentication();
+				authenticator.prepareAuthentication();
+			}
+		});
 	}
 
 	private void signedIn(String accName) {
@@ -94,10 +101,10 @@ public class AndroidGSIFragment extends Fragment {
 	}
 
 	private void buildSigninAuthenticator() {
-		if (authenticator != null) {
-			Log.d(LOG_TAG, "Disconnecting prior authenticator GAPI Client");
-			authenticator.disconnectGoogleApiClient();
-		}
+//		if (authenticator != null) {
+//			Log.d(LOG_TAG, "Disconnecting prior authenticator GAPI Client");
+//			authenticator.disconnectGoogleApiClient();
+//		}
 		AndroidGSIAuthenticator.Builder builder = new AndroidGSIAuthenticator.Builder(getActivity(), new ServiceAuthenticationListener() {
 
 			@Override
@@ -202,7 +209,7 @@ public class AndroidGSIFragment extends Fragment {
 				reapply();
 			}
 		}, manager).forAccount(verifiedAccount);
-		authenticator.disconnectGoogleApiClient();
+		//authenticator.disconnectGoogleApiClient();
 		authenticator = builder.build();
 	}
 
@@ -211,16 +218,6 @@ public class AndroidGSIFragment extends Fragment {
 
 		returnedAcc.setText("");
 		serviceProgress.setText("");
-		/***************************************************************************/
-		// This section is strictly to handle the stunnel local dev mode for
-		// GAE. The alternative to the STunnel option is provide the whitelist
-		// server hosts in the string-array resource gsp_no_ssl_whitelist
-
-		// TODO Create Proguard Config that will remove the STunnel class
-		// if (BuildConfig.DEBUG) {
-		// STunnel.reconfig(getActivity(), R.raw.server, "login1");
-		// }
-		/***************************************************************************/
 		ServiceAsyncTask<ProfileServiceAsync, UserInfo> serviceTask = new ServiceAsyncTask<ProfileServiceAsync, UserInfo>(ProfileService.class, getActivity(), R.string.gsp_base, authenticator, new AsyncCallback<UserInfo>() {
 
 			@Override
@@ -262,16 +259,6 @@ public class AndroidGSIFragment extends Fragment {
 
 		returnedAcc.setText("");
 		serviceProgress.setText("");
-		/***************************************************************************/
-		// This section is strictly to handle the stunnel local dev mode for
-		// GAE. The alternative to the STunnel option is provide the whitelist
-		// server hosts in the string-array resource gsp_no_ssl_whitelist
-
-		// TODO Create Proguard Config that will remove the STunnel class
-		// if (BuildConfig.DEBUG) {
-		// STunnel.reconfig(getActivity(), R.raw.server, "login1");
-		// }
-		/***************************************************************************/
 		ServiceAsyncTask<ProfileServiceAsync, UserInfo> serviceTask = new ServiceAsyncTask<ProfileServiceAsync, UserInfo>(ProfileService.class, getActivity(), R.string.gsp_base, authenticator, new AsyncCallback<UserInfo>() {
 
 			@Override

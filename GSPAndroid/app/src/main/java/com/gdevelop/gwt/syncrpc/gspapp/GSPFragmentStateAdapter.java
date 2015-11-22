@@ -1,29 +1,24 @@
 package com.gdevelop.gwt.syncrpc.gspapp;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
-
 public class GSPFragmentStateAdapter extends FragmentStatePagerAdapter {
-	ArrayList<Fragment> frags;
+
+	static GreetFragment greet = new GreetFragment();
+	static AndroidGAECrossClientFragment ageaccFrag = new AndroidGAECrossClientFragment();
+	static AndroidGSIFragment agsiFrag = new AndroidGSIFragment();
 
 	public GSPFragmentStateAdapter(FragmentManager fm) {
 		super(fm);
-		frags = new ArrayList<>();
 	}
 
 	@Override
 	public Fragment getItem(int i) {
-		if (frags.size() - 1 >= i) {
-			return frags.get(i);
-		}
 		Fragment fragment = GSPFrag.values()[i].getFragment();
-		Bundle args = new Bundle();
-		fragment.setArguments(args);
-		frags.add(i, fragment);
+//		Bundle args = new Bundle();
+//		fragment.setArguments(args);
 		return fragment;
 	}
 
@@ -49,11 +44,11 @@ public class GSPFragmentStateAdapter extends FragmentStatePagerAdapter {
 		public Fragment getFragment() {
 			switch (this) {
 				case GREET:
-					return new GreetFragment();
+					return greet;
 				case OAUTH:
-					return new AndroidGAECrossClientFragment();
+					return ageaccFrag;
 				case GSI:
-					return new AndroidGSIFragment();
+					return agsiFrag;
 				default:
 					throw new RuntimeException("Unhandled Fragment Type: " + this);
 			}
