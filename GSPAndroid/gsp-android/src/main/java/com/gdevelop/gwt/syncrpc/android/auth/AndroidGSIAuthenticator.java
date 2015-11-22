@@ -14,6 +14,7 @@ package com.gdevelop.gwt.syncrpc.android.auth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -74,7 +75,18 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		if (account != null) {
 			Log.i(LOG_TAG, "Account provided, prepared");
 			prepared = true;
-			//listener.onAuthenticatorPrepared(this);
+			new AsyncTask<Void, Void, Void>() {
+				@Override
+				protected Void doInBackground(Void... params) {
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
+					prepareAuthentication();
+				}
+			}.execute();
 		}
 	}
 
@@ -400,6 +412,8 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 						throw new RuntimeException("Must specifiy A Fragment activity or delegator fragment for a new login to auto-manage");
 					}
 					break;
+				case AR_FAIL_SIGNIN:
+					Log.d(LOG_TAG, "Signin not processed");
 				case ACTIVITY_RESULT:
 					break;
 				default:

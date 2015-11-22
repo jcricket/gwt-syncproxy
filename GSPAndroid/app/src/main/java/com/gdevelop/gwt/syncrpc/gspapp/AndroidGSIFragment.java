@@ -14,6 +14,7 @@ package com.gdevelop.gwt.syncrpc.gspapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -78,13 +79,8 @@ public class AndroidGSIFragment extends Fragment {
 //			authenticator.disconnectGoogleApiClient();
 //		}
 		authenticator = builder.build();
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				authenticator.prepareAuthentication();
-				authenticator.prepareAuthentication();
-			}
-		});
+		//		authenticator.prepareAuthentication();
+
 	}
 
 	private void signedIn(String accName) {
