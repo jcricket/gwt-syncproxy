@@ -1,9 +1,9 @@
 buildscript {
 	// Dependency Versions
 	ext{
-		gaeVer = '1.9.19'
+		gaeVer = '1.9.28'
 		gwtVer = '2.7.0'
-		gspVer = '0.6.1'
+		gspVer = '0.6.2'
 		groupId = 'com.gdevelop.gwt.syncrpc'
 	}
 	

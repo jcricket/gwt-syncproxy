@@ -12,7 +12,9 @@ public class GSPAMain extends FragmentActivity {
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_gspamain);
-		pager = new GSPFragmentStateAdapter(getSupportFragmentManager());
+		if (pager == null) {
+			pager = new GSPFragmentStateAdapter(getSupportFragmentManager());
+		}
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(pager);
 	}

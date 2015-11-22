@@ -17,4 +17,10 @@ public interface GoogleOAuth2Checker {
 	 * @return null if token is not valid
 	 */
 	GoogleIdToken.Payload check(String tokenString);
+	
+	/**
+	 * 
+	 * @return a string indicate a problem, if one occurred
+	 */
+	String problem();
 }

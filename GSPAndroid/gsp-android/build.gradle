@@ -12,7 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.gdevelop.gwt.syncrpc'
-version = '0.6.1'
+version = '0.6.2'
 def projectName = 'Gwt-SyncProxy Android Library'
 def projectUrl = 'http://www.blueesoteric.com'
 def licenseName = 'The Apache Software License, Version 2.0'
@@ -49,8 +49,9 @@ preBuild.dependsOn tasks.getByPath(":gspgwtuser:gwtUserJar")
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$androidSupportVer"
-    compile 'com.gdevelop.gwt.syncrpc:gsp-java:0.6.1'
-    compile 'com.google.android.gms:play-services-identity:8.1.0'
+    compile 'com.gdevelop.gwt.syncrpc:gsp-java:0.6.2'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile 'com.google.android.gms:play-services-identity:8.3.0'
     compile files('../gspgwtuser/build/libs/GSPGwtUserAndroid.jar')
 }
 //
