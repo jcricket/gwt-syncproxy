@@ -70,9 +70,13 @@ public class AndroidGSIFragment extends Fragment {
 			public void onAuthenticatorPrepared(ServiceAuthenticator authenticator) {
 				Log.v(LOG_TAG, "Activity Result authenticator prepared");
 				signedIn(authenticator.accountName());
-				reapply();
+				verify.setEnabled(true);
 			}
 		}, manager).onActivityResult(requestCode, resultCode, data);
+		if (authenticator != null) {
+			Log.d(LOG_TAG, "Activity Result disconnecting prior auth GAPI Client");
+			authenticator.disconnectGoogleApiClient();
+		}
 		authenticator = builder.build();
 	}
 
@@ -86,6 +90,14 @@ public class AndroidGSIFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		buildSigninAuthenticator();
+	}
+
+	private void buildSigninAuthenticator() {
+		if (authenticator != null) {
+			Log.d(LOG_TAG, "Disconnecting prior authenticator GAPI Client");
+			authenticator.disconnectGoogleApiClient();
+		}
 		AndroidGSIAuthenticator.Builder builder = new AndroidGSIAuthenticator.Builder(getActivity(), new ServiceAuthenticationListener() {
 
 			@Override
@@ -96,7 +108,7 @@ public class AndroidGSIFragment extends Fragment {
 				signedIn(accName);
 				verify.setEnabled(true);
 			}
-		}, manager).signIn(getActivity());
+		}, manager).signIn(this);
 		authenticator = builder.build();
 	}
 
@@ -157,7 +169,8 @@ public class AndroidGSIFragment extends Fragment {
 
 	private void disconnect() {
 		authenticator.disconnect();
-		signOut();
+		signedOut();
+		buildSigninAuthenticator();
 	}
 
 	private void signOut() {
@@ -171,6 +184,8 @@ public class AndroidGSIFragment extends Fragment {
 		prepare.setVisibility(View.VISIBLE);
 		signOut.setVisibility(View.GONE);
 		disconnect.setVisibility(View.GONE);
+		verify.setEnabled(false);
+		reapply.setEnabled(false);
 	}
 
 	private void reapplyNewAuth() {

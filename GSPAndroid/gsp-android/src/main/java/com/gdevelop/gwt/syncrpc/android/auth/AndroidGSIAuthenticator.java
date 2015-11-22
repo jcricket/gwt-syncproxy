@@ -14,6 +14,7 @@ package com.gdevelop.gwt.syncrpc.android.auth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -46,6 +47,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 	public static final String LOG_TAG = "AGSI_AUTH";
 	Context context;
 	FragmentActivity activity;
+	Fragment fragment;
 	GoogleOAuthIdManager idManager;
 	ServiceAuthenticationListener listener;
 	String accountName;
@@ -60,9 +62,10 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 	 * The listener will be called when authentication has been prepared regarding which account was
 	 * chosen.
 	 */
-	private AndroidGSIAuthenticator(Context context, FragmentActivity activity, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener, GoogleSignInAccount account, String accountName, Mode mode) {
+	private AndroidGSIAuthenticator(Context context, FragmentActivity activity, Fragment fragment, GoogleOAuthIdManager idManager, ServiceAuthenticationListener listener, GoogleSignInAccount account, String accountName, Mode mode) {
 		this.context = context;
 		this.activity = activity;
+		this.fragment = fragment;
 		this.idManager = idManager;
 		this.listener = listener;
 		this.account = account;
@@ -142,10 +145,14 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 						prepared = true;
 						listener.onAuthenticatorPrepared(AndroidGSIAuthenticator.this);
 					} else {
-						throw new RuntimeException(googleSignInResult.getStatus().getStatusMessage());
-//						Log.d(LOG_TAG, "Launching account selection intent");
-//						Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-//						activity.startActivityForResult(signInIntent, RC_GSI);
+//						throw new RuntimeException(googleSignInResult.getStatus().getStatusMessage());
+						Log.d(LOG_TAG, "Launching account selection intent");
+						Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+						if (fragment != null) {
+							fragment.startActivityForResult(signInIntent, RC_GSI);
+						} else {
+							activity.startActivityForResult(signInIntent, RC_GSI);
+						}
 					}
 					if (mode == Mode.LOGIN_ACC) {
 						Log.v(LOG_TAG, "Manually Dis-Connecting API Client");
@@ -169,6 +176,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		GoogleSignInOptions gso = gsoBuilder.build();
 		GoogleApiClient.Builder clientBuilder = new GoogleApiClient.Builder(context).addApi(Auth.GOOGLE_SIGN_IN_API, gso);
 		if (mode == Mode.LOGIN_NEW) {
+			Log.v(LOG_TAG, "Enable GAPI Client Auto Manage");
 			clientBuilder.enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
 				@Override
 				public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -194,9 +202,12 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		if (!isPrepared()) {
 			throw new RuntimeException("Authenticator must be prepared before it can be signed out");
 		}
-		if (mGoogleApiClient == null) {
-			Log.d(LOG_TAG, "Building client for signout");
-			buildClient();
+		if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
+			if (mGoogleApiClient == null) {
+				Log.d(LOG_TAG, "Building client for signout");
+				buildClient();
+			}
+			Log.d(LOG_TAG, "Connecting client for signout");
 			mGoogleApiClient.connect();
 			OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
 			Log.d(LOG_TAG, "API Client Connected: " + mGoogleApiClient.isConnected());
@@ -251,22 +262,26 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 	}
 
 	private void revoke() {
-		Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-																					 new ResultCallback<Status>() {
-																						 @Override
-																						 public void onResult(Status status) {
-																							 Log.d(LOG_TAG, "Revoke Completed: " + status.getStatusMessage());
-																						 }
-																					 });
+		Log.i(LOG_TAG, "Attempting revoke");
+		Log.v(LOG_TAG, "GAPI Client is connected: " + mGoogleApiClient.isConnected());
+		Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+			@Override
+			public void onResult(Status status) {
+				Log.d(LOG_TAG, "Revoke Completed: " + status.getStatusMessage());
+			}
+		});
+		disconnectGoogleApiClient();
 	}
 
 	protected void secondarySignOut() {
+		Log.i(LOG_TAG, "Attempting signout secondary");
 		Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
 			@Override
 			public void onResult(Status status) {
 				Log.d(LOG_TAG, "SIGN Out Completed: " + status.getStatusMessage());
 			}
 		});
+		disconnectGoogleApiClient();
 	}
 
 	public void disconnect() {
@@ -275,7 +290,16 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 	}
 
 	public void disconnectGoogleApiClient() {
-		mGoogleApiClient.disconnect();
+		if (mGoogleApiClient != null) {
+			if (activity != null) {
+				Log.v(LOG_TAG, "Halting GAPI Auto Manage");
+				mGoogleApiClient.stopAutoManage(activity);
+			}
+			Log.v(LOG_TAG, "Disconnecting GAPI");
+			mGoogleApiClient.disconnect();
+		} else {
+			Log.v(LOG_TAG, "No Client to Disconnect: " + accountName());
+		}
 	}
 
 	private enum Mode {
@@ -284,6 +308,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 
 	public static class Builder {
 		FragmentActivity activity;
+		Fragment fragment;
 		Context context;
 		ServiceAuthenticationListener listener;
 		GoogleOAuthIdManager idManager;
@@ -342,6 +367,15 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 		}
 
 		/**
+		 * Use when setting up an inital account selection request
+		 */
+		public Builder signIn(Fragment frag) {
+			mode = Mode.LOGIN_NEW;
+			this.fragment = frag;
+			return this;
+		}
+
+		/**
 		 * For use case when users has logged in before, and app is re-establishing credneitals to
 		 * retrieve token for backend authentication
 		 */
@@ -375,8 +409,8 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 					}
 					break;
 				case LOGIN_NEW:
-					if (activity == null) {
-						throw new RuntimeException("Must specifiy A Fragment activity for a new login to auto-manage");
+					if (activity == null && fragment == null) {
+						throw new RuntimeException("Must specifiy A Fragment activity or delegator fragment for a new login to auto-manage");
 					}
 					break;
 				case ACTIVITY_RESULT:
@@ -384,7 +418,7 @@ public class AndroidGSIAuthenticator implements ServiceAuthenticator, TestModeHo
 				default:
 					throw new RuntimeException("Invalid settings for mode: " + mode);
 			}
-			return new AndroidGSIAuthenticator(context, activity, idManager, listener, acct, accountName, mode);
+			return new AndroidGSIAuthenticator(context, activity == null && fragment != null ? fragment.getActivity() : activity, fragment, idManager, listener, acct, accountName, mode);
 		}
 	}
 }

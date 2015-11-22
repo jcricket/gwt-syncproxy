@@ -5,17 +5,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.util.ArrayList;
+
 public class GSPFragmentStateAdapter extends FragmentStatePagerAdapter {
+	ArrayList<Fragment> frags;
+
 	public GSPFragmentStateAdapter(FragmentManager fm) {
 		super(fm);
-
+		frags = new ArrayList<>();
 	}
 
 	@Override
 	public Fragment getItem(int i) {
+		if (frags.size() - 1 >= i) {
+			return frags.get(i);
+		}
 		Fragment fragment = GSPFrag.values()[i].getFragment();
 		Bundle args = new Bundle();
 		fragment.setArguments(args);
+		frags.add(i, fragment);
 		return fragment;
 	}
 
