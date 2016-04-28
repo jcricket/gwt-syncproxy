@@ -3,7 +3,7 @@ buildscript {
 	ext{
 		gaeVer = '1.9.28'
 		gwtVer = '2.7.0'
-		gspVer = '0.6.2'
+		gspVer = '0.6.3'
 		groupId = 'com.gdevelop.gwt.syncrpc'
 	}
 	

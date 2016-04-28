@@ -8,8 +8,8 @@ android {
         applicationId "com.gdevelop.gwt.syncrpc.gspapp"
         minSdkVersion 14
         targetSdkVersion sdkVer
-        versionCode 1
-        versionName "1.0"
+        versionCode gspVerCode
+        versionName gspVer
     }
     buildTypes {
         release {
@@ -26,6 +26,6 @@ repositories{
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "com.android.support:appcompat-v7:$androidSupportVer"
-    compile 'com.gdevelop.gwt.syncrpc:spweb-client-api:0.6.2'
+    compile "com.gdevelop.gwt.syncrpc:spweb-client-api:$gspVer"
     compile project(':gsp-android')
 }
