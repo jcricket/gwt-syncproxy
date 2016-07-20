@@ -121,6 +121,21 @@ publishing{
 			artifact gspJavadocJar{
 				classifier 'javadoc'
 			}
+			// Work-around for missing dependencies: http://stackoverflow.com/a/24764713/1544046
+			pom.withXml {
+     			def dependenciesNode = asNode().appendNode('dependencies')
+    
+        		// Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+        		configurations.compile.allDependencies.each {
+            		// Handle skipping over the manually added testing files jar
+            		if(!(it instanceof org.gradle.api.internal.artifacts.dependencies.DefaultSelfResolvingDependency_Decorated) && !it.name.startsWith('spweb')){
+	            		def dependencyNode = dependenciesNode.appendNode('dependency')
+    	        		dependencyNode.appendNode('groupId', it.group)
+        	    		dependencyNode.appendNode('artifactId', it.name)
+            			dependencyNode.appendNode('version', it.version)
+            		}
+        		}
+			}
 		}
 	}
 }
